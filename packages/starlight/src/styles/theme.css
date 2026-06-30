@@ -25,4 +25,14 @@
   --sl-color-gray-7: color-mix(in oklab, var(--nbr-foreground), var(--nbr-background) 96%);
 
   --sl-color-hairline: var(--nbr-border);
+
+  --sl-font: 'Atkinson Hyperlegible', ui-sans-serif, system-ui, sans-serif;
+  --sl-font-mono: 'Fira Code', ui-monospace, monospace;
+  --nbr-font-heading: 'Poppins', var(--sl-font);
+}
+
+h1, h2, h3, h4, h5, h6,
+.sl-markdown-content :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--nbr-font-heading);
+  font-weight: 600;
 }

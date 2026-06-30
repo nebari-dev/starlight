@@ -7,6 +7,7 @@ export function nebari(): StarlightPlugin {
       'config:setup'({ config, updateConfig }) {
         updateConfig({
           customCss: [
+            '@nebari/starlight/fonts/font-face.css',
             '@nebari/starlight/styles/nebari-tokens.css',
             '@nebari/starlight/styles/theme.css',
             ...(config.customCss ?? []),

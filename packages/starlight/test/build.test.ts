@@ -39,3 +39,25 @@ test('both light and dark token blocks are present', () => {
   expect(css).toMatch(/data-theme=['"]?dark['"]?/);
   expect(css).toMatch(/data-theme=['"]?light['"]?/);
 });
+
+test('fonts are self-hosted, no external font host', () => {
+  const css = allText('.css');
+  const html = allText('.html');
+  expect(css).toMatch(/Atkinson Hyperlegible/);
+  expect(css).toMatch(/Fira Code/);
+  expect(css).toMatch(/Poppins/);
+  expect(css + html).not.toMatch(/fonts\.googleapis\.com|fonts\.gstatic\.com|use\.typekit|cdn/i);
+});
+
+test('woff2 files are emitted into the build', () => {
+  const fonts: string[] = [];
+  const walk = (dir: string) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = join(dir, e.name);
+      if (e.isDirectory()) walk(p);
+      else if (e.name.endsWith('.woff2')) fonts.push(p);
+    }
+  };
+  walk(DIST);
+  expect(fonts.length).toBeGreaterThan(0);
+});
