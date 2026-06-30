@@ -1,6 +1,6 @@
 {
   "name": "@nebari/starlight",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "license": "Apache-2.0",
   "files": ["dist", "src/styles", "src/fonts", "src/assets", "src/components"],
