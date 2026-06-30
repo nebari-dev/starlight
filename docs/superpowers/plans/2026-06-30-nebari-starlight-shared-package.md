@@ -100,7 +100,7 @@ Expected: FAIL - cannot resolve `../src/index.ts` (file does not exist).
   "type": "module",
   "workspaces": ["packages/*", "docs"],
   "scripts": {
-    "build": "bun --filter '@nebari/starlight' run build",
+    "build": "bun run --filter '@nebari/starlight' build",
     "test": "bun test packages/starlight/test",
     "sync-tokens": "bun packages/starlight/scripts/sync-tokens.ts"
   }
@@ -296,7 +296,7 @@ test and the end-to-end search test both look for this string.
 
 - [ ] **Step 2: Install and run the build to verify the baseline**
 
-Run: `bun install && bun --filter '@nebari/starlight' run build && cd docs && bun run build`
+Run: `bun install && bun run --filter '@nebari/starlight' build && cd docs && bun run build`
 Expected: exit 0; `docs/dist/index.html` exists; `docs/dist/pagefind/pagefind.js` exists (Starlight runs Pagefind by default).
 
 - [ ] **Step 3: Commit**
@@ -475,7 +475,7 @@ function allText(ext: string): string {
 }
 
 beforeAll(async () => {
-  await $`bun --filter '@nebari/starlight' run build`.cwd(join(import.meta.dir, '../../..'));
+  await $`bun run --filter '@nebari/starlight' build`.cwd(join(import.meta.dir, '../../..'));
   await $`bun run build`.cwd(join(import.meta.dir, '../../../docs'));
 });
 
@@ -962,7 +962,7 @@ import { $ } from 'bun';
 const HOME = join(import.meta.dir, '../dist/index.html');
 
 beforeAll(async () => {
-  await $`bun --filter '@nebari/starlight' run build`.cwd(join(import.meta.dir, '../..'));
+  await $`bun run --filter '@nebari/starlight' build`.cwd(join(import.meta.dir, '../..'));
   await $`bun run build:base`.cwd(join(import.meta.dir, '..'));
 });
 
@@ -1058,7 +1058,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
-      - run: bun --filter '@nebari/starlight' run build
+      - run: bun run --filter '@nebari/starlight' build
       - run: bun test packages/starlight/test
       - run: cd docs && bun test
       - run: cd docs && bunx playwright install --with-deps chromium && bun run e2e
@@ -1069,7 +1069,7 @@ jobs:
 Run from repo root:
 ```bash
 bun install --frozen-lockfile
-bun --filter '@nebari/starlight' run build
+bun run --filter '@nebari/starlight' build
 bun test packages/starlight/test
 cd docs && bun test && bun run e2e && cd ..
 ```
