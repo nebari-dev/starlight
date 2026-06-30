@@ -3,4 +3,5 @@ import Default from '@astrojs/starlight/components/Head.astro';
 import favicon from '../assets/nebari-symbol.svg?url';
 ---
 <Default><slot /></Default>
+<!-- intentional: appended after Default so this favicon link wins over any default - branded theme behavior -->
 <link rel="icon" href={favicon} type="image/svg+xml" />

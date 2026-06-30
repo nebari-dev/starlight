@@ -6,11 +6,14 @@ Code, logo, footer) with one line of config.
 
 ## Install
 
-    bun add @nebari/starlight
+```sh
+bun add @nebari/starlight
+```
 
 ## Use
 
 ```js
+import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import { nebari } from '@nebari/starlight';
 
