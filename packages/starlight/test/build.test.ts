@@ -57,3 +57,13 @@ test('woff2 files are emitted into the build', () => {
   const fonts = allFiles('.woff2');
   expect(fonts.length).toBeGreaterThan(0);
 });
+
+test('branded footer marker renders on pages', () => {
+  const html = allText('.html');
+  expect(html).toContain('data-nebari-footer');
+});
+
+test('Nebari logo is rendered in the header', () => {
+  const html = allText('.html');
+  expect(html).toMatch(/alt="Nebari"/);
+});

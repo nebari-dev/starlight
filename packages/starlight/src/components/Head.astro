@@ -1,0 +1,6 @@
+---
+import Default from '@astrojs/starlight/components/Head.astro';
+import favicon from '../assets/nebari-symbol.svg?url';
+---
+<Default><slot /></Default>
+<link rel="icon" href={favicon} type="image/svg+xml" />

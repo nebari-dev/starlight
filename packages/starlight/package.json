@@ -5,9 +5,13 @@
   "license": "Apache-2.0",
   "files": ["dist", "src/styles", "src/fonts", "src/assets", "src/components"],
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
     "./styles/*": "./src/styles/*",
-    "./fonts/*": "./src/fonts/*"
+    "./fonts/*": "./src/fonts/*",
+    "./components/*": "./src/components/*"
   },
   "scripts": {
     "build": "tsup"

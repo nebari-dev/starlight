@@ -12,6 +12,16 @@ export function nebari(): StarlightPlugin {
             '@nebari/starlight/styles/theme.css',
             ...(config.customCss ?? []),
           ],
+          components: {
+            SiteTitle: '@nebari/starlight/components/SiteTitle.astro',
+            Head: '@nebari/starlight/components/Head.astro',
+            Footer: '@nebari/starlight/components/Footer.astro',
+            ...(config.components ?? {}),
+          },
+          social: [
+            { icon: 'github', label: 'GitHub', href: 'https://github.com/nebari-dev' },
+            ...(config.social ?? []),
+          ],
         });
       },
     },

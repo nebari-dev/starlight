@@ -1,0 +1,16 @@
+---
+import logoLight from '../assets/nebari-horizontal-light.svg?url';
+import logoDark from '../assets/nebari-horizontal-dark.svg?url';
+const href = import.meta.env.BASE_URL;
+---
+<a href={href} class="nbr-site-title">
+  <img src={logoLight} alt="Nebari" class="nbr-logo nbr-logo--light" height="32" />
+  <img src={logoDark} alt="Nebari" class="nbr-logo nbr-logo--dark" height="32" />
+</a>
+<style>
+  .nbr-site-title { display: flex; align-items: center; }
+  .nbr-logo { height: 2rem; width: auto; }
+  .nbr-logo--dark { display: none; }
+  :global(:root[data-theme='dark']) .nbr-logo--light { display: none; }
+  :global(:root[data-theme='dark']) .nbr-logo--dark { display: inline; }
+</style>
