@@ -27,7 +27,7 @@ beforeAll(async () => {
 test('compiled CSS maps Starlight accent and grays onto nebari tokens', () => {
   const css = allText('.css');
   expect(css).toMatch(/--sl-color-accent:\s*var\(--nbr-primary\)/);
-  expect(css).toMatch(/--sl-color-gray-1:/);
+  expect(css).toMatch(/--sl-color-gray-1:\s*color-mix/);
   // A namespaced primitive carries a literal oklch value
   expect(css).toMatch(/--nbr-zinc-50:\s*oklch/);
   // Semantic token resolves through the namespace (not a literal oklch)
