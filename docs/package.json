@@ -1,6 +1,15 @@
 {
-  "name": "nebari-docs",
+  "name": "@nebari/starlight-docs",
   "private": true,
-  "version": "0.0.0",
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.33.0",
+    "@nebari/starlight": "workspace:*",
+    "astro": "^5.0.0"
+  }
 }
