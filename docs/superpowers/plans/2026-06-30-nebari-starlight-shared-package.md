@@ -69,7 +69,7 @@ README.md
 - Test: `packages/starlight/test/skeleton.test.ts`
 
 **Interfaces:**
-- Produces: `export function nebari(options?: NebariThemeOptions): StarlightPlugin` from `@nebari/starlight`. `NebariThemeOptions = { githubUrl?: string }` (optional; defaults to `https://github.com/nebari-dev`). The plugin's `name` is `'@nebari/starlight'`.
+- Produces: `export function nebari(): StarlightPlugin` from `@nebari/starlight`. The plugin's `name` is `'@nebari/starlight'`. (The GitHub social-link default is added in Task 6; no options are needed for v1.)
 
 - [ ] **Step 1: Write the failing test**
 
@@ -174,19 +174,12 @@ export default defineConfig({
 // packages/starlight/src/index.ts
 import type { StarlightPlugin } from '@astrojs/starlight/types';
 
-export interface NebariThemeOptions {
-  /** Base GitHub org/repo URL for the default social link. */
-  githubUrl?: string;
-}
-
-export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
-  const githubUrl = options.githubUrl ?? 'https://github.com/nebari-dev';
+export function nebari(): StarlightPlugin {
   return {
     name: '@nebari/starlight',
     hooks: {
       'config:setup'() {
         // Wiring added in later tasks.
-        void githubUrl;
       },
     },
   };
@@ -809,6 +802,10 @@ updateConfig({
     Footer: '@nebari/starlight/components/Footer.astro',
     ...(config.components ?? {}),
   },
+  social: [
+    { icon: 'github', label: 'GitHub', href: 'https://github.com/nebari-dev' },
+    ...(config.social ?? []),
+  ],
 });
 ```
 
@@ -1104,7 +1101,7 @@ git tag v0.1.0
 - Theme CSS mapping (accent/gray/text/bg, light+dark): Task 4. Covered.
 - Self-hosted fonts: Task 5. Covered.
 - Logos + favicon: Task 6. Covered.
-- Config defaults (social): set in the plugin via `updateConfig`; `social` wiring should be added in Task 6's `updateConfig` block using `options.githubUrl` (note for implementer: include `social: [{ icon: 'github', label: 'GitHub', href: githubUrl }, ...(config.social ?? [])]`). Covered with this note.
+- Config defaults (social): set in the plugin's `updateConfig` in Task 6 Step 7 (GitHub link merged ahead of the consumer's `config.social`). Covered.
 - Minimal component overrides: Task 6 (SiteTitle/Head/Footer - Head/SiteTitle justified by favicon/logo needs). Covered.
 - Subpath/base docs + verification: Task 8 + README (Task 9). Covered.
 - Demo site / dogfood: Task 2. Covered.
@@ -1115,7 +1112,7 @@ git tag v0.1.0
 
 **3. Type consistency:** `nebari(options?: NebariThemeOptions)` and `name: '@nebari/starlight'` are consistent across Tasks 1, 4, 6. `transformTokens` signature consistent between Task 3 implementation and test. `customCss` array order is preserved and extended consistently across Tasks 4-6. Component override keys (`SiteTitle`, `Head`, `Footer`) match the files created in Task 6.
 
-**Gap fixed inline:** Task 6 originally omitted the `social` default from the spec; added an implementer note in Step 7 / Self-Review to set it in the same `updateConfig` call.
+**Gap fixed inline:** Task 6 Step 7 now sets the `social` default directly (the spec's config-defaults requirement), and the `nebari()` signature takes no options for v1 (avoids an unused-variable error across tasks under the strict tsconfig).
 
 ## Journeys
 
