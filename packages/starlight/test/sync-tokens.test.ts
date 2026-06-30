@@ -25,3 +25,22 @@ test('maps light tokens to :root and dark tokens to data-theme dark', () => {
   expect(out).toMatch(/:root,\s*:root\[data-theme='light'\]\s*\{[^}]*--nbr-background: oklch\(1 0 0\)/);
   expect(out).toMatch(/:root\[data-theme='dark'\]\s*\{[^}]*--nbr-background: oklch\(0\.1743/);
 });
+
+const VAR_CHAIN_SAMPLE = `
+:root {
+  --zinc-50: oklch(1 0 0);
+  --background: var(--zinc-50);
+}
+.dark {
+  --zinc-950: oklch(0.2 0 0);
+  --background: var(--zinc-950);
+}
+`;
+
+test('namespaces var() references so semantic tokens resolve', () => {
+  const out = transformTokens(VAR_CHAIN_SAMPLE);
+  expect(out).toContain('--nbr-background: var(--nbr-zinc-50)');
+  expect(out).toContain('--nbr-background: var(--nbr-zinc-950)');
+  expect(out).not.toContain('var(--zinc-50)');
+  expect(out).not.toContain('var(--zinc-950)');
+});

@@ -136,63 +136,63 @@
 
 --nbr-radius: 0.625rem;
 
-  --nbr-background: var(--zinc-50);
-  --nbr-foreground: var(--zinc-950);
+  --nbr-background: var(--nbr-zinc-50);
+  --nbr-foreground: var(--nbr-zinc-950);
 
-  --nbr-card: var(--white);
-  --nbr-card-foreground: var(--zinc-950);
+  --nbr-card: var(--nbr-white);
+  --nbr-card-foreground: var(--nbr-zinc-950);
 
-  --nbr-popover: var(--white);
-  --nbr-popover-foreground: var(--zinc-950);
+  --nbr-popover: var(--nbr-white);
+  --nbr-popover-foreground: var(--nbr-zinc-950);
 
-  --nbr-primary: var(--primary-magenta-600);
-  --nbr-primary-foreground: var(--white);
+  --nbr-primary: var(--nbr-primary-magenta-600);
+  --nbr-primary-foreground: var(--nbr-white);
   /* Figma color/background/primary-hover — hover/pressed fill. */
-  --nbr-primary-hover: var(--primary-magenta-700);
+  --nbr-primary-hover: var(--nbr-primary-magenta-700);
 
-  --nbr-secondary: var(--neutral-100);
-  --nbr-secondary-foreground: var(--neutral-900);
+  --nbr-secondary: var(--nbr-neutral-100);
+  --nbr-secondary-foreground: var(--nbr-neutral-900);
 
-  --nbr-muted: var(--zinc-100);
-  --nbr-muted-foreground: var(--zinc-600);
+  --nbr-muted: var(--nbr-zinc-100);
+  --nbr-muted-foreground: var(--nbr-zinc-600);
   /* Figma color/foreground/muted-strong — pressed interactive text. */
-  --nbr-muted-foreground-strong: var(--zinc-700);
+  --nbr-muted-foreground-strong: var(--nbr-zinc-700);
 
-  --nbr-accent: var(--neutral-100);
-  --nbr-accent-foreground: var(--neutral-900);
+  --nbr-accent: var(--nbr-neutral-100);
+  --nbr-accent-foreground: var(--nbr-neutral-900);
 
   /* Feedback pairs: a soft background fill + a strong foreground for text and
    * borders. Mirrors Figma's color/background/* and color/foreground/* roles. */
-  --nbr-destructive: var(--red-100);
-  --nbr-destructive-foreground: var(--red-600);
+  --nbr-destructive: var(--nbr-red-100);
+  --nbr-destructive-foreground: var(--nbr-red-600);
 
-  --nbr-warning: var(--yellow-100);
-  --nbr-warning-foreground: var(--yellow-700);
+  --nbr-warning: var(--nbr-yellow-100);
+  --nbr-warning-foreground: var(--nbr-yellow-700);
 
-  --nbr-success: var(--green-100);
-  --nbr-success-foreground: var(--green-700);
+  --nbr-success: var(--nbr-green-100);
+  --nbr-success-foreground: var(--nbr-green-700);
 
-  --nbr-border: var(--zinc-300);
-  --nbr-input: var(--zinc-400);
+  --nbr-border: var(--nbr-zinc-300);
+  --nbr-input: var(--nbr-zinc-400);
   /* Figma color/border/strong — a stronger, more visible border than the
    * default (used by the Badge outline variant). */
-  --nbr-border-strong: var(--zinc-500);
-  --nbr-ring: var(--primary-magenta-500);
+  --nbr-border-strong: var(--nbr-zinc-500);
+  --nbr-ring: var(--nbr-primary-magenta-500);
 
-  --nbr-chart-1: var(--primary-magenta-500);
-  --nbr-chart-2: var(--accent-teal-500);
-  --nbr-chart-3: var(--highlight-yellow-400);
-  --nbr-chart-4: var(--blue-500);
-  --nbr-chart-5: var(--green-500);
+  --nbr-chart-1: var(--nbr-primary-magenta-500);
+  --nbr-chart-2: var(--nbr-accent-teal-500);
+  --nbr-chart-3: var(--nbr-highlight-yellow-400);
+  --nbr-chart-4: var(--nbr-blue-500);
+  --nbr-chart-5: var(--nbr-green-500);
 
-  --nbr-sidebar: var(--zinc-50);
-  --nbr-sidebar-foreground: var(--zinc-950);
-  --nbr-sidebar-primary: var(--primary-magenta-600);
-  --nbr-sidebar-primary-foreground: var(--white);
-  --nbr-sidebar-accent: var(--neutral-100);
-  --nbr-sidebar-accent-foreground: var(--neutral-900);
-  --nbr-sidebar-border: var(--zinc-300);
-  --nbr-sidebar-ring: var(--primary-magenta-500);
+  --nbr-sidebar: var(--nbr-zinc-50);
+  --nbr-sidebar-foreground: var(--nbr-zinc-950);
+  --nbr-sidebar-primary: var(--nbr-primary-magenta-600);
+  --nbr-sidebar-primary-foreground: var(--nbr-white);
+  --nbr-sidebar-accent: var(--nbr-neutral-100);
+  --nbr-sidebar-accent-foreground: var(--nbr-neutral-900);
+  --nbr-sidebar-border: var(--nbr-zinc-300);
+  --nbr-sidebar-ring: var(--nbr-primary-magenta-500);
 
   /* Motion tokens */
   --nbr-duration-fast: 100ms;
@@ -203,55 +203,55 @@
 }
 
 :root[data-theme='dark'] {
---nbr-background: var(--zinc-950);
-  --nbr-foreground: var(--zinc-50);
+--nbr-background: var(--nbr-zinc-950);
+  --nbr-foreground: var(--nbr-zinc-50);
 
-  --nbr-card: var(--zinc-900);
-  --nbr-card-foreground: var(--zinc-50);
+  --nbr-card: var(--nbr-zinc-900);
+  --nbr-card-foreground: var(--nbr-zinc-50);
 
-  --nbr-popover: var(--zinc-950);
-  --nbr-popover-foreground: var(--zinc-50);
+  --nbr-popover: var(--nbr-zinc-950);
+  --nbr-popover-foreground: var(--nbr-zinc-50);
 
-  --nbr-primary: var(--primary-magenta-500);
-  --nbr-primary-foreground: var(--black);
-  --nbr-primary-hover: var(--primary-magenta-400);
+  --nbr-primary: var(--nbr-primary-magenta-500);
+  --nbr-primary-foreground: var(--nbr-black);
+  --nbr-primary-hover: var(--nbr-primary-magenta-400);
 
-  --nbr-secondary: var(--neutral-800);
-  --nbr-secondary-foreground: var(--neutral-100);
+  --nbr-secondary: var(--nbr-neutral-800);
+  --nbr-secondary-foreground: var(--nbr-neutral-100);
 
-  --nbr-muted: var(--zinc-900);
-  --nbr-muted-foreground: var(--zinc-400);
-  --nbr-muted-foreground-strong: var(--zinc-300);
+  --nbr-muted: var(--nbr-zinc-900);
+  --nbr-muted-foreground: var(--nbr-zinc-400);
+  --nbr-muted-foreground-strong: var(--nbr-zinc-300);
 
-  --nbr-accent: var(--neutral-800);
-  --nbr-accent-foreground: var(--neutral-100);
+  --nbr-accent: var(--nbr-neutral-800);
+  --nbr-accent-foreground: var(--nbr-neutral-100);
 
-  --nbr-destructive: var(--red-900);
-  --nbr-destructive-foreground: var(--red-300);
+  --nbr-destructive: var(--nbr-red-900);
+  --nbr-destructive-foreground: var(--nbr-red-300);
 
-  --nbr-warning: var(--yellow-900);
-  --nbr-warning-foreground: var(--yellow-200);
+  --nbr-warning: var(--nbr-yellow-900);
+  --nbr-warning-foreground: var(--nbr-yellow-200);
 
-  --nbr-success: var(--green-900);
-  --nbr-success-foreground: var(--green-200);
+  --nbr-success: var(--nbr-green-900);
+  --nbr-success-foreground: var(--nbr-green-200);
 
-  --nbr-border: var(--zinc-700);
-  --nbr-input: var(--zinc-600);
-  --nbr-border-strong: var(--zinc-500);
-  --nbr-ring: var(--primary-magenta-400);
+  --nbr-border: var(--nbr-zinc-700);
+  --nbr-input: var(--nbr-zinc-600);
+  --nbr-border-strong: var(--nbr-zinc-500);
+  --nbr-ring: var(--nbr-primary-magenta-400);
 
-  --nbr-chart-1: var(--primary-magenta-400);
-  --nbr-chart-2: var(--accent-teal-400);
-  --nbr-chart-3: var(--highlight-yellow-300);
-  --nbr-chart-4: var(--blue-400);
-  --nbr-chart-5: var(--green-400);
+  --nbr-chart-1: var(--nbr-primary-magenta-400);
+  --nbr-chart-2: var(--nbr-accent-teal-400);
+  --nbr-chart-3: var(--nbr-highlight-yellow-300);
+  --nbr-chart-4: var(--nbr-blue-400);
+  --nbr-chart-5: var(--nbr-green-400);
 
-  --nbr-sidebar: var(--zinc-950);
-  --nbr-sidebar-foreground: var(--zinc-50);
-  --nbr-sidebar-primary: var(--primary-magenta-500);
-  --nbr-sidebar-primary-foreground: var(--black);
-  --nbr-sidebar-accent: var(--neutral-800);
-  --nbr-sidebar-accent-foreground: var(--neutral-100);
-  --nbr-sidebar-border: var(--zinc-700);
-  --nbr-sidebar-ring: var(--primary-magenta-400);
+  --nbr-sidebar: var(--nbr-zinc-950);
+  --nbr-sidebar-foreground: var(--nbr-zinc-50);
+  --nbr-sidebar-primary: var(--nbr-primary-magenta-500);
+  --nbr-sidebar-primary-foreground: var(--nbr-black);
+  --nbr-sidebar-accent: var(--nbr-neutral-800);
+  --nbr-sidebar-accent-foreground: var(--nbr-neutral-100);
+  --nbr-sidebar-border: var(--nbr-zinc-700);
+  --nbr-sidebar-ring: var(--nbr-primary-magenta-400);
 }
