@@ -5,11 +5,16 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.33.0",
     "@nebari/starlight": "workspace:*",
     "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
+    "@playwright/test": "^1.61.1"
   }
 }
