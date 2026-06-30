@@ -6,17 +6,21 @@ import { $ } from 'bun';
 
 const DIST = join(import.meta.dir, '../../../docs/dist');
 
-function allText(ext: string): string {
+function allFiles(ext: string): string[] {
   const out: string[] = [];
   const walk = (dir: string) => {
     for (const e of readdirSync(dir, { withFileTypes: true })) {
       const p = join(dir, e.name);
       if (e.isDirectory()) walk(p);
-      else if (e.name.endsWith(ext)) out.push(readFileSync(p, 'utf8'));
+      else if (e.name.endsWith(ext)) out.push(p);
     }
   };
   walk(DIST);
-  return out.join('\n');
+  return out;
+}
+
+function allText(ext: string): string {
+  return allFiles(ext).map((p) => readFileSync(p, 'utf8')).join('\n');
 }
 
 beforeAll(async () => {
@@ -50,14 +54,6 @@ test('fonts are self-hosted, no external font host', () => {
 });
 
 test('woff2 files are emitted into the build', () => {
-  const fonts: string[] = [];
-  const walk = (dir: string) => {
-    for (const e of readdirSync(dir, { withFileTypes: true })) {
-      const p = join(dir, e.name);
-      if (e.isDirectory()) walk(p);
-      else if (e.name.endsWith('.woff2')) fonts.push(p);
-    }
-  };
-  walk(DIST);
+  const fonts = allFiles('.woff2');
   expect(fonts.length).toBeGreaterThan(0);
 });
