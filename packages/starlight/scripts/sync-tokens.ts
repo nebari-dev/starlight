@@ -50,10 +50,10 @@ function extractAllBlocks(css: string, selector: string): string {
 }
 
 function namespaceDecls(decls: string): string {
-  // Rename leading --foo: to --nbr-foo:
-  const withPrefixedDecls = decls.replace(/(^|\n)(\s*)--([a-zA-Z0-9-]+)\s*:/g, '$1$2--nbr-$3:');
-  // Also namespace every var(--foo) reference so semantic tokens resolve.
-  return withPrefixedDecls.replace(/var\(\s*--([A-Za-z0-9-]+)\s*\)/g, 'var(--nbr-$1)');
+  // Rename leading --foo: to --nbr-foo: (skip already-prefixed --nbr-* tokens)
+  const withPrefixedDecls = decls.replace(/(^|\n)(\s*)--(?!nbr-)([a-zA-Z0-9-]+)\s*:/g, '$1$2--nbr-$3:');
+  // Also namespace every var(--foo) reference so semantic tokens resolve (skip already-prefixed).
+  return withPrefixedDecls.replace(/var\(\s*--(?!nbr-)([A-Za-z0-9-]+)\s*\)/g, 'var(--nbr-$1)');
 }
 
 export function transformTokens(globalsCss: string): string {

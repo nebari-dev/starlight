@@ -44,3 +44,16 @@ test('namespaces var() references so semantic tokens resolve', () => {
   expect(out).not.toContain('var(--zinc-50)');
   expect(out).not.toContain('var(--zinc-950)');
 });
+
+const ALREADY_NAMESPACED_SAMPLE = `
+:root { --nbr-existing: oklch(1 0 0); --background: var(--nbr-existing); }
+.dark { --nbr-existing: oklch(0.2 0 0); --background: var(--nbr-existing); }
+`;
+
+test('does not double-prefix already-namespaced tokens (idempotent)', () => {
+  const out = transformTokens(ALREADY_NAMESPACED_SAMPLE);
+  expect(out).toContain('--nbr-existing:');
+  expect(out).toContain('var(--nbr-existing)');
+  expect(out).not.toContain('--nbr-nbr-existing');
+  expect(out).not.toContain('var(--nbr-nbr-existing)');
+});
