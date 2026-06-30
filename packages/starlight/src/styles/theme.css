@@ -1,0 +1,28 @@
+/* packages/starlight/src/styles/theme.css
+ * Maps vendored --nbr-* tokens onto Starlight's --sl-* theme variables.
+ * Theme-agnostic at :root because --nbr-* is already scoped per theme in
+ * nebari-tokens.css. Gray ramp is derived from the neutral fg/bg with
+ * color-mix so it tracks whichever theme is active.
+ */
+:root {
+  --sl-color-accent-low: color-mix(in oklab, var(--nbr-primary), var(--nbr-background) 80%);
+  --sl-color-accent: var(--nbr-primary);
+  --sl-color-accent-high: color-mix(in oklab, var(--nbr-primary), var(--nbr-foreground) 35%);
+
+  --sl-color-text: var(--nbr-foreground);
+  --sl-color-text-accent: var(--nbr-primary);
+  --sl-color-bg: var(--nbr-background);
+  --sl-color-bg-nav: var(--nbr-card);
+  --sl-color-bg-sidebar: var(--nbr-card);
+
+  /* Neutral gray ramp tied to nebari fg/bg. */
+  --sl-color-gray-1: color-mix(in oklab, var(--nbr-foreground), var(--nbr-background) 10%);
+  --sl-color-gray-2: color-mix(in oklab, var(--nbr-foreground), var(--nbr-background) 30%);
+  --sl-color-gray-3: color-mix(in oklab, var(--nbr-foreground), var(--nbr-background) 50%);
+  --sl-color-gray-4: var(--nbr-muted-foreground);
+  --sl-color-gray-5: color-mix(in oklab, var(--nbr-foreground), var(--nbr-background) 80%);
+  --sl-color-gray-6: var(--nbr-border);
+  --sl-color-gray-7: color-mix(in oklab, var(--nbr-foreground), var(--nbr-background) 96%);
+
+  --sl-color-hairline: var(--nbr-border);
+}

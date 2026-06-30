@@ -4,8 +4,14 @@ export function nebari(): StarlightPlugin {
   return {
     name: '@nebari/starlight',
     hooks: {
-      'config:setup'() {
-        // Wiring added in later tasks.
+      'config:setup'({ config, updateConfig }) {
+        updateConfig({
+          customCss: [
+            '@nebari/starlight/styles/nebari-tokens.css',
+            '@nebari/starlight/styles/theme.css',
+            ...(config.customCss ?? []),
+          ],
+        });
       },
     },
   };
