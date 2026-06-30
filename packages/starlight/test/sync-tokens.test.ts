@@ -1,0 +1,27 @@
+// packages/starlight/test/sync-tokens.test.ts
+import { test, expect } from 'bun:test';
+import { transformTokens } from '../scripts/sync-tokens.ts';
+
+const SAMPLE = `
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --primary: oklch(0.5809 0.2683 319.62);
+}
+.dark {
+  --background: oklch(0.1743 0.0105 276.35);
+  --primary: oklch(0.6809 0.2483 319.62);
+}
+`;
+
+test('namespaces custom properties to --nbr-*', () => {
+  const out = transformTokens(SAMPLE);
+  expect(out).toContain('--nbr-primary: oklch(0.5809 0.2683 319.62)');
+  expect(out).not.toMatch(/(^|[^-])--primary:/);
+});
+
+test('maps light tokens to :root and dark tokens to data-theme dark', () => {
+  const out = transformTokens(SAMPLE);
+  expect(out).toMatch(/:root,\s*:root\[data-theme='light'\]\s*\{[^}]*--nbr-background: oklch\(1 0 0\)/);
+  expect(out).toMatch(/:root\[data-theme='dark'\]\s*\{[^}]*--nbr-background: oklch\(0\.1743/);
+});
