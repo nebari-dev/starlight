@@ -28,10 +28,12 @@ beforeAll(async () => {
   await $`bun run build`.cwd(join(import.meta.dir, '../../../docs'));
 }, 120_000);
 
-test('compiled CSS maps Starlight accent and grays onto nebari tokens', () => {
+test('compiled CSS maps Starlight accent onto nebari tokens (grays deferred to Starlight)', () => {
   const css = allText('.css');
   expect(css).toMatch(/--sl-color-accent:\s*var\(--nbr-primary\)/);
-  expect(css).toMatch(/--sl-color-gray-1:\s*color-mix/);
+  // Grays are intentionally NOT overridden (Starlight's are WCAG-tuned), so we do
+  // not assert a --sl-color-gray-* mapping. The light-mode accent cascade fix is
+  // regression-tested in the demo e2e (light-mode accent = Nebari magenta).
   // A namespaced primitive carries a literal oklch value
   expect(css).toMatch(/--nbr-zinc-50:\s*oklch/);
   // Semantic token resolves through the namespace (not a literal oklch)

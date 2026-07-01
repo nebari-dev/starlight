@@ -1,10 +1,15 @@
 /* packages/starlight/src/styles/theme.css
  * Maps vendored --nbr-* tokens onto Starlight's --sl-* theme variables.
- * Theme-agnostic at :root because --nbr-* is already scoped per theme in
- * nebari-tokens.css. Gray ramp is derived from the neutral fg/bg with
- * color-mix so it tracks whichever theme is active.
+ * The --nbr-* tokens are already scoped per theme in nebari-tokens.css, but we
+ * MUST list the [data-theme] selectors explicitly here: Starlight defines its
+ * color vars under :root[data-theme='light'] / :root[data-theme='dark']
+ * (specificity 0,1,1), so a plain :root mapping (0,1,0) loses in light/dark
+ * mode and Starlight's default blue wins. Matching those selectors (and loading
+ * later via customCss) makes the Nebari mapping win.
  */
-:root {
+:root,
+:root[data-theme='light'],
+:root[data-theme='dark'] {
   --sl-color-accent-low: color-mix(in oklab, var(--nbr-primary), var(--nbr-background) 80%);
   --sl-color-accent: var(--nbr-primary);
   --sl-color-accent-high: color-mix(in oklab, var(--nbr-primary), var(--nbr-foreground) 35%);
@@ -12,19 +17,12 @@
   --sl-color-text: var(--nbr-foreground);
   --sl-color-text-accent: var(--nbr-primary);
   --sl-color-bg: var(--nbr-background);
-  --sl-color-bg-nav: var(--nbr-card);
-  --sl-color-bg-sidebar: var(--nbr-card); /* intentional: --nbr-card gives a lighter sidebar in both light and dark themes; --nbr-sidebar exists but is darker */
 
-  /* Neutral gray ramp tied to nebari fg/bg. */
-  --sl-color-gray-1: color-mix(in oklab, var(--nbr-foreground), var(--nbr-background) 10%);
-  --sl-color-gray-2: color-mix(in oklab, var(--nbr-foreground), var(--nbr-background) 30%);
-  --sl-color-gray-3: color-mix(in oklab, var(--nbr-foreground), var(--nbr-background) 50%);
-  --sl-color-gray-4: var(--nbr-muted-foreground);
-  --sl-color-gray-5: color-mix(in oklab, var(--nbr-foreground), var(--nbr-background) 80%);
-  --sl-color-gray-6: var(--nbr-border);
-  --sl-color-gray-7: color-mix(in oklab, var(--nbr-foreground), var(--nbr-background) 96%);
-
-  --sl-color-hairline: var(--nbr-border);
+  /* Grays, borders, and nav/sidebar backgrounds are intentionally NOT overridden.
+   * Starlight's gray scale is tuned for WCAG contrast; mapping the Nebari neutral
+   * ramp onto it produced insufficient-contrast muted text in light mode (axe
+   * color-contrast failures). We keep only the brand-defining accent + fg/bg +
+   * fonts and let Starlight's contrast-safe neutrals stand. */
 
   --sl-font: 'Atkinson Hyperlegible', ui-sans-serif, system-ui, sans-serif;
   --sl-font-mono: 'Fira Code', ui-monospace, monospace;

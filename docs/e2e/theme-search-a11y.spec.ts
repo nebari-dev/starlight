@@ -24,6 +24,29 @@ test('theme toggle switches data-theme to dark', async ({ page }) => {
   expect(accent.length).toBeGreaterThan(0);
 });
 
+test('light-mode accent is the Nebari magenta, not Starlight default blue', async ({ page }) => {
+  // Regression: theme.css mapped --sl-color-* under plain :root (0,1,0), which lost
+  // to Starlight's :root[data-theme='light'] (0,1,1), so light-mode links rendered
+  // Starlight's default blue instead of the Nebari magenta. The fix lists the
+  // [data-theme] selectors so the Nebari mapping wins.
+  await page.goto('/');
+  const select = page.locator(THEME_SELECT).first();
+  await select.selectOption('light');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+
+  const link = page.locator('.sl-markdown-content a').first();
+  await expect(link).toBeVisible();
+  const color = await link.evaluate((el) => getComputedStyle(el).color);
+  const nums = (color.match(/[\d.]+/g) || []).map(Number);
+  // Chromium returns the accent in its authored space. Nebari magenta is
+  // oklch hue ~311 (or rgb red ~149); Starlight's default blue is oklch hue
+  // ~264 (or rgb red ~61).
+  const isNebariMagenta = /^oklch/i.test(color)
+    ? nums[2] > 290 && nums[2] < 340
+    : nums[0] > 100;
+  expect(isNebariMagenta, `content link color was ${color}; expected Nebari magenta, not Starlight default blue`).toBe(true);
+});
+
 test('search returns the seeded token', async ({ page }) => {
   await page.goto('/');
 
