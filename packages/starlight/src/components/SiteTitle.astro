@@ -1,7 +1,8 @@
 ---
 import logoLight from '../assets/nebari-horizontal-light.svg?url';
 import logoDark from '../assets/nebari-horizontal-dark.svg?url';
-const href = import.meta.env.BASE_URL;
+import { logoHref } from 'virtual:nebari/config';
+const href = logoHref ?? import.meta.env.BASE_URL;
 ---
 <a href={href} class="nbr-site-title">
   <img src={logoLight} alt="Nebari" class="nbr-logo nbr-logo--light" height="44" />
