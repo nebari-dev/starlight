@@ -1,6 +1,6 @@
 {
   "name": "@nebari/starlight",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "type": "module",
   "license": "Apache-2.0",
   "description": "Shared Starlight theme plugin for Nebari documentation sites.",
@@ -8,7 +8,7 @@
   "homepage": "https://github.com/nebari-dev/starlight#readme",
   "repository": { "type": "git", "url": "git+https://github.com/nebari-dev/starlight.git", "directory": "packages/starlight" },
   "publishConfig": { "access": "public" },
-  "files": ["dist", "src/styles", "src/fonts", "src/assets", "src/components"],
+  "files": ["dist", "src/styles", "src/fonts", "src/assets", "src/components", "src/virtual.d.ts"],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

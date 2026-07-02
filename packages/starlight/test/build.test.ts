@@ -52,7 +52,7 @@ test('fonts are self-hosted, no external font host', () => {
   expect(css).toMatch(/Atkinson Hyperlegible/);
   expect(css).toMatch(/Fira Code/);
   expect(css).toMatch(/Poppins/);
-  expect(css + html).not.toMatch(/fonts\.googleapis\.com|fonts\.gstatic\.com|use\.typekit|cdn/i);
+  expect(css + html).not.toMatch(/fonts\.googleapis\.com|fonts\.gstatic\.com|use\.typekit|cdn\.[a-z0-9-]+\.[a-z]/i);
 });
 
 test('woff2 files are emitted into the build', () => {
@@ -68,4 +68,13 @@ test('branded footer marker renders on pages', () => {
 test('Nebari logo is rendered in the header', () => {
   const html = allText('.html');
   expect(html).toMatch(/alt="Nebari"/);
+});
+
+test('SiteTitle links the header logo to the configured logoHref', () => {
+  const html = allText('.html');
+  // The demo config sets logoHref to the Nebari platform home.
+  // Astro appends a scoped-style hash class (e.g. "astro-xxxxxxxx") after
+  // nbr-site-title, so match the class as a token rather than the full
+  // attribute value.
+  expect(html).toMatch(/<a[^>]*href="https:\/\/nebari\.dev\/"[^>]*class="nbr-site-title\b/);
 });

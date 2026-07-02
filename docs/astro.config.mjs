@@ -6,7 +6,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Nebari Starlight',
-      plugins: [nebari()],
+      plugins: [nebari({ logoHref: 'https://nebari.dev/' })],
     }),
   ],
 });
