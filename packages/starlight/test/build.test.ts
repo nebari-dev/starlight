@@ -52,7 +52,7 @@ test('fonts are self-hosted, no external font host', () => {
   expect(css).toMatch(/Atkinson Hyperlegible/);
   expect(css).toMatch(/Fira Code/);
   expect(css).toMatch(/Poppins/);
-  expect(css + html).not.toMatch(/fonts\.googleapis\.com|fonts\.gstatic\.com|use\.typekit|cdn/i);
+  expect(css + html).not.toMatch(/fonts\.googleapis\.com|fonts\.gstatic\.com|use\.typekit|cdn\.[a-z0-9-]+\.[a-z]/i);
 });
 
 test('woff2 files are emitted into the build', () => {

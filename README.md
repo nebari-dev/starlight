@@ -54,6 +54,15 @@ export default defineConfig({
 });
 ```
 
+### Pointing the logo at the portal
+
+By default the header logo links to the site's own base. On the Nebari portal,
+point it at the portal root so it returns users to the pack catalog:
+
+```js
+starlight({ plugins: [nebari({ logoHref: 'https://packs.nebari.dev/' })] })
+```
+
 ## What you get
 
 - **Brand colors** - nebari-design's OKLCH tokens mapped onto Starlight's theme
