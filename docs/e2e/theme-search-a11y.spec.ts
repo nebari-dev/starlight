@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { expect, test } from '@playwright/test';
 
 // The theme select is rendered as <starlight-theme-select><label><select>...</select></label></starlight-theme-select>
 // There are two instances in the DOM (desktop header + mobile sidebar); the first is the desktop one.
@@ -24,7 +24,9 @@ test('theme toggle switches data-theme to dark', async ({ page }) => {
   expect(accent.length).toBeGreaterThan(0);
 });
 
-test('light-mode accent is the Nebari magenta, not Starlight default blue', async ({ page }) => {
+test('light-mode accent is the Nebari magenta, not Starlight default blue', async ({
+  page,
+}) => {
   // Regression: theme.css mapped --sl-color-* under plain :root (0,1,0), which lost
   // to Starlight's :root[data-theme='light'] (0,1,1), so light-mode links rendered
   // Starlight's default blue instead of the Nebari magenta. The fix lists the
@@ -44,7 +46,10 @@ test('light-mode accent is the Nebari magenta, not Starlight default blue', asyn
   const isNebariMagenta = /^oklch/i.test(color)
     ? nums[2] > 290 && nums[2] < 340
     : nums[0] > 100;
-  expect(isNebariMagenta, `content link color was ${color}; expected Nebari magenta, not Starlight default blue`).toBe(true);
+  expect(
+    isNebariMagenta,
+    `content link color was ${color}; expected Nebari magenta, not Starlight default blue`,
+  ).toBe(true);
 });
 
 test('search returns the seeded token', async ({ page }) => {
@@ -55,17 +60,21 @@ test('search returns the seeded token', async ({ page }) => {
 
   // The Pagefind UI renders its input with class pagefind-ui__search-input inside #starlight__search.
   // Fall back to any input inside the dialog if the class is not present.
-  const searchInput = page.locator(
-    '#starlight__search input, dialog input.pagefind-ui__search-input',
-  ).first();
+  const searchInput = page
+    .locator('#starlight__search input, dialog input.pagefind-ui__search-input')
+    .first();
 
   await searchInput.waitFor({ state: 'visible', timeout: 10_000 });
   await searchInput.fill('pagefind-probe-token');
 
-  await expect(page.locator('text=Sample content').first()).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator('text=Sample content').first()).toBeVisible({
+    timeout: 15_000,
+  });
 });
 
-test('home and sample page have no serious/critical a11y violations', async ({ page }) => {
+test('home and sample page have no serious/critical a11y violations', async ({
+  page,
+}) => {
   for (const path of ['/', '/sample/']) {
     await page.goto(path);
     const results = await new AxeBuilder({ page })

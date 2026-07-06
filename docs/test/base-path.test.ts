@@ -1,4 +1,4 @@
-import { test, expect, beforeAll, setDefaultTimeout } from 'bun:test';
+import { beforeAll, expect, setDefaultTimeout, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { $ } from 'bun';
@@ -9,7 +9,9 @@ setDefaultTimeout(180_000);
 const HOME = join(import.meta.dir, '../dist/index.html');
 
 beforeAll(async () => {
-  await $`bun run --filter '@nebari/starlight' build`.cwd(join(import.meta.dir, '../..'));
+  await $`bun run --filter '@nebari/starlight' build`.cwd(
+    join(import.meta.dir, '../..'),
+  );
   await $`bun run build:base`.cwd(join(import.meta.dir, '..'));
 });
 

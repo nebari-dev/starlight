@@ -1,5 +1,5 @@
 // packages/starlight/test/sync-tokens.test.ts
-import { test, expect } from 'bun:test';
+import { expect, test } from 'bun:test';
 import { transformTokens } from '../scripts/sync-tokens.ts';
 
 const SAMPLE = `
@@ -22,8 +22,12 @@ test('namespaces custom properties to --nbr-*', () => {
 
 test('maps light tokens to :root and dark tokens to data-theme dark', () => {
   const out = transformTokens(SAMPLE);
-  expect(out).toMatch(/:root,\s*:root\[data-theme='light'\]\s*\{[^}]*--nbr-background: oklch\(1 0 0\)/);
-  expect(out).toMatch(/:root\[data-theme='dark'\]\s*\{[^}]*--nbr-background: oklch\(0\.1743/);
+  expect(out).toMatch(
+    /:root,\s*:root\[data-theme='light'\]\s*\{[^}]*--nbr-background: oklch\(1 0 0\)/,
+  );
+  expect(out).toMatch(
+    /:root\[data-theme='dark'\]\s*\{[^}]*--nbr-background: oklch\(0\.1743/,
+  );
 });
 
 const VAR_CHAIN_SAMPLE = `

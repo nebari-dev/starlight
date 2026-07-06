@@ -24,7 +24,8 @@ function nebariConfigIntegration(logoHref: string | null): AstroIntegration {
               {
                 name: '@nebari/starlight/virtual-config',
                 resolveId(id: string) {
-                  if (id === 'virtual:nebari/config') return '\0virtual:nebari/config';
+                  if (id === 'virtual:nebari/config')
+                    return '\0virtual:nebari/config';
                   return undefined;
                 },
                 load(id: string) {
@@ -62,7 +63,11 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
             ...(config.components ?? {}),
           },
           social: [
-            { icon: 'github', label: 'GitHub', href: 'https://github.com/nebari-dev' },
+            {
+              icon: 'github',
+              label: 'GitHub',
+              href: 'https://github.com/nebari-dev',
+            },
             ...(config.social ?? []),
           ],
         });

@@ -108,6 +108,39 @@ Run the test suite (builds the package and docs, then runs the tests):
 bun test
 ```
 
+### Linting and formatting
+
+[Biome](https://biomejs.dev) handles both formatting and linting (including
+import sorting) from a single `biome.json` at the repo root:
+
+```sh
+bun run check        # lint + format check, no writes
+bun run check:fix    # lint + format and apply safe fixes
+bun run lint         # lint only
+bun run lint:fix     # lint and apply safe fixes
+bun run format       # format check only, no writes
+bun run format:fix   # format and write changes in place
+bun run ci           # biome ci — what CI runs
+```
+
+CI runs `bun run ci` (`biome ci`) and fails the build on any violation, so run
+`bun run check` before pushing.
+
+For editor integration, install the
+[Biome VS Code extension](https://marketplace.visualstudio.com/items?itemName=biomejs.biome)
+and set it as the default formatter with format-on-save:
+
+```jsonc
+// .vscode/settings.json
+{
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "explicit"
+  }
+}
+```
+
 ## Tokens
 
 Color tokens are vendored from nebari-design's `registry/nebari/globals.css`
