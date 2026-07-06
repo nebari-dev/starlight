@@ -78,6 +78,36 @@ starlight({ plugins: [nebari({ logoHref: 'https://packs.nebari.dev/' })] })
 Everything is overridable: your own `customCss`, `components`, and `social`
 entries are merged after the theme's, so a consumer always wins.
 
+## Local development
+
+This repo is a [Bun](https://bun.sh) workspace monorepo: the `@nebari/starlight`
+theme lives in `packages/starlight`, and `docs/` is an example Starlight site
+that consumes it for previewing changes.
+
+Install dependencies for every workspace from the repo root:
+
+```sh
+bun install
+```
+
+Preview the theme against the docs site with hot reload:
+
+```sh
+bun run dev
+```
+
+Build the theme package (compiles `src/` to `dist/` with tsup):
+
+```sh
+bun run build
+```
+
+Run the test suite (builds the package and docs, then runs the tests):
+
+```sh
+bun test
+```
+
 ## Tokens
 
 Color tokens are vendored from nebari-design's `registry/nebari/globals.css`

@@ -4,6 +4,7 @@
   "type": "module",
   "workspaces": ["packages/*", "docs"],
   "scripts": {
+    "dev": "bun run --filter '@nebari/starlight-docs' dev",
     "build": "bun run --filter '@nebari/starlight' build",
     "test": "bun test packages/starlight/test",
     "sync-tokens": "bun packages/starlight/scripts/sync-tokens.ts"
