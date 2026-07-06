@@ -80,13 +80,11 @@ test('Nebari logo is rendered in the header', () => {
   expect(html).toMatch(/alt="Nebari"/);
 });
 
-test('SiteTitle links the header logo to the configured logoHref', () => {
+test('SiteTitle links the header logo to the site root by default', () => {
   const html = allText('.html');
-  // The demo config sets logoHref to the Nebari platform home.
-  // Astro appends a scoped-style hash class (e.g. "astro-xxxxxxxx") after
-  // nbr-site-title, so match the class as a token rather than the full
-  // attribute value.
-  expect(html).toMatch(
-    /<a[^>]*href="https:\/\/nebari\.dev\/"[^>]*class="nbr-site-title\b/,
-  );
+  // The demo config omits logoHref, so SiteTitle falls back to the site base
+  // (import.meta.env.BASE_URL, i.e. "/"). Astro appends a scoped-style hash
+  // class (e.g. "astro-xxxxxxxx") after nbr-site-title, so match the class as a
+  // token rather than the full attribute value.
+  expect(html).toMatch(/<a[^>]*href="\/"[^>]*class="nbr-site-title\b/);
 });

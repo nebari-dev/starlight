@@ -39,9 +39,12 @@
    * axe note that motivated the original mapping). --nbr-surface-subtle is the
    * Darby `--bg-subtle` analogue, defined per theme below. */
   --sl-color-bg-sidebar: var(--nbr-surface-subtle);
-  --sl-color-bg-nav: var(--nbr-surface-subtle);
+  /* Header sits on the page background (white in light mode) with just a
+   * light-gray hairline beneath it, rather than the tinted surface fill. */
+  --sl-color-bg-nav: var(--nbr-background);
   --sl-color-hairline: var(--nbr-border);
   --sl-color-hairline-light: var(--nbr-border);
+  --sl-color-hairline-shade: var(--nbr-border);
 
   /* ── Layout widths (Darby proportions) ─────────────────────────────────── */
   --sl-content-width: 48rem; /* was 45rem */
