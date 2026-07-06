@@ -200,7 +200,11 @@ div.header site-search button[data-open-modal] {
 .sidebar-content a[aria-current="page"],
 .sidebar-content a[aria-current="page"]:hover,
 .sidebar-content a[aria-current="page"]:focus {
-  color: var(--sl-color-text-accent);
+  /* accent-high (brand mixed toward the foreground) rather than the plain brand:
+   * on the pale accent-low fill the plain brand only hits 4.13:1, below WCAG AA
+   * 4.5:1. accent-high darkens in light mode / lightens in dark mode, clearing AA
+   * in both. */
+  color: var(--sl-color-accent-high);
   background-color: var(--sl-color-accent-low);
   font-weight: 600;
 }
