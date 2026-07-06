@@ -1,5 +1,5 @@
 // packages/starlight/test/skeleton.test.ts
-import { test, expect } from 'bun:test';
+import { expect, test } from 'bun:test';
 import { nebari } from '../src/index.ts';
 
 test('nebari() returns a Starlight plugin object', () => {

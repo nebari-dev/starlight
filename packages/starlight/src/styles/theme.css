@@ -8,11 +8,19 @@
  * later via customCss) makes the Nebari mapping win.
  */
 :root,
-:root[data-theme='light'],
-:root[data-theme='dark'] {
-  --sl-color-accent-low: color-mix(in oklab, var(--nbr-primary), var(--nbr-background) 80%);
+:root[data-theme="light"],
+:root[data-theme="dark"] {
+  --sl-color-accent-low: color-mix(
+    in oklab,
+    var(--nbr-primary),
+    var(--nbr-background) 80%
+  );
   --sl-color-accent: var(--nbr-primary);
-  --sl-color-accent-high: color-mix(in oklab, var(--nbr-primary), var(--nbr-foreground) 35%);
+  --sl-color-accent-high: color-mix(
+    in oklab,
+    var(--nbr-primary),
+    var(--nbr-foreground) 35%
+  );
 
   --sl-color-text: var(--nbr-foreground);
   --sl-color-text-accent: var(--nbr-primary);
@@ -24,12 +32,17 @@
    * color-contrast failures). We keep only the brand-defining accent + fg/bg +
    * fonts and let Starlight's contrast-safe neutrals stand. */
 
-  --sl-font: 'Atkinson Hyperlegible', ui-sans-serif, system-ui, sans-serif;
-  --sl-font-mono: 'Fira Code', ui-monospace, monospace;
-  --nbr-font-heading: 'Poppins', var(--sl-font);
+  --sl-font: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+  --sl-font-mono: "Fira Code", ui-monospace, monospace;
+  --nbr-font-heading: "Poppins", var(--sl-font);
 }
 
-h1, h2, h3, h4, h5, h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
 .sl-markdown-content :is(h1, h2, h3, h4, h5, h6) {
   font-family: var(--nbr-font-heading);
   font-weight: 600;

@@ -30,8 +30,8 @@ function extractAllBlocks(css: string, selector: string): string {
   const selectorRe = new RegExp(`(?:^|\\n)(\\s*)${escaped}\\s*\\{`, 'g');
   const parts: string[] = [];
 
-  let match: RegExpExecArray | null;
-  while ((match = selectorRe.exec(css)) !== null) {
+  let match = selectorRe.exec(css);
+  while (match !== null) {
     // Walk forward from the opening brace to find the matching closing brace.
     const openIdx = match.index + match[0].length - 1; // index of '{'
     let depth = 1;
@@ -44,6 +44,7 @@ function extractAllBlocks(css: string, selector: string): string {
     // The declarations are between openIdx+1 and i-2 (before the closing '}'.
     const body = css.slice(openIdx + 1, i - 1).trim();
     if (body) parts.push(body);
+    match = selectorRe.exec(css);
   }
 
   return parts.join('\n\n');
@@ -51,9 +52,15 @@ function extractAllBlocks(css: string, selector: string): string {
 
 function namespaceDecls(decls: string): string {
   // Rename leading --foo: to --nbr-foo: (skip already-prefixed --nbr-* tokens)
-  const withPrefixedDecls = decls.replace(/(^|\n)(\s*)--(?!nbr-)([a-zA-Z0-9-]+)\s*:/g, '$1$2--nbr-$3:');
+  const withPrefixedDecls = decls.replace(
+    /(^|\n)(\s*)--(?!nbr-)([a-zA-Z0-9-]+)\s*:/g,
+    '$1$2--nbr-$3:',
+  );
   // Also namespace every var(--foo) reference so semantic tokens resolve (skip already-prefixed).
-  return withPrefixedDecls.replace(/var\(\s*--(?!nbr-)([A-Za-z0-9-]+)\s*\)/g, 'var(--nbr-$1)');
+  return withPrefixedDecls.replace(
+    /var\(\s*--(?!nbr-)([A-Za-z0-9-]+)\s*\)/g,
+    'var(--nbr-$1)',
+  );
 }
 
 export function transformTokens(globalsCss: string): string {
