@@ -1,0 +1,50 @@
+---
+/*
+ * Darby-style theme toggle. Replaces Starlight's default <select> theme picker
+ * with a single rounded icon button (sun in light mode, moon in dark mode).
+ *
+ * It keeps the <starlight-theme-select> custom-element tag so Starlight's
+ * ThemeProvider.updatePickers() still resolves it harmlessly (it looks for a
+ * <select> inside, finds none, and no-ops). Theme state is read from / written
+ * to the same `starlight-theme` localStorage key the ThemeProvider FOUC script
+ * uses, so the two stay in sync. Icon visibility is driven purely by the
+ * document's data-theme (see components.css), so no JS is needed to render it.
+ */
+import { Icon } from '@astrojs/starlight/components';
+---
+
+<starlight-theme-select>
+  <button
+    type="button"
+    class="nbr-theme-toggle"
+    aria-label="Toggle between light and dark theme"
+  >
+    <Icon name="sun" class="nbr-theme-icon nbr-theme-icon--sun" />
+    <Icon name="moon" class="nbr-theme-icon nbr-theme-icon--moon" />
+  </button>
+</starlight-theme-select>
+
+<script>
+  const STORAGE_KEY = 'starlight-theme';
+
+  class StarlightThemeSelect extends HTMLElement {
+    constructor() {
+      super();
+      this.querySelector('button')?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const current =
+          root.dataset.theme ||
+          (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const next = current === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try {
+          localStorage.setItem(STORAGE_KEY, next);
+        } catch {
+          /* storage unavailable — theme still applies for this page view */
+        }
+      });
+    }
+  }
+
+  customElements.define('starlight-theme-select', StarlightThemeSelect);
+</script>

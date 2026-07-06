@@ -1,0 +1,192 @@
+/* packages/starlight/src/styles/components.css
+ * Element-styling layer (loaded after theme.css). Where theme.css maps tokens,
+ * this file styles concrete surfaces — depth/radius, callouts, cards, hero —
+ * in the Darby-inspired direction. Loaded via customCss (unlayered), so these
+ * rules win over Starlight's own @layer styles without needing !important.
+ */
+
+:root {
+  --nbr-radius-lg: calc(var(--nbr-radius) + 0.25rem); /* ~14px cards */
+  --sl-shadow-sm:
+    0 1px 2px rgb(15 23 42 / 0.05), 0 2px 8px rgb(15 23 42 / 0.05);
+  --sl-shadow-md:
+    0 4px 16px rgb(15 23 42 / 0.08), 0 1px 3px rgb(15 23 42 / 0.06);
+}
+:root[data-theme="dark"] {
+  --sl-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35), 0 2px 8px rgb(0 0 0 / 0.35);
+  --sl-shadow-md: 0 6px 24px rgb(0 0 0 / 0.45), 0 1px 3px rgb(0 0 0 / 0.4);
+}
+
+/* ── Code blocks ─────────────────────────────────────────────────────────
+ * Give Expressive Code frames a soft, layered lift like Darby's code blocks. */
+.sl-markdown-content .expressive-code .frame {
+  border-radius: var(--nbr-radius);
+  box-shadow: var(--sl-shadow-sm);
+}
+
+/* ── Cards ───────────────────────────────────────────────────────────────
+ * Rounder corners, subtle surface fill, soft shadow, and a gentle hover lift. */
+.card {
+  border-radius: var(--nbr-radius-lg);
+  background-color: var(--nbr-surface-subtle);
+  border-color: var(--nbr-border);
+  box-shadow: var(--sl-shadow-sm);
+  transition:
+    transform var(--nbr-duration-base) var(--nbr-ease-standard),
+    box-shadow var(--nbr-duration-base) var(--nbr-ease-standard);
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sl-shadow-md);
+}
+.card .icon {
+  color: var(--sl-color-accent);
+}
+
+/* ── Callouts / asides ───────────────────────────────────────────────────
+ * Darby-style: rounded, tinted fill + a strong left accent bar. Each type maps
+ * to a Nebari feedback pair (soft fill + strong foreground for bar/title). The
+ * aside body text stays on Starlight's --sl-color-white (theme foreground), so
+ * contrast holds against the pale/deep fills in light and dark. */
+.starlight-aside {
+  border-radius: var(--nbr-radius);
+  border-inline-start-width: 0.25rem;
+}
+
+.starlight-aside--note {
+  --sl-color-asides-border: var(--sl-color-accent);
+  --sl-color-asides-text-accent: var(--sl-color-accent-high);
+  background-color: color-mix(
+    in oklab,
+    var(--nbr-brand),
+    var(--nbr-background) 88%
+  );
+}
+.starlight-aside--tip {
+  --sl-color-asides-border: var(--nbr-success-foreground);
+  --sl-color-asides-text-accent: var(--nbr-success-foreground);
+  background-color: var(--nbr-success);
+}
+.starlight-aside--caution {
+  --sl-color-asides-border: var(--nbr-warning-foreground);
+  --sl-color-asides-text-accent: var(--nbr-warning-foreground);
+  background-color: var(--nbr-warning);
+}
+.starlight-aside--danger {
+  --sl-color-asides-border: var(--nbr-destructive-foreground);
+  --sl-color-asides-text-accent: var(--nbr-destructive-foreground);
+  background-color: var(--nbr-destructive);
+}
+
+/* ── Header: right-aligned search + Darby-style theme toggle ─────────────
+ * Replace Starlight's header grid with a simple flex row so the search box and
+ * controls cluster on the right, like Darby's topbar. Scoped to `div.header`
+ * (the inner header row) so we don't disturb the outer `<header class="header">`
+ * wrapper, which shares the class name. Unlayered rules win over Starlight's
+ * @layer starlight.core without !important. */
+div.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.75rem;
+}
+/* Push the search wrapper (the div immediately after the site title) — and
+ * everything after it — to the right edge. */
+div.header > .title-wrapper + div {
+  margin-inline-start: auto;
+}
+/* Extra breathing room between the search bar and the social/theme controls. */
+div.header .right-group {
+  margin-inline-start: 0.85rem;
+}
+
+/* Remove the vertical divider Starlight draws between the social icons and the
+ * theme toggle. */
+div.header .social-icons::after {
+  content: none;
+}
+
+/* Pill-shaped search trigger, echoing Darby's rounded search box. */
+div.header site-search button[data-open-modal] {
+  border-radius: 999px;
+}
+/* Widen the search bar (~3x) on desktop, where the label + shortcut show. Left
+ * untouched below the breakpoint so it stays a compact icon button on mobile.
+ * The ⌘K shortcut is pushed to the right edge. */
+@media (min-width: 50rem) {
+  div.header site-search button[data-open-modal] {
+    min-width: 24rem;
+  }
+  div.header site-search button[data-open-modal] > kbd {
+    margin-inline-start: auto;
+  }
+}
+
+/* Rounded icon theme toggle. */
+.nbr-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  color: var(--sl-color-text-accent);
+  background-color: transparent;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    color var(--nbr-duration-fast) var(--nbr-ease-standard),
+    background-color var(--nbr-duration-fast) var(--nbr-ease-standard);
+}
+.nbr-theme-toggle:hover {
+  color: var(--sl-color-white);
+  background-color: var(--nbr-surface-subtle);
+}
+.nbr-theme-toggle .nbr-theme-icon {
+  font-size: 1.15rem;
+}
+/* Show only the icon that represents the current theme. */
+:root[data-theme="light"] .nbr-theme-toggle .nbr-theme-icon--moon,
+:root[data-theme="dark"] .nbr-theme-toggle .nbr-theme-icon--sun {
+  display: none;
+}
+
+/* ── Splash hero ─────────────────────────────────────────────────────────
+ * A soft accent wash behind the hero, with the tagline set in Lora to echo the
+ * serif page titles. The hero <h1> already inherits Lora from theme.css. */
+.hero {
+  background-image: radial-gradient(
+    60% 120% at 50% 0%,
+    var(--sl-color-accent-low) 0%,
+    transparent 70%
+  );
+  border-radius: var(--nbr-radius-lg);
+}
+/* Trim the hero's default top padding (Starlight's media-query rule ramps it up
+ * to 10rem, leaving a big gap under the header). Selector out-specifies that
+ * `.hero:where(...)` rule so it wins regardless of source order. */
+.sl-container .hero {
+  padding-block: clamp(1.5rem, 3vw, 2.75rem);
+}
+
+/* ── Splash landing: full-width content ──────────────────────────────────
+ * Let the hero and page content span the full column on the home/splash page.
+ * Scoped via :has(.hero) so ONLY splash pages (which render a hero) widen —
+ * regular doc pages keep the reverted 48rem centered measure. A capped,
+ * centered measure (~80rem) reads like a landing page — roomy hero, four cards
+ * across with room to spare — without sprawling to unreadable line lengths on
+ * ultra-wide screens. Drop the panel's top padding so the hero's accent wash
+ * meets the header with no gap, and give the content breathing room L/R. */
+.content-panel:has(.hero) .sl-container {
+  max-width: 80rem;
+}
+.content-panel:has(.hero) {
+  padding-block-start: 0;
+  padding-inline: clamp(1.5rem, 5vw, 4rem);
+}
+.hero .tagline {
+  font-family: var(--nbr-font-title);
+  font-style: italic;
+  color: var(--sl-color-gray-2);
+}

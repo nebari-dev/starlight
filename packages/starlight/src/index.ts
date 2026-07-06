@@ -54,12 +54,14 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
             '@nebari/starlight/fonts/font-face.css',
             '@nebari/starlight/styles/nebari-tokens.css',
             '@nebari/starlight/styles/theme.css',
+            '@nebari/starlight/styles/components.css',
             ...(config.customCss ?? []),
           ],
           components: {
             SiteTitle: '@nebari/starlight/components/SiteTitle.astro',
             Head: '@nebari/starlight/components/Head.astro',
             Footer: '@nebari/starlight/components/Footer.astro',
+            ThemeSelect: '@nebari/starlight/components/ThemeSelect.astro',
             ...(config.components ?? {}),
           },
           social: [

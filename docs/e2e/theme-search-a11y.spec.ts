@@ -1,21 +1,25 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
-// The theme select is rendered as <starlight-theme-select><label><select>...</select></label></starlight-theme-select>
-// There are two instances in the DOM (desktop header + mobile sidebar); the first is the desktop one.
-const THEME_SELECT = 'starlight-theme-select select';
+// The theme picker is the Nebari icon toggle button (a rounded sun/moon button
+// that replaces Starlight's default <select>). Two instances exist (desktop
+// header + mobile sidebar); the first is the desktop one.
+const THEME_TOGGLE = '.nbr-theme-toggle';
 
-test('theme toggle switches data-theme to dark', async ({ page }) => {
+test('theme toggle switches data-theme between light and dark', async ({
+  page,
+}) => {
   await page.goto('/');
   const html = page.locator('html');
-  const select = page.locator(THEME_SELECT).first();
+  const toggle = page.locator(THEME_TOGGLE).first();
 
-  // Set to light first so we have a known starting state, then switch to dark.
-  await select.selectOption('light');
-  await expect(html).toHaveAttribute('data-theme', 'light');
-
-  await select.selectOption('dark');
+  // Force a known starting state, then click the toggle to flip it.
+  await html.evaluate((el) => el.setAttribute('data-theme', 'light'));
+  await toggle.click();
   await expect(html).toHaveAttribute('data-theme', 'dark');
+
+  await toggle.click();
+  await expect(html).toHaveAttribute('data-theme', 'light');
 
   // Verify the Nebari accent token is populated (non-empty custom property).
   const accent = await html.evaluate((el) =>
@@ -32,8 +36,9 @@ test('light-mode accent is the Nebari magenta, not Starlight default blue', asyn
   // Starlight's default blue instead of the Nebari magenta. The fix lists the
   // [data-theme] selectors so the Nebari mapping wins.
   await page.goto('/');
-  const select = page.locator(THEME_SELECT).first();
-  await select.selectOption('light');
+  await page
+    .locator('html')
+    .evaluate((el) => el.setAttribute('data-theme', 'light'));
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
 
   const link = page.locator('.sl-markdown-content a').first();
