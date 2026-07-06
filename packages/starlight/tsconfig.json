@@ -3,7 +3,9 @@
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    // tsup injects a deprecated `baseUrl` into the DTS build; silence the TS 6.0 removal error.
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src", "scripts", "test"]
 }
