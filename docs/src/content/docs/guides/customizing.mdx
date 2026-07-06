@@ -1,0 +1,127 @@
+---
+title: Customizing the Theme
+description: Adjust colors, the logo, and other presentation details without forking the Nebari Starlight theme.
+---
+
+import { Steps, Tabs, TabItem, FileTree, Badge } from '@astrojs/starlight/components';
+
+The theme is opinionated so most packs need zero customization. When you do need
+to adjust something, prefer the seams the theme leaves open — a `customCss` file
+and Starlight's own config — over editing the package. That keeps you on the
+upgrade path.
+
+## Point the logo somewhere else
+
+By default the header logo links back to your site's base. To send it to a shared
+portal instead, set `logoHref`:
+
+```js title="astro.config.mjs" {3}
+starlight({
+  plugins: [
+    nebari({ logoHref: 'https://packs.nebari.dev/' }),
+  ],
+});
+```
+
+## Override design tokens
+
+The theme's stylesheets load *before* any `customCss` you register, so your CSS
+always wins. Override Starlight's semantic variables rather than the raw Nebari
+tokens.
+
+<Steps>
+
+1. Create a stylesheet for your overrides:
+
+   ```css title="src/styles/overrides.css"
+   :root {
+     --sl-color-accent: oklch(0.6 0.2 300);
+     --sl-color-accent-high: oklch(0.9 0.05 300);
+   }
+
+   :root[data-theme='light'] {
+     --sl-color-accent: oklch(0.55 0.2 300);
+   }
+   ```
+
+2. Register it after the plugin:
+
+   ```js title="astro.config.mjs" {4}
+   starlight({
+     title: 'My Pack',
+     plugins: [nebari()],
+     customCss: ['./src/styles/overrides.css'],
+   });
+   ```
+
+3. Restart the dev server so Astro picks up the new stylesheet.
+
+</Steps>
+
+:::caution
+Set light and dark values separately. The theme defines tokens under both
+`:root[data-theme='light']` and `:root[data-theme='dark']`; an override on plain
+`:root` alone can lose the CSS cascade in light mode.
+:::
+
+## Add your own components overrides <Badge text="Advanced" variant="caution" />
+
+Starlight lets you swap individual layout components. The theme already overrides
+`SiteTitle`, `Head`, `Footer`, and `ThemeSelect`. You can override *others*
+freely, but if you override one the theme also sets, list yours **after** the
+plugin so it wins:
+
+```js title="astro.config.mjs"
+starlight({
+  plugins: [nebari()],
+  components: {
+    // Fine — theme doesn't touch this one:
+    Hero: './src/components/MyHero.astro',
+  },
+});
+```
+
+:::danger
+Overriding `SiteTitle`, `Head`, `Footer`, or `ThemeSelect` replaces the theme's
+versions of them — you lose the branded logo, self-hosted fonts, footer, or the
+Nebari theme toggle respectively. Only do this if you're deliberately replacing
+that piece.
+:::
+
+## Where files go
+
+A customized pack typically grows a `styles/` and maybe a `components/` directory:
+
+<FileTree>
+
+- src
+  - content/docs/
+  - styles
+    - **overrides.css**       your token overrides
+  - components
+    - MyHero.astro            optional component overrides
+- astro.config.mjs
+
+</FileTree>
+
+## Verify your changes
+
+Customizations to color and contrast are easy to get subtly wrong. Before you
+ship:
+
+<Tabs>
+  <TabItem label="Visual">
+    Toggle light and dark with the control in the header and check every accent,
+    link, and callout in both modes.
+  </TabItem>
+  <TabItem label="Automated">
+    Run the accessibility checks so contrast regressions fail loudly:
+
+    ```sh
+    bunx playwright test
+    ```
+  </TabItem>
+</Tabs>
+
+See the [Configuration Options reference](/reference/configuration/) for the
+complete list of what the plugin sets and what it leaves to you.

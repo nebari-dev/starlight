@@ -1,0 +1,156 @@
+---
+title: Authoring Content
+description: How to structure pages and use the components the Nebari Starlight theme ships with.
+---
+
+import { Tabs, TabItem, Steps, FileTree, Badge } from '@astrojs/starlight/components';
+
+Writing docs with this theme is mostly writing Markdown. This guide covers the
+project layout, page frontmatter, and the built-in components you'll reach for
+most. Everything here works in `.md` files except the components, which require
+`.mdx`.
+
+## Where content lives
+
+All pages live under `src/content/docs/`. The path of a file becomes its URL, so
+organize directories to match your sidebar groups:
+
+<FileTree>
+
+- src/content/docs
+  - index.mdx              `/` — your landing page
+  - getting-started
+    - installation.mdx     `/getting-started/installation/`
+    - quickstart.mdx
+  - guides
+    - authoring-content.mdx
+    - deployment
+      - build.mdx          `/guides/deployment/build/`
+  - reference/
+
+</FileTree>
+
+## Page frontmatter
+
+Every page starts with a YAML frontmatter block. `title` is required; the rest is
+optional:
+
+```md title="src/content/docs/guides/example.md"
+---
+title: Example page
+description: Shown in search results and social cards.
+sidebar:
+  order: 2        # control position within its group
+  badge: New      # a badge next to the sidebar label
+---
+
+Your content starts here.
+```
+
+:::note
+`description` feeds both the page's `<meta>` tag and its Pagefind search result
+snippet. Write it for a human skimming search results, not for keywords.
+:::
+
+## Callouts (asides)
+
+Use asides to pull the reader's attention aside without breaking the flow. The
+theme maps their colors to Nebari's feedback tokens.
+
+:::note
+A neutral aside for context or a side remark.
+:::
+
+:::tip
+A tip — the friendly "here's a shortcut" callout.
+:::
+
+:::caution[Heads up]
+A caution, with a custom title in brackets. Use it for footguns.
+:::
+
+:::danger
+A danger callout for irreversible or destructive actions.
+:::
+
+The syntax is a fenced block with the variant name:
+
+```md
+:::tip
+This is a tip.
+:::
+```
+
+## Code blocks
+
+Code blocks are styled with Fira Code and support titles, line highlighting, and
+diff markers via Expressive Code (bundled with Starlight):
+
+```js title="astro.config.mjs" {3} del={4} ins={5}
+starlight({
+  title: 'My Pack',
+  plugins: [nebari()],
+  // sidebar: legacyConfig,
+  sidebar: newConfig,
+});
+```
+
+Group related commands with tabs so readers see only their package manager:
+
+<Tabs syncKey="pkg">
+  <TabItem label="npm">
+    ```sh
+    npm run build
+    ```
+  </TabItem>
+  <TabItem label="Bun">
+    ```sh
+    bun run build
+    ```
+  </TabItem>
+</Tabs>
+
+:::tip
+Give `<Tabs>` a `syncKey` and every tab group with the same key switches together
+across the whole site — set it once to "npm" and all your install snippets follow.
+:::
+
+## Numbered procedures
+
+Wrap an ordered list in `<Steps>` for a visually distinct walkthrough:
+
+<Steps>
+
+1. Write the page under `src/content/docs/`.
+
+2. Add it to the `sidebar` in `astro.config.mjs`.
+
+3. Run `npm run dev` and check it renders.
+
+</Steps>
+
+## Badges
+
+Use `<Badge>` inline to flag status: <Badge text="New" variant="success" />,
+<Badge text="Beta" variant="caution" />, or <Badge text="Deprecated"
+variant="danger" />. Variants are `note`, `tip`, `caution`, `danger`, `success`,
+and `default`.
+
+## Linking between pages
+
+Use root-relative links so they keep working under a base path:
+
+```md
+See the [configuration reference](/reference/configuration/).
+```
+
+:::caution
+Don't link to the source file (`configuration.mdx`) — link to the built URL
+(`/reference/configuration/`), with a trailing slash. Broken internal links fail
+the build.
+:::
+
+## Next
+
+- [Customizing the Theme](/guides/customizing/) — colors, logo, and overrides.
+- [Components reference](/reference/components/) — every component and its props.
