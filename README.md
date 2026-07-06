@@ -84,6 +84,9 @@ This repo is a [Bun](https://bun.sh) workspace monorepo: the `@nebari/starlight`
 theme lives in `packages/starlight`, and `docs/` is an example Starlight site
 that consumes it for previewing changes.
 
+The example docs are deployed to GitHub Pages on every push to `main` and can be
+viewed at **<https://nebari-dev.github.io/starlight/>**.
+
 Install dependencies for every workspace from the repo root:
 
 ```sh
@@ -161,9 +164,24 @@ your build unexpectedly:
 { "dependencies": { "@nebari/starlight": "^0.1.0" } }
 ```
 
+## Releasing
+
 Releases are published to npm automatically from GitHub Releases via
-[Trusted Publishing](https://docs.npmjs.com/trusted-publishers), with signed
-provenance attestations.
+[Trusted Publishing](https://docs.npmjs.com/trusted-publishers) (OIDC, no npm
+token), with signed provenance attestations. The `.github/workflows/release.yml`
+workflow runs on every published release.
+
+To cut a release:
+
+1. Bump the `version` in `packages/starlight/package.json` (following
+   [EffVer](https://jacobtomlinson.dev/effver/)) and merge it to `main`.
+2. Create a GitHub Release with a tag that matches the new version, prefixed
+   with `v` — e.g. version `0.2.0` → tag `v0.2.0`. The workflow verifies the
+   tag matches `packages/starlight/package.json` and fails the publish if they
+   diverge.
+3. Publishing the release triggers the workflow, which installs dependencies,
+   builds the package via the `prepublishOnly` hook, and runs `npm publish`
+   from `packages/starlight`.
 
 ## License
 
