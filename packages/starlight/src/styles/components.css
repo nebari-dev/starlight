@@ -223,6 +223,16 @@ div.header site-search button[data-open-modal] {
   padding-inline: clamp(1.5rem, 4vw, 3rem);
 }
 
+/* Drop the hairline divider + extra gap Starlight draws between the page-title
+ * panel and the content panel, so the h1 sits directly above the body. Starlight
+ * gives each panel 1.5rem vertical padding and a border-top on the second one;
+ * we remove the line and zero the doubled top padding, leaving the title panel's
+ * padding-bottom as the sole (normal) gap. */
+.content-panel + .content-panel {
+  border-top: none;
+  padding-top: 0;
+}
+
 /* Sticky footer: when a page's content is shorter than the viewport, push the
  * pagination links + footer down to the bottom rather than leaving them floating
  * mid-page. The footer + custom footer live inside the last content panel's
