@@ -2,34 +2,81 @@
  * Self-hosted brand font declarations.
  * Relative src() paths are resolved by Vite at build time; woff2 files are
  * emitted into the site's own asset directory (no external font host).
+ *
+ * Inter        — body text (--sl-font)
+ * Space Grotesk — headings h2–h6 (--nbr-font-heading)
+ * Lora          — large page titles (--nbr-font-title)
+ * Fira Code     — code (--sl-font-mono)
  */
 @font-face {
-  font-family: "Atkinson Hyperlegible";
+  font-family: "Inter";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./atkinson-hyperlegible-latin-400-normal.woff2") format("woff2");
+  src: url("./inter-latin-400-normal.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Atkinson Hyperlegible";
+  font-family: "Inter";
   font-style: normal;
-  font-weight: 700;
+  font-weight: 500;
   font-display: swap;
-  src: url("./atkinson-hyperlegible-latin-700-normal.woff2") format("woff2");
+  src: url("./inter-latin-500-normal.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Poppins";
+  font-family: "Inter";
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url("./poppins-latin-600-normal.woff2") format("woff2");
+  src: url("./inter-latin-600-normal.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Poppins";
+  font-family: "Inter";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("./poppins-latin-700-normal.woff2") format("woff2");
+  src: url("./inter-latin-700-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./space-grotesk-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./space-grotesk-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./space-grotesk-latin-700-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./lora-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./lora-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./lora-latin-700-normal.woff2") format("woff2");
 }
 @font-face {
   font-family: "Fira Code";

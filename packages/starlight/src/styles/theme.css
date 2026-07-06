@@ -10,40 +10,80 @@
 :root,
 :root[data-theme="light"],
 :root[data-theme="dark"] {
+  /* ── Brand accent ──────────────────────────────────────────────────────
+   * Nebari magenta nudged toward violet (Darby's deep-violet influence) so
+   * links/accents read as a magenta-violet. Kept derived from --nbr-primary so
+   * the per-theme magenta shade still flows through. Retune the 78% split if a
+   * link/text pair drops below AA. */
+  --nbr-brand: color-mix(in oklch, var(--nbr-primary) 78%, oklch(45% 0.16 292));
+
   --sl-color-accent-low: color-mix(
     in oklab,
-    var(--nbr-primary),
+    var(--nbr-brand),
     var(--nbr-background) 80%
   );
-  --sl-color-accent: var(--nbr-primary);
+  --sl-color-accent: var(--nbr-brand);
   --sl-color-accent-high: color-mix(
     in oklab,
-    var(--nbr-primary),
+    var(--nbr-brand),
     var(--nbr-foreground) 35%
   );
 
   --sl-color-text: var(--nbr-foreground);
-  --sl-color-text-accent: var(--nbr-primary);
+  --sl-color-text-accent: var(--nbr-brand);
   --sl-color-bg: var(--nbr-background);
 
-  /* Grays, borders, and nav/sidebar backgrounds are intentionally NOT overridden.
-   * Starlight's gray scale is tuned for WCAG contrast; mapping the Nebari neutral
-   * ramp onto it produced insufficient-contrast muted text in light mode (axe
-   * color-contrast failures). We keep only the brand-defining accent + fg/bg +
-   * fonts and let Starlight's contrast-safe neutrals stand. */
+  /* ── Slate-tinted surfaces + borders (safe subset) ─────────────────────
+   * Nav/sidebar surfaces and hairlines only — never the gray scale that drives
+   * body/muted text. Starlight's contrast-safe grays are left intact (see the
+   * axe note that motivated the original mapping). --nbr-surface-subtle is the
+   * Darby `--bg-subtle` analogue, defined per theme below. */
+  /* Sidebar sits on the page background (white in light mode), separated from
+   * the content only by Starlight's hairline — not a tinted surface fill. */
+  --sl-color-bg-sidebar: var(--nbr-background);
+  /* Header likewise sits on the page background with just a light-gray hairline
+   * beneath it, rather than the tinted surface fill. */
+  --sl-color-bg-nav: var(--nbr-background);
+  --sl-color-hairline: var(--nbr-border);
+  --sl-color-hairline-light: var(--nbr-border);
+  --sl-color-hairline-shade: var(--nbr-border);
 
-  --sl-font: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+  /* ── Layout widths (Darby proportions) ─────────────────────────────────── */
+  --sl-content-width: 48rem; /* was 45rem */
+  --sl-sidebar-width: 17rem; /* was 18.75rem */
+
+  /* ── Typography — Darby stack, self-hosted (no CDN) ────────────────────── */
+  --sl-font: "Inter", ui-sans-serif, system-ui, sans-serif;
   --sl-font-mono: "Fira Code", ui-monospace, monospace;
-  --nbr-font-heading: "Poppins", var(--sl-font);
+  --nbr-font-heading: "Space Grotesk", var(--sl-font);
+  --nbr-font-title: "Lora", Georgia, serif;
 }
 
+/* Per-theme subtle surface: sits just off the page background so the sidebar/
+ * nav read as a distinct-but-quiet app-shell surface. Primitives resolve the
+ * same in both scopes, so we pick the right shade explicitly per theme. */
+:root,
+:root[data-theme="light"] {
+  --nbr-surface-subtle: var(--nbr-neutral-100); /* slate-tinted #eceff1 */
+}
+:root[data-theme="dark"] {
+  --nbr-surface-subtle: var(--nbr-zinc-900);
+}
+
+/* Large page title (h1) in Lora serif — Darby's editorial title treatment.
+ * h2–h6 stay on Space Grotesk. */
 h1,
+.sl-markdown-content h1 {
+  font-family: var(--nbr-font-title);
+  font-weight: 600;
+}
+
 h2,
 h3,
 h4,
 h5,
 h6,
-.sl-markdown-content :is(h1, h2, h3, h4, h5, h6) {
+.sl-markdown-content :is(h2, h3, h4, h5, h6) {
   font-family: var(--nbr-font-heading);
   font-weight: 600;
 }

@@ -32,12 +32,15 @@ beforeAll(async () => {
   await $`bun run build`.cwd(join(import.meta.dir, '../../../docs'));
 }, 120_000);
 
-test('compiled CSS maps Starlight accent onto nebari tokens (grays deferred to Starlight)', () => {
+test('compiled CSS maps Starlight accent onto the nebari brand (grays deferred to Starlight)', () => {
   const css = allText('.css');
-  expect(css).toMatch(/--sl-color-accent:\s*var\(--nbr-primary\)/);
+  // Accent maps to --nbr-brand, the Nebari magenta nudged toward violet, which
+  // is itself derived from the per-theme --nbr-primary.
+  expect(css).toMatch(/--sl-color-accent:\s*var\(--nbr-brand\)/);
+  expect(css).toMatch(/--nbr-brand:\s*color-mix\([^;]*var\(--nbr-primary\)/);
   // Grays are intentionally NOT overridden (Starlight's are WCAG-tuned), so we do
   // not assert a --sl-color-gray-* mapping. The light-mode accent cascade fix is
-  // regression-tested in the demo e2e (light-mode accent = Nebari magenta).
+  // regression-tested in the demo e2e.
   // A namespaced primitive carries a literal oklch value
   expect(css).toMatch(/--nbr-zinc-50:\s*oklch/);
   // Semantic token resolves through the namespace (not a literal oklch)
@@ -53,9 +56,10 @@ test('both light and dark token blocks are present', () => {
 test('fonts are self-hosted, no external font host', () => {
   const css = allText('.css');
   const html = allText('.html');
-  expect(css).toMatch(/Atkinson Hyperlegible/);
+  expect(css).toMatch(/Inter/);
+  expect(css).toMatch(/Space Grotesk/);
+  expect(css).toMatch(/Lora/);
   expect(css).toMatch(/Fira Code/);
-  expect(css).toMatch(/Poppins/);
   expect(css + html).not.toMatch(
     /fonts\.googleapis\.com|fonts\.gstatic\.com|use\.typekit|cdn\.[a-z0-9-]+\.[a-z]/i,
   );
@@ -76,13 +80,11 @@ test('Nebari logo is rendered in the header', () => {
   expect(html).toMatch(/alt="Nebari"/);
 });
 
-test('SiteTitle links the header logo to the configured logoHref', () => {
+test('SiteTitle links the header logo to the site root by default', () => {
   const html = allText('.html');
-  // The demo config sets logoHref to the Nebari platform home.
-  // Astro appends a scoped-style hash class (e.g. "astro-xxxxxxxx") after
-  // nbr-site-title, so match the class as a token rather than the full
-  // attribute value.
-  expect(html).toMatch(
-    /<a[^>]*href="https:\/\/nebari\.dev\/"[^>]*class="nbr-site-title\b/,
-  );
+  // The demo config omits logoHref, so SiteTitle falls back to the site base
+  // (import.meta.env.BASE_URL, i.e. "/"). Astro appends a scoped-style hash
+  // class (e.g. "astro-xxxxxxxx") after nbr-site-title, so match the class as a
+  // token rather than the full attribute value.
+  expect(html).toMatch(/<a[^>]*href="\/"[^>]*class="nbr-site-title\b/);
 });

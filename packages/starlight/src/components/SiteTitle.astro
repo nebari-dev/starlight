@@ -5,12 +5,12 @@ import { logoHref } from 'virtual:nebari/config';
 const href = logoHref ?? import.meta.env.BASE_URL;
 ---
 <a href={href} class="nbr-site-title">
-  <img src={logoLight} alt="Nebari" class="nbr-logo nbr-logo--light" height="44" />
-  <img src={logoDark} alt="Nebari" class="nbr-logo nbr-logo--dark" height="44" />
+  <img src={logoLight} alt="Nebari" class="nbr-logo nbr-logo--light" height="32" />
+  <img src={logoDark} alt="Nebari" class="nbr-logo nbr-logo--dark" height="32" />
 </a>
 <style>
-  .nbr-site-title { display: flex; align-items: center; }
-  .nbr-logo { height: 2.75rem; width: auto; }
+  .nbr-site-title { display: flex; align-items: center; padding-block: 0.25rem; }
+  .nbr-logo { height: 2rem; width: auto; }
   .nbr-logo--dark { display: none; }
   :global(:root[data-theme='dark']) .nbr-logo--light { display: none; }
   :global(:root[data-theme='dark']) .nbr-logo--dark { display: inline; }

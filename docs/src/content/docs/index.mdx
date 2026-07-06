@@ -1,0 +1,71 @@
+---
+title: Nebari Starlight
+description: The shared Starlight theme for Nebari documentation sites.
+template: splash
+hero:
+  tagline: The shared Starlight theme for Nebari documentation sites — brand colors, fonts, logo, and footer from one line of config.
+  actions:
+    - text: Quick start
+      link: "#quick-start"
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/nebari-dev
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+`@nebari/starlight` gives every Nebari documentation site the same look. Pack
+maintainers write Markdown; the theme handles presentation.
+
+<CardGrid>
+  <Card title="Brand colors" icon="seti:css">
+    nebari-design's OKLCH tokens mapped onto Starlight's theme variables — a
+    magenta-violet accent with slate-tinted surfaces, in light and dark mode.
+  </Card>
+  <Card title="Typography" icon="seti:font">
+    Inter for body text, Space Grotesk for headings, Lora for page titles, and
+    Fira Code for code — all self-hosted, no CDN.
+  </Card>
+  <Card title="Logo and footer" icon="starlight">
+    The Nebari mark in the header and a branded footer on every page, wired up
+    automatically.
+  </Card>
+  <Card title="Search" icon="magnifier">
+    Starlight's built-in Pagefind, ready for multisite merging across packs.
+  </Card>
+</CardGrid>
+
+## Quick start
+
+```js
+// astro.config.mjs
+import { defineConfig } from 'astro/config';
+import starlight from '@astrojs/starlight';
+import { nebari } from '@nebari/starlight';
+
+export default defineConfig({
+  integrations: [
+    starlight({ title: 'My Pack', plugins: [nebari()] }),
+  ],
+});
+```
+
+:::tip
+This page is the theme's own demo — the hero, cards, code block, callouts, and
+link colors are all the theme in action. Toggle light and dark with the control
+in the top right, and see the [sample page](/sample/) for the full docs layout.
+:::
+
+:::note
+The accent is Nebari magenta nudged toward violet; surfaces pick up a subtle
+slate tint.
+:::
+
+:::caution
+Callout colors map to Nebari feedback tokens, not Starlight's defaults.
+:::
+
+See the [Nebari documentation](https://nebari.dev) for the wider platform.
