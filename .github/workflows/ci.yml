@@ -22,8 +22,13 @@ jobs:
         with:
           bun-version: latest
       - name: Install dependencies
+        # Detect Dependabot by branch name, not github.actor — the actor
+        # becomes the human who re-runs or pushes to the PR, but the branch
+        # stays dependabot/*.
+        env:
+          IS_DEPENDABOT: ${{ startsWith(github.head_ref, 'dependabot/') }}
         run: |
-          if [ "${{ github.actor }}" = "dependabot[bot]" ]; then
+          if [ "$IS_DEPENDABOT" = "true" ]; then
             # Dependabot bumps package.json but leaves bun.lock stale, so a
             # frozen install would fail. Regenerate the lockfile instead.
             echo "Dependabot PR: regenerating bun.lock to match package.json"
@@ -32,7 +37,7 @@ jobs:
             bun install --frozen-lockfile
           fi
       - name: Sync bun.lock (Dependabot only)
-        if: github.actor == 'dependabot[bot]'
+        if: startsWith(github.head_ref, 'dependabot/')
         run: |
           if git diff --quiet -- bun.lock; then
             echo "bun.lock already in sync — nothing to commit"
@@ -54,8 +59,10 @@ jobs:
         with:
           bun-version: latest
       - name: Install dependencies
+        env:
+          IS_DEPENDABOT: ${{ startsWith(github.head_ref, 'dependabot/') }}
         run: |
-          if [ "${{ github.actor }}" = "dependabot[bot]" ]; then
+          if [ "$IS_DEPENDABOT" = "true" ]; then
             echo "Dependabot PR: regenerating bun.lock to match package.json"
             bun install
           else
