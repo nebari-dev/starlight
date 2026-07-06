@@ -1,0 +1,79 @@
+---
+title: Components
+description: The Starlight components available in Nebari docs packs, with import paths, props, and status.
+---
+
+import { Badge, Card, CardGrid } from '@astrojs/starlight/components';
+
+Nebari Starlight styles the standard Starlight component set — it doesn't add new
+components or dependencies. Everything below is imported from
+`@astrojs/starlight/components` and works in any `.mdx` page.
+
+```js
+import { Card, CardGrid, Tabs, TabItem, Steps, FileTree, Badge, Aside }
+  from '@astrojs/starlight/components';
+```
+
+## Available components
+
+| Component            | Purpose                                        | Status                                        |
+| -------------------- | ---------------------------------------------- | --------------------------------------------- |
+| `Card` / `CardGrid`  | Grid of titled, icon'd content blocks          | <Badge text="Stable" variant="success" />     |
+| `LinkCard`           | A card that is itself a link                    | <Badge text="Stable" variant="success" />     |
+| `Tabs` / `TabItem`   | Tabbed panels, syncable via `syncKey`           | <Badge text="Stable" variant="success" />     |
+| `Steps`              | Numbered, visually distinct procedures          | <Badge text="Stable" variant="success" />     |
+| `FileTree`           | Annotated file/directory trees                  | <Badge text="Stable" variant="success" />     |
+| `Badge`              | Inline status pills                             | <Badge text="Stable" variant="success" />     |
+| `Aside`              | Callouts (also via `:::note` syntax)            | <Badge text="Stable" variant="success" />     |
+| `LinkButton`         | Prominent call-to-action link                   | <Badge text="Stable" variant="success" />     |
+| `Icon`               | Built-in icon set                               | <Badge text="Stable" variant="success" />     |
+
+## Badge variants
+
+`<Badge>` takes a `text` and a `variant`:
+
+- <Badge text="note" variant="note" /> — `note`
+- <Badge text="tip" variant="tip" /> — `tip`
+- <Badge text="success" variant="success" /> — `success`
+- <Badge text="caution" variant="caution" /> — `caution`
+- <Badge text="danger" variant="danger" /> — `danger`
+- <Badge text="default" variant="default" /> — `default`
+
+It also accepts a `size` of `small`, `medium`, or `large`.
+
+## Aside variants
+
+Asides render with Nebari's feedback colors. Use the fenced syntax in Markdown or
+the `<Aside>` component in MDX:
+
+| Variant   | Markdown            | Use for                          |
+| --------- | ------------------- | -------------------------------- |
+| Note      | `:::note`           | Neutral context                  |
+| Tip       | `:::tip`            | Shortcuts and recommendations    |
+| Caution   | `:::caution`        | Footguns and gotchas             |
+| Danger    | `:::danger`         | Destructive or irreversible acts |
+
+## Card grids at a glance
+
+<CardGrid>
+  <Card title="Layout components" icon="puzzle">
+    `Card`, `CardGrid`, and `LinkCard` structure landing pages and section
+    overviews.
+  </Card>
+  <Card title="Content components" icon="document">
+    `Tabs`, `Steps`, and `FileTree` make procedures and structure scannable.
+  </Card>
+</CardGrid>
+
+:::note[Search indexing]
+Every page on this site is indexed by Pagefind at build time — including this
+one, which carries the search probe token `pagefind-probe-token` that the
+end-to-end search test looks for. You don't configure any of this; the theme
+ships search enabled.
+:::
+
+## Full docs
+
+For prop-level detail on any component, see the upstream
+[Starlight component reference](https://starlight.astro.build/components/using-components/).
+This theme changes their appearance, not their API.

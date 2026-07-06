@@ -1,0 +1,111 @@
+---
+title: Deploy to Production
+description: Publish your built Nebari docs pack to static hosting, with per-platform steps.
+---
+
+import { Steps, Tabs, TabItem, Badge } from '@astrojs/starlight/components';
+
+Because a pack builds to plain static files, you can host it on any static
+provider. Pick the platform you use and point it at the build command and the
+`dist/` output.
+
+## Choose a platform
+
+<Tabs>
+  <TabItem label="GitHub Pages">
+    <Steps>
+
+    1. Set `site` and `base` in `astro.config.mjs` to match your Pages URL:
+
+       ```js title="astro.config.mjs"
+       export default defineConfig({
+         site: 'https://my-org.github.io',
+         base: '/my-pack',
+         integrations: [starlight({ plugins: [nebari()] })],
+       });
+       ```
+
+    2. Add a workflow that builds and uploads the artifact:
+
+       ```yaml title=".github/workflows/deploy.yml"
+       - run: npm ci && npm run build
+       - uses: actions/upload-pages-artifact@v3
+         with:
+           path: dist
+       ```
+
+    3. Enable Pages in the repo settings with source **GitHub Actions**.
+
+    </Steps>
+  </TabItem>
+  <TabItem label="Cloudflare">
+    <Steps>
+
+    1. Create a Pages project and connect your repository.
+
+    2. Set the build command to `npm run build` and the output directory to
+       `dist`.
+
+    3. If serving under a subpath, add `--base /my-pack` to the build command and
+       set `base` to match.
+
+    </Steps>
+  </TabItem>
+  <TabItem label="Netlify">
+    ```toml title="netlify.toml"
+    [build]
+    command = "npm run build"
+    publish = "dist"
+    ```
+  </TabItem>
+  <TabItem label="Vercel">
+    Vercel detects Astro automatically. Confirm the output directory is `dist`
+    and the build command is `npm run build`; no extra config is needed for a
+    root-hosted site.
+  </TabItem>
+</Tabs>
+
+## Serving under a subpath <Badge text="Common for packs" variant="note" />
+
+Packs are often published together under one domain, e.g.
+`packs.nebari.dev/my-pack`. When that's the case:
+
+<Steps>
+
+1. Build with the matching base: `astro build --base /my-pack`.
+
+2. Set `logoHref` to the portal root so the logo returns users to the index:
+
+   ```js
+   nebari({ logoHref: 'https://packs.nebari.dev/' });
+   ```
+
+3. Confirm assets resolve by checking the built HTML references the base — every
+   `href`/`src` should start with `/my-pack/`.
+
+</Steps>
+
+:::tip
+This repo's `base-path` test does exactly that check: it builds with
+`--base /demo-pack` and asserts the HTML has no bare-root `/_astro/` asset URLs.
+Copy the idea into your CI to catch subpath regressions early.
+:::
+
+## Pre-flight checklist
+
+<Steps>
+
+1. `npm run build` completes with no broken-link warnings.
+
+2. `npm run preview` renders correctly and search returns results.
+
+3. `bunx playwright test` (or your equivalent) passes the theme, search, and
+   accessibility checks.
+
+</Steps>
+
+:::caution
+Double-check the `site` value in `astro.config.mjs` before shipping. It's used to
+generate canonical URLs and the sitemap; a stale value points crawlers at the
+wrong domain.
+:::

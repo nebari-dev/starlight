@@ -1,71 +1,78 @@
 ---
 title: Nebari Starlight
-description: The shared Starlight theme for Nebari documentation sites.
+description: A shared Starlight theme that gives every Nebari documentation site the same look, feel, and search — from one line of config.
 template: splash
 hero:
-  tagline: The shared Starlight theme for Nebari documentation sites — brand colors, fonts, logo, and footer from one line of config.
+  tagline: Ship on-brand docs for your Nebari pack in minutes. Brand colors, fonts, logo, footer, and search all come from one plugin — you just write Markdown.
   actions:
-    - text: Quick start
-      link: "#quick-start"
+    - text: Get started
+      link: /getting-started/installation/
       icon: right-arrow
       variant: primary
+    - text: Read the guides
+      link: /guides/authoring-content/
+      icon: open-book
+      variant: minimal
     - text: View on GitHub
-      link: https://github.com/nebari-dev
+      link: https://github.com/nebari-dev/starlight
       icon: external
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-`@nebari/starlight` gives every Nebari documentation site the same look. Pack
-maintainers write Markdown; the theme handles presentation.
+Every Nebari pack ships documentation, and every set of docs should look like it
+belongs to the same platform. `@nebari/starlight` is the shared theme that makes
+that automatic: add the plugin, write your content, and get a polished,
+accessible, on-brand site out of the box. New here? Jump to the
+[installation guide](/getting-started/installation/).
 
-<CardGrid>
-  <Card title="Brand colors" icon="seti:css">
-    nebari-design's OKLCH tokens mapped onto Starlight's theme variables — a
-    magenta-violet accent with slate-tinted surfaces, in light and dark mode.
+## Why teams use it
+
+<CardGrid stagger>
+  <Card title="One-line install" icon="rocket">
+    Register the `nebari()` plugin in `astro.config.mjs` and the entire theme —
+    colors, fonts, logo, footer, and social links — is wired up for you.
   </Card>
-  <Card title="Typography" icon="seti:font">
-    Inter for body text, Space Grotesk for headings, Lora for page titles, and
-    Fira Code for code — all self-hosted, no CDN.
+  <Card title="On-brand by default" icon="approve-check">
+    OKLCH design tokens from nebari-design map onto Starlight's variables: a
+    magenta-violet accent with slate-tinted surfaces, tuned for light and dark.
   </Card>
-  <Card title="Logo and footer" icon="starlight">
-    The Nebari mark in the header and a branded footer on every page, wired up
-    automatically.
+  <Card title="Typography that ships with it" icon="seti:font">
+    Inter for body, Space Grotesk for headings, Lora for page titles, and Fira
+    Code for code — all self-hosted, no CDN calls, no layout shift.
   </Card>
-  <Card title="Search" icon="magnifier">
-    Starlight's built-in Pagefind, ready for multisite merging across packs.
+  <Card title="Search included" icon="magnifier">
+    Starlight's built-in Pagefind search is enabled and styled to match, ready
+    for multisite merging across packs.
   </Card>
 </CardGrid>
 
-## Quick start
+## Start here
 
-```js
-// astro.config.mjs
-import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
-import { nebari } from '@nebari/starlight';
+<CardGrid>
+  <LinkCard
+    title="Installation"
+    href="/getting-started/installation/"
+    description="Add the theme to a new or existing Starlight site."
+  />
+  <LinkCard
+    title="Quickstart"
+    href="/getting-started/quickstart/"
+    description="Scaffold a docs pack and see the theme running in five minutes."
+  />
+  <LinkCard
+    title="Authoring content"
+    href="/guides/authoring-content/"
+    description="Learn the components and Markdown conventions this theme adds."
+  />
+  <LinkCard
+    title="Configuration reference"
+    href="/reference/configuration/"
+    description="Every plugin option, with defaults and examples."
+  />
+</CardGrid>
 
-export default defineConfig({
-  integrations: [
-    starlight({ title: 'My Pack', plugins: [nebari()] }),
-  ],
-});
-```
-
-:::tip
-This page is the theme's own demo — the hero, cards, code block, callouts, and
-link colors are all the theme in action. Toggle light and dark with the control
-in the top right, and see the [sample page](/sample/) for the full docs layout.
-:::
-
-:::note
-The accent is Nebari magenta nudged toward violet; surfaces pick up a subtle
-slate tint.
-:::
-
-:::caution
-Callout colors map to Nebari feedback tokens, not Starlight's defaults.
-:::
-
-See the [Nebari documentation](https://nebari.dev) for the wider platform.
+This site is also a working template. It runs on `@nebari/starlight` itself, so
+everything you see — the hero above, the cards, the callouts, the sidebar
+groups — is the theme in action. Fork it as the starting point for your own pack.

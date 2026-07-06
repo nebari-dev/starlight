@@ -72,15 +72,23 @@ test('search returns the seeded token', async ({ page }) => {
   await searchInput.waitFor({ state: 'visible', timeout: 10_000 });
   await searchInput.fill('pagefind-probe-token');
 
-  await expect(page.locator('text=Sample content').first()).toBeVisible({
+  // The probe token lives in the Components reference page; Pagefind surfaces it
+  // under that page's title.
+  await expect(page.locator('text=Components').first()).toBeVisible({
     timeout: 15_000,
   });
 });
 
-test('home and sample page have no serious/critical a11y violations', async ({
+test('home and content pages have no serious/critical a11y violations', async ({
   page,
 }) => {
-  for (const path of ['/', '/sample/']) {
+  // Cover the splash home plus a component-heavy guide and a table-heavy
+  // reference page, so the a11y sweep exercises the full docs layout.
+  for (const path of [
+    '/',
+    '/guides/authoring-content/',
+    '/reference/components/',
+  ]) {
     await page.goto(path);
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa'])

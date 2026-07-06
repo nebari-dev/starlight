@@ -1,0 +1,125 @@
+---
+title: Configuration
+description: Configure the Nebari Starlight theme and the Starlight options that pair well with it.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+The `nebari()` plugin is deliberately small — most of what you'll configure lives
+in Starlight's own options. This page covers both: the theme's options, and the
+Starlight settings that matter most for a pack.
+
+## Theme options
+
+Pass options as an object to the plugin:
+
+```js title="astro.config.mjs" {3-5}
+starlight({
+  title: 'My Pack',
+  plugins: [
+    nebari({ logoHref: 'https://packs.nebari.dev/' }),
+  ],
+});
+```
+
+### `logoHref`
+
+Where the header logo links to. Defaults to the site's own base
+(`import.meta.env.BASE_URL`), so clicking the logo returns to your pack's home.
+Set it to the portal root when your pack is one of many served under a shared
+domain:
+
+```js
+nebari({ logoHref: 'https://packs.nebari.dev/' });
+```
+
+See the [Configuration Options reference](/reference/configuration/) for the full
+option table and defaults.
+
+## Starlight options worth setting
+
+The theme leaves these to you — they're per-pack decisions.
+
+### Title and description
+
+```js title="astro.config.mjs"
+starlight({
+  title: 'My Pack',
+  description: 'Documentation for the My Pack Nebari extension.',
+  plugins: [nebari()],
+});
+```
+
+### Sidebar
+
+Define your information architecture explicitly, or let Starlight autogenerate it
+from the file tree. This site uses explicit groups so it can nest and collapse:
+
+```js title="astro.config.mjs"
+sidebar: [
+  {
+    label: 'Getting Started',
+    items: [
+      { label: 'Installation', link: '/getting-started/installation/' },
+      { label: 'Quickstart', link: '/getting-started/quickstart/' },
+    ],
+  },
+  {
+    label: 'Reference',
+    collapsed: true, // starts collapsed
+    autogenerate: { directory: 'reference' },
+  },
+],
+```
+
+### Deploying under a base path
+
+If your pack is served from a subpath (for example `packs.nebari.dev/my-pack`),
+set `base` so every asset and link is prefixed correctly:
+
+<Tabs>
+  <TabItem label="astro.config.mjs">
+    ```js
+    export default defineConfig({
+      base: '/my-pack',
+      integrations: [starlight({ title: 'My Pack', plugins: [nebari()] })],
+    });
+    ```
+  </TabItem>
+  <TabItem label="CLI">
+    ```sh
+    astro build --base /my-pack
+    ```
+  </TabItem>
+</Tabs>
+
+:::caution
+When you set a `base`, use root-relative links in your content (for example
+`/guides/hello/`). Starlight rewrites them to include the base at build time;
+hard-coding the base yourself produces doubled paths like `/my-pack/my-pack/`.
+:::
+
+## Overriding theme tokens
+
+The theme's CSS loads before any `customCss` you provide, so you can override
+individual design tokens without forking:
+
+```css title="src/styles/overrides.css"
+:root {
+  /* Nudge the accent for a sub-brand */
+  --sl-color-accent: oklch(0.6 0.2 320);
+}
+```
+
+```js title="astro.config.mjs"
+starlight({
+  plugins: [nebari()],
+  customCss: ['./src/styles/overrides.css'],
+});
+```
+
+:::tip
+Prefer overriding Starlight's `--sl-color-*` variables rather than the raw Nebari
+tokens — that keeps your changes working if the theme reorganizes its internal
+token names in a future release.
+:::

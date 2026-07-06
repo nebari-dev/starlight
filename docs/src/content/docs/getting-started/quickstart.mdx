@@ -1,0 +1,153 @@
+---
+title: Quickstart
+description: Scaffold a Nebari documentation pack and see the theme running end to end in about five minutes.
+---
+
+import { Tabs, TabItem, Steps, FileTree } from '@astrojs/starlight/components';
+
+This guide takes you from an empty directory to a themed, searchable docs site.
+By the end you'll have a project you can commit and deploy.
+
+## Create the project
+
+<Steps>
+
+1. Scaffold a new Starlight site and pick the **minimal** template when prompted:
+
+   <Tabs syncKey="pkg">
+     <TabItem label="npm">
+       ```sh
+       npm create astro@latest my-pack -- --template starlight
+       ```
+     </TabItem>
+     <TabItem label="pnpm">
+       ```sh
+       pnpm create astro@latest my-pack --template starlight
+       ```
+     </TabItem>
+     <TabItem label="Bun">
+       ```sh
+       bun create astro@latest my-pack -- --template starlight
+       ```
+     </TabItem>
+   </Tabs>
+
+2. Move into the project and add the theme:
+
+   ```sh
+   cd my-pack
+   npm install @nebari/starlight
+   ```
+
+3. Register the plugin in `astro.config.mjs`:
+
+   ```js title="astro.config.mjs" ins={2,7}
+   import starlight from '@astrojs/starlight';
+   import { nebari } from '@nebari/starlight';
+   import { defineConfig } from 'astro/config';
+
+   export default defineConfig({
+     integrations: [
+       starlight({
+         title: 'My Pack',
+         plugins: [nebari()],
+       }),
+     ],
+   });
+   ```
+
+4. Run the dev server:
+
+   ```sh
+   npm run dev
+   ```
+
+</Steps>
+
+Open `http://localhost:4321` and you'll see the Nebari header, footer, and
+accent colors already applied.
+
+## What you get
+
+A fresh pack has this shape. The theme owns presentation; everything under
+`src/content/docs/` is yours to write.
+
+<FileTree>
+
+- astro.config.mjs        the `nebari()` plugin lives here
+- package.json
+- src
+  - content
+    - docs
+      - **index.mdx**     your landing page (use the `splash` template)
+      - getting-started
+        - installation.md
+        - quickstart.md
+      - guides/
+      - reference/
+    - content.config.ts   Starlight's docs collection schema
+- public/                 static assets served as-is
+
+</FileTree>
+
+## Add your first page
+
+Create `src/content/docs/guides/hello.md`:
+
+````md title="src/content/docs/guides/hello.md"
+---
+title: Hello, Nebari
+description: My first themed page.
+---
+
+Welcome to my pack. This paragraph already uses Inter, and code blocks use Fira
+Code:
+
+```py
+print("themed code, no extra setup")
+```
+````
+
+Then add it to the sidebar in `astro.config.mjs`:
+
+```js title="astro.config.mjs"
+sidebar: [
+  {
+    label: 'Guides',
+    items: [{ label: 'Hello', link: '/guides/hello/' }],
+  },
+],
+```
+
+:::tip
+Prefer not to maintain the sidebar by hand? Use
+`{ label: 'Guides', autogenerate: { directory: 'guides' } }` and Starlight builds
+the group from your file tree.
+:::
+
+## Ship it
+
+<Steps>
+
+1. Build the static site:
+
+   ```sh
+   npm run build
+   ```
+
+2. Preview the production build locally:
+
+   ```sh
+   npm run preview
+   ```
+
+</Steps>
+
+The `dist/` directory is a plain static site — deploy it anywhere. See
+[Deployment](/guides/deployment/build/) for platform-specific steps.
+
+:::note
+Search is powered by Pagefind, which indexes your content **at build time**. You
+won't see search results in `npm run dev` — run `npm run build && npm run preview`
+to try it.
+:::

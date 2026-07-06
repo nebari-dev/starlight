@@ -1,0 +1,112 @@
+---
+title: Build & Preview
+description: Produce a production build of your Nebari docs pack and preview it locally before deploying.
+---
+
+import { Steps, Tabs, TabItem, FileTree } from '@astrojs/starlight/components';
+
+A Nebari docs pack is a static Astro site. Building it produces a `dist/`
+directory of HTML, CSS, JS, and a prebuilt Pagefind search index that you can host
+anywhere.
+
+## Build
+
+<Steps>
+
+1. Install dependencies (once):
+
+   <Tabs syncKey="pkg">
+     <TabItem label="npm">
+       ```sh
+       npm install
+       ```
+     </TabItem>
+     <TabItem label="Bun">
+       ```sh
+       bun install
+       ```
+     </TabItem>
+   </Tabs>
+
+2. Produce the production build:
+
+   <Tabs syncKey="pkg">
+     <TabItem label="npm">
+       ```sh
+       npm run build
+       ```
+     </TabItem>
+     <TabItem label="Bun">
+       ```sh
+       bun run build
+       ```
+     </TabItem>
+   </Tabs>
+
+3. Preview the built site locally — this serves `dist/` exactly as production
+   will, including working search:
+
+   <Tabs syncKey="pkg">
+     <TabItem label="npm">
+       ```sh
+       npm run preview
+       ```
+     </TabItem>
+     <TabItem label="Bun">
+       ```sh
+       bun run preview
+       ```
+     </TabItem>
+   </Tabs>
+
+</Steps>
+
+:::note
+Search only works against a build. `npm run dev` skips Pagefind indexing for
+speed, so the search box returns nothing in dev — use `preview` to test it.
+:::
+
+## What the build produces
+
+<FileTree>
+
+- dist
+  - index.html
+  - getting-started/
+  - guides/
+  - _astro/            hashed CSS/JS and self-hosted fonts
+  - pagefind/          prebuilt search index
+
+</FileTree>
+
+## Building under a base path
+
+If your pack is served from a subpath, build with the matching `base` so every
+asset URL is prefixed. This site's `build:base` script does exactly that:
+
+<Tabs>
+  <TabItem label="Script">
+    ```json title="package.json"
+    {
+      "scripts": {
+        "build:base": "astro build --base /demo-pack"
+      }
+    }
+    ```
+  </TabItem>
+  <TabItem label="CLI">
+    ```sh
+    astro build --base /my-pack
+    ```
+  </TabItem>
+</Tabs>
+
+:::caution
+The `base` you build with must match the path the site is actually served from. A
+mismatch produces assets that 404 (missing prefix) or links that double the prefix.
+:::
+
+## Next
+
+Once the build and preview look right, continue to
+[Deploy to Production](/guides/deployment/deploy/).

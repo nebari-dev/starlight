@@ -1,0 +1,94 @@
+---
+title: Installation
+description: Add the Nebari Starlight theme to a new or existing Starlight documentation site.
+---
+
+import { Tabs, TabItem, Steps } from '@astrojs/starlight/components';
+
+`@nebari/starlight` is a Starlight plugin. If you already have a Starlight site,
+adding it is two changes: install the package and register the plugin. If you're
+starting from scratch, create a Starlight project first and then follow along.
+
+## Prerequisites
+
+- **Node.js 18.17 or newer** (or Bun 1.1+). The theme is tested against both.
+- An **Astro + Starlight** project. To create one, run
+  `npm create astro@latest -- --template starlight`.
+
+:::note
+This theme targets Starlight `0.41` and Astro `7`. Older Starlight versions map
+theme tokens differently and are not supported.
+:::
+
+## Install the package
+
+Add the theme with your package manager of choice:
+
+<Tabs syncKey="pkg">
+  <TabItem label="npm">
+    ```sh
+    npm install @nebari/starlight
+    ```
+  </TabItem>
+  <TabItem label="pnpm">
+    ```sh
+    pnpm add @nebari/starlight
+    ```
+  </TabItem>
+  <TabItem label="Bun">
+    ```sh
+    bun add @nebari/starlight
+    ```
+  </TabItem>
+  <TabItem label="Yarn">
+    ```sh
+    yarn add @nebari/starlight
+    ```
+  </TabItem>
+</Tabs>
+
+## Register the plugin
+
+<Steps>
+
+1. Open `astro.config.mjs` at the root of your project.
+
+2. Import the theme and pass it to Starlight's `plugins` array:
+
+   ```js title="astro.config.mjs" {2,8}
+   import starlight from '@astrojs/starlight';
+   import { nebari } from '@nebari/starlight';
+   import { defineConfig } from 'astro/config';
+
+   export default defineConfig({
+     integrations: [
+       starlight({
+         title: 'My Pack',
+         plugins: [nebari()],
+       }),
+     ],
+   });
+   ```
+
+3. Start the dev server and open the site:
+
+   ```sh
+   npm run dev
+   ```
+
+</Steps>
+
+That's it — the header logo, brand colors, fonts, footer, and search are now
+active. There is no CSS to import and no fonts to download separately; the plugin
+registers everything.
+
+:::tip
+The theme layers its styles on top of Starlight's, so any `customCss` you already
+have still applies and loads *after* the theme. Use that to override individual
+tokens without forking the theme.
+:::
+
+## Next steps
+
+- Follow the [Quickstart](/getting-started/quickstart/) to scaffold a full pack.
+- See [Configuration](/getting-started/configuration/) for the available options.

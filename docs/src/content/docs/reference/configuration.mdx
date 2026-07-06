@@ -1,0 +1,79 @@
+---
+title: Configuration Options
+description: The complete reference for the nebari() plugin options and the Starlight settings it manages.
+---
+
+import { Badge } from '@astrojs/starlight/components';
+
+This is the authoritative list of what the `nebari()` plugin accepts and what it
+sets on your behalf. For task-oriented guidance, see
+[Configuration](/getting-started/configuration/) and
+[Customizing the Theme](/guides/customizing/).
+
+## Plugin options
+
+Options passed to `nebari(options)`:
+
+| Option      | Type               | Default                    | Description                                                                 |
+| ----------- | ------------------ | -------------------------- | --------------------------------------------------------------------------- |
+| `logoHref`  | `string`           | site base (`BASE_URL`)     | URL the header logo links to. Set to a portal root for multi-pack domains.  |
+
+```ts
+interface NebariThemeOptions {
+  /** URL the header logo links to. Defaults to the site's own base. */
+  logoHref?: string;
+}
+```
+
+## What the plugin configures
+
+When you register `nebari()`, it updates your Starlight config as follows. All of
+these are merged **before** your own config, so your values take precedence.
+
+| Setting     | What the theme adds                                                                                     | Overridable |
+| ----------- | ------------------------------------------------------------------------------------------------------- | ----------- |
+| `customCss` | Font faces, Nebari tokens, theme mapping, and component styles — prepended before your own `customCss`. | Yes         |
+| `components` | Overrides `SiteTitle`, `Head`, `Footer`, and `ThemeSelect`.                                            | Yes         |
+| `social`    | Prepends a GitHub link to `github.com/nebari-dev`.                                                       | Yes         |
+
+### Overridden components
+
+| Component     | Status                            | Why the theme overrides it                          |
+| ------------- | --------------------------------- | --------------------------------------------------- |
+| `SiteTitle`   | <Badge text="Overridden" variant="note" />   | Renders the Nebari logo in the header.   |
+| `Head`        | <Badge text="Overridden" variant="note" />   | Injects self-hosted font preloads.       |
+| `Footer`      | <Badge text="Overridden" variant="note" />   | Adds the branded Nebari footer.          |
+| `ThemeSelect` | <Badge text="Overridden" variant="note" />   | Swaps the `<select>` for the icon toggle. |
+
+:::caution
+Setting any of the four components above in your own `components` map replaces the
+theme's version and drops the corresponding branding. See
+[Customizing the Theme](/guides/customizing/).
+:::
+
+## Design tokens
+
+The theme maps Nebari's OKLCH tokens onto Starlight's semantic variables. Override
+the Starlight-side variable, not the raw token, so your changes survive upgrades.
+
+| Variable                | Role                                  |
+| ----------------------- | ------------------------------------- |
+| `--sl-color-accent`     | Links, active states, primary buttons |
+| `--sl-color-accent-low` | Subtle accent backgrounds             |
+| `--sl-color-accent-high`| High-contrast accent text             |
+| `--sl-color-bg`         | Page background                       |
+| `--sl-color-text`       | Body text                             |
+
+:::tip
+These are standard Starlight variables — anything the [Starlight theming
+docs](https://starlight.astro.build/guides/css-and-tailwind/) describe applies
+here too.
+:::
+
+## Compatibility
+
+| Dependency  | Supported range | Notes                                            |
+| ----------- | --------------- | ------------------------------------------------ |
+| Starlight   | `0.41.x`        | Token mapping targets this major.                |
+| Astro       | `7.x`           | Peer of the supported Starlight range.           |
+| Node.js     | `>= 18.17`      | Bun `1.1+` also supported.                        |
