@@ -70,20 +70,14 @@
   --nbr-surface-subtle: var(--nbr-zinc-900);
 }
 
-/* Large page title (h1) in Lora serif — Darby's editorial title treatment.
- * h2–h6 stay on Space Grotesk. */
+/* All headings (h1–h6) share Space Grotesk. */
 h1,
-.sl-markdown-content h1 {
-  font-family: var(--nbr-font-title);
-  font-weight: 600;
-}
-
 h2,
 h3,
 h4,
 h5,
 h6,
-.sl-markdown-content :is(h2, h3, h4, h5, h6) {
+.sl-markdown-content :is(h1, h2, h3, h4, h5, h6) {
   font-family: var(--nbr-font-heading);
   font-weight: 600;
 }
