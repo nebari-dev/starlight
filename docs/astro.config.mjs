@@ -6,7 +6,16 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Nebari Starlight',
-      plugins: [nebari()],
+      description: 'Shared Starlight theme for Nebari documentation sites.',
+      plugins: [
+        nebari({
+          nav: [
+            { label: 'Docs', href: '/' },
+            { label: 'Guides', href: '/guides/authoring-content/' },
+            { label: 'Reference', href: '/reference/configuration/' },
+          ],
+        }),
+      ],
       sidebar: [
         {
           label: 'Getting Started',

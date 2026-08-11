@@ -79,31 +79,72 @@ test('search returns the seeded token', async ({ page }) => {
   });
 });
 
+test('the mobile drawer exposes nav tabs and keeps accessible names', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto('/guides/deployment/build/');
+
+  // The header tabs are desktop-only; the drawer copy is what mobile gets.
+  await expect(page.locator('.nbr-nav-tabs--header')).toBeHidden();
+  // Starlight tracks the open state on the custom element, not on the button
+  // (the button's own aria-expanded stays "false"), and only sets it on the
+  // first toggle — so it is absent, not "false", until the menu is opened.
+  const menu = page.locator('starlight-menu-button');
+  await expect(page.locator('.nbr-nav-tabs--drawer')).toBeHidden();
+  await menu.locator('button').click();
+  await expect(menu).toHaveAttribute('aria-expanded', 'true');
+
+  const drawerTabs = page.locator('.nbr-nav-tabs--drawer');
+  await expect(drawerTabs).toBeVisible();
+  await expect(drawerTabs.locator('a[aria-current="page"]')).toHaveCount(1);
+
+  // Collapsible sidebar groups must keep their accessible names.
+  const summaries = page.locator('#starlight__sidebar summary');
+  for (let i = 0; i < (await summaries.count()); i++) {
+    expect((await summaries.nth(i).innerText()).trim().length).toBeGreaterThan(
+      0,
+    );
+  }
+});
+
 test('home and content pages have no serious/critical a11y violations', async ({
   page,
 }) => {
   // Cover the splash home plus a component-heavy guide and a table-heavy
-  // reference page, so the a11y sweep exercises the full docs layout.
-  for (const path of [
-    '/',
-    '/guides/authoring-content/',
-    '/reference/components/',
+  // reference page, so the a11y sweep exercises the full docs layout. Both
+  // widths run: the mobile drawer, the moved menu button and the mobile table
+  // of contents are surfaces the desktop pass never reaches.
+  for (const [width, height] of [
+    [1440, 900],
+    [375, 800],
   ]) {
-    await page.goto(path);
-    // Expressive Code marks horizontally scrollable code blocks keyboard
-    // accessible (tabindex + role="region") from a requestIdleCallback, so axe
-    // must not sample the DOM before that pass has run.
-    await page.waitForFunction(() =>
-      [...document.querySelectorAll('pre')].every(
-        (el) => el.scrollWidth <= el.clientWidth || el.hasAttribute('tabindex'),
-      ),
-    );
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa'])
-      .analyze();
-    const serious = results.violations.filter(
-      (v) => v.impact === 'serious' || v.impact === 'critical',
-    );
-    expect(serious, JSON.stringify(serious.map((v) => v.id))).toEqual([]);
+    await page.setViewportSize({ width, height });
+    for (const path of [
+      '/',
+      '/guides/authoring-content/',
+      '/reference/components/',
+    ]) {
+      await page.goto(path);
+      // Expressive Code marks horizontally scrollable code blocks keyboard
+      // accessible (tabindex + role="region") from a requestIdleCallback, so axe
+      // must not sample the DOM before that pass has run.
+      await page.waitForFunction(() =>
+        [...document.querySelectorAll('pre')].every(
+          (el) =>
+            el.scrollWidth <= el.clientWidth || el.hasAttribute('tabindex'),
+        ),
+      );
+      const results = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa'])
+        .analyze();
+      const serious = results.violations.filter(
+        (v) => v.impact === 'serious' || v.impact === 'critical',
+      );
+      expect(
+        serious,
+        `${width}px ${path}: ${JSON.stringify(serious.map((v) => v.id))}`,
+      ).toEqual([]);
+    }
   }
 });

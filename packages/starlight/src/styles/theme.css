@@ -42,7 +42,7 @@
    * body/muted text. Starlight's contrast-safe grays are left intact (see the
    * axe note that motivated the original mapping). */
   --nbr-surface-subtle: var(--nbr-background);
-  --sl-color-bg-sidebar: var(--nbr-background);
+  --sl-color-bg-sidebar: var(--nbr-card);
   --sl-color-bg-nav: var(--nbr-background);
   --sl-color-hairline: var(--nbr-border);
   --sl-color-hairline-light: var(--nbr-border);

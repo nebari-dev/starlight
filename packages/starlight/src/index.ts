@@ -51,10 +51,22 @@ export interface NebariThemeOptions {
    * returns users to `packs.nebari.dev/`.
    */
   logoHref?: string;
+  /**
+   * Top-level navigation tabs rendered in the header beside the logo, and used
+   * for the footer's Documentation column. Hrefs are site-relative and get the
+   * site `base` prepended. Omit the option to render no tabs at all.
+   */
+  nav?: Array<{ label: string; href: string }>;
+}
+
+/** The theme options after defaulting, emitted as `virtual:nebari/config` exports. */
+interface ResolvedOptions {
+  logoHref: string | null;
+  nav: Array<{ label: string; href: string }> | null;
 }
 
 /** Astro integration that exposes the theme config to components via a virtual module. */
-function nebariConfigIntegration(logoHref: string | null): AstroIntegration {
+function nebariConfigIntegration(resolved: ResolvedOptions): AstroIntegration {
   // Captured in config:setup, consumed in build:done to prefix content links.
   let base = '/';
   return {
@@ -74,7 +86,12 @@ function nebariConfigIntegration(logoHref: string | null): AstroIntegration {
                 },
                 load(id: string) {
                   if (id === '\0virtual:nebari/config') {
-                    return `export const logoHref = ${JSON.stringify(logoHref)};`;
+                    return Object.entries(resolved)
+                      .map(
+                        ([key, value]) =>
+                          `export const ${key} = ${JSON.stringify(value)};`,
+                      )
+                      .join('\n');
                   }
                   return undefined;
                 },
@@ -143,16 +160,28 @@ function nebariExpressiveCode(
 }
 
 export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
-  const logoHref = options.logoHref ?? null;
+  const resolved: ResolvedOptions = {
+    logoHref: options.logoHref ?? null,
+    nav: options.nav ?? null,
+  };
   return {
     name: '@nebari/starlight',
     hooks: {
+      'i18n:setup'({ injectTranslations }) {
+        injectTranslations({
+          en: {
+            'search.label': 'Search docs…',
+            'nebari.navLabel': 'Site',
+          },
+        });
+      },
       'config:setup'({ config, updateConfig, addIntegration }) {
         updateConfig({
           customCss: [
             '@nebari/starlight/fonts/font-face.css',
             '@nebari/starlight/styles/nebari-tokens.css',
             '@nebari/starlight/styles/theme.css',
+            '@nebari/starlight/styles/chrome.css',
             '@nebari/starlight/styles/components.css',
             ...(config.customCss ?? []),
           ],
@@ -160,6 +189,7 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
             SiteTitle: '@nebari/starlight/components/SiteTitle.astro',
             Head: '@nebari/starlight/components/Head.astro',
             Footer: '@nebari/starlight/components/Footer.astro',
+            Sidebar: '@nebari/starlight/components/Sidebar.astro',
             ThemeSelect: '@nebari/starlight/components/ThemeSelect.astro',
             ...(config.components ?? {}),
           },
@@ -180,7 +210,7 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
                     : config.expressiveCode,
                 ),
         });
-        addIntegration(nebariConfigIntegration(logoHref));
+        addIntegration(nebariConfigIntegration(resolved));
       },
     },
   };

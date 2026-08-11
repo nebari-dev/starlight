@@ -1,0 +1,36 @@
+---
+import { nav } from 'virtual:nebari/config';
+import { activeNavHref } from '../utils/nav';
+
+interface Props {
+  class?: string;
+}
+
+const items = nav ?? [];
+const base = import.meta.env.BASE_URL;
+const active = activeNavHref(Astro.url.pathname, items, base);
+const prefix = base.replace(/\/+$/, '');
+const hrefFor = (href: string) => `${prefix}/${href.replace(/^\/+/, '')}`;
+---
+
+{
+  items.length > 0 && (
+    <nav
+      class:list={['nbr-nav-tabs', Astro.props.class]}
+      aria-label={Astro.locals.t('nebari.navLabel')}
+    >
+      <ul>
+        {items.map((item) => (
+          <li>
+            <a
+              href={hrefFor(item.href)}
+              aria-current={item.href === active ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}

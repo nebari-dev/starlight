@@ -26,6 +26,7 @@
     "src/fonts",
     "src/assets",
     "src/components",
+    "src/utils",
     "src/virtual.d.ts"
   ],
   "exports": {

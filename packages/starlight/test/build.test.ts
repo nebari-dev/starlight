@@ -77,6 +77,78 @@ test('Nebari logo is rendered in the header', () => {
   expect(html).toMatch(/alt="Nebari"/);
 });
 
+function navTabsMarkup(page: string): string {
+  const html = readFileSync(join(DIST, page), 'utf8');
+  const match = html.match(
+    /<nav class="nbr-nav-tabs[^"]*"[^>]*>[\s\S]*?<\/nav>/,
+  );
+  if (!match) throw new Error(`no nav tabs rendered in ${page}`);
+  return match[0];
+}
+
+test('the nav option renders top-level tabs in the header', () => {
+  const tabs = navTabsMarkup('index.html');
+  expect(tabs).toContain('>Docs<');
+  expect(tabs).toContain('>Guides<');
+  expect(tabs).toContain('>Reference<');
+});
+
+test('exactly one nav tab is marked aria-current per page', () => {
+  // The sidebar also uses aria-current="page", so scope the count to the tabs.
+  for (const page of [
+    'index.html',
+    'reference/configuration/index.html',
+    'guides/deployment/build/index.html',
+  ]) {
+    const current = navTabsMarkup(page).match(/aria-current="page"/g) ?? [];
+    expect(current.length, `${page} lit ${current.length} tabs`).toBe(1);
+  }
+});
+
+test('the active tab is the section the page belongs to', () => {
+  // The Guides tab points at a leaf page, so this also proves segment matching
+  // carries the whole section rather than falling back to the root tab.
+  expect(navTabsMarkup('guides/deployment/build/index.html')).toMatch(
+    /href="\/guides\/authoring-content\/"[^>]*aria-current="page"/,
+  );
+  expect(navTabsMarkup('reference/components/index.html')).toMatch(
+    /href="\/reference\/configuration\/"[^>]*aria-current="page"/,
+  );
+  // Nothing outside a section tab falls through to the root tab.
+  expect(navTabsMarkup('getting-started/installation/index.html')).toMatch(
+    /href="\/"[^>]*aria-current="page"/,
+  );
+});
+
+test('nav tabs render in both the header and the mobile drawer', () => {
+  // The splash home has no sidebar, so the drawer copy only exists on pages
+  // that render one.
+  const html = readFileSync(
+    join(DIST, 'guides/deployment/build/index.html'),
+    'utf8',
+  );
+  expect(html).toContain('nbr-nav-tabs--header');
+  expect(html).toContain('nbr-nav-tabs--drawer');
+});
+
+test('the search label is overridden through injectTranslations', () => {
+  // Proves a plugin can override a built-in Starlight UI string: the default is
+  // "Search". The same key also feeds the Pagefind modal placeholder.
+  const html = readFileSync(join(DIST, 'index.html'), 'utf8');
+  expect(html).toContain('Search docs');
+  expect(html).toMatch(/aria-label="Search docs[^"]*"/);
+});
+
+test('the footer renders the link columns and bottom bar', () => {
+  const html = readFileSync(join(DIST, 'index.html'), 'utf8');
+  expect(html).toContain('data-nebari-footer');
+  expect(html).toContain('Documentation');
+  expect(html).toContain('Community');
+  expect(html).toContain('Project');
+  expect(html).toContain('Built with Astro Starlight');
+  expect(html).toMatch(/(©|&copy;)\s*\d{4} Nebari/);
+});
+
 test('SiteTitle links the header logo to the site root by default', () => {
   const html = allText('.html');
   // The demo config omits logoHref, so SiteTitle falls back to the site base

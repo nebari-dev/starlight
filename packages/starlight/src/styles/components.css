@@ -59,188 +59,20 @@
   background-color: var(--nbr-destructive);
 }
 
-/* ── Header: right-aligned search + Darby-style theme toggle ─────────────
- * Replace Starlight's header grid with a simple flex row so the search box and
- * controls cluster on the right, like Darby's topbar. Scoped to `div.header`
- * (the inner header row) so we don't disturb the outer `<header class="header">`
- * wrapper, which shares the class name. Unlayered rules win over Starlight's
- * @layer starlight.core without !important. */
-div.header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.75rem;
-}
-/* Push the search wrapper (the div immediately after the site title) — and
- * everything after it — to the right edge. */
-div.header > .title-wrapper + div {
-  margin-inline-start: auto;
-}
-/* Extra breathing room between the search bar and the social/theme controls. */
-div.header .right-group {
-  margin-inline-start: 0.85rem;
-}
-
-/* Remove the vertical divider Starlight draws between the social icons and the
- * theme toggle. */
-div.header .social-icons::after {
-  content: none;
-}
-
-/* Header icons (GitHub + theme toggle) read as neutral gray rather than the
- * accent violet, brightening to the high-contrast foreground on hover. */
-div.header .social-icons a {
-  color: var(--sl-color-gray-1);
-  border-radius: 999px;
-  transition:
-    color var(--nbr-duration-fast) var(--nbr-ease-standard),
-    background-color var(--nbr-duration-fast) var(--nbr-ease-standard);
-}
-div.header .social-icons a:hover {
-  color: var(--sl-color-white);
-  background-color: var(--nbr-surface-subtle);
-}
-
-/* Pill-shaped search trigger, echoing Darby's rounded search box. */
-div.header site-search button[data-open-modal] {
-  border-radius: 999px;
-}
-/* Widen the search bar (~3x) on desktop, where the label + shortcut show. Left
- * untouched below the breakpoint so it stays a compact icon button on mobile.
- * The ⌘K shortcut is pushed to the right edge. */
-@media (min-width: 50rem) {
-  div.header site-search button[data-open-modal] {
-    min-width: 24rem;
+/* ── Tables ──────────────────────────────────────────────────────────────
+ * Starlight makes every table `display: block; overflow: auto`, which turns an
+ * overflowing table into a scroll container with no tabindex and no focusable
+ * content — an axe `scrollable-region-focusable` failure. It only bites at
+ * narrow widths, where the column is too tight for the table. Letting the table
+ * lay out normally and wrap its cells removes the scroll container entirely
+ * rather than leaving one nobody can reach from a keyboard. */
+@media not all and (min-width: 50rem) {
+  .sl-markdown-content table:not(:where(.not-content *)) {
+    display: table;
+    width: 100%;
   }
-  div.header site-search button[data-open-modal] > kbd {
-    margin-inline-start: auto;
-  }
-}
-
-/* Rounded icon theme toggle. */
-.nbr-theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  padding: 0;
-  color: var(--sl-color-gray-1);
-  background-color: transparent;
-  border: none;
-  border-radius: 999px;
-  cursor: pointer;
-  transition:
-    color var(--nbr-duration-fast) var(--nbr-ease-standard),
-    background-color var(--nbr-duration-fast) var(--nbr-ease-standard);
-}
-.nbr-theme-toggle:hover {
-  color: var(--sl-color-white);
-  background-color: var(--nbr-surface-subtle);
-}
-.nbr-theme-toggle .nbr-theme-icon {
-  font-size: 1.15rem;
-}
-/* Show only the icon that represents the current theme. */
-:root[data-theme="light"] .nbr-theme-toggle .nbr-theme-icon--moon,
-:root[data-theme="dark"] .nbr-theme-toggle .nbr-theme-icon--sun {
-  display: none;
-}
-
-/* ── Sidebar navigation ──────────────────────────────────────────────────
- * Darby-style docs nav: small uppercase muted group headings, rounded links
- * with a subtle hover fill, and a soft pill on the active page — a pale accent
- * fill with accent-colored text, replacing Starlight's solid-accent bar with
- * inverted text. */
-
-/* Group headings — uppercase, letter-spaced, muted slate. Scoped to the group
- * label so standalone top-level links keep their normal size. */
-.sidebar-content .group-label .large {
-  font-size: var(--sl-text-xs);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--sl-color-gray-3);
-}
-
-/* Rounder pill shape + a faint accent hover fill (the sidebar itself already
- * sits on --nbr-surface-subtle, so hover uses a light accent tint to read). */
-.sidebar-content a {
-  border-radius: 0.5rem;
-}
-.sidebar-content a:hover {
-  background-color: color-mix(
-    in oklab,
-    var(--nbr-brand),
-    var(--nbr-background) 90%
-  );
-}
-
-/* Active page — pale accent pill with accent text (out-specifies Starlight's
- * :where(...)[aria-current=page] solid-accent + inverted-text rule). */
-.sidebar-content a[aria-current="page"],
-.sidebar-content a[aria-current="page"]:hover,
-.sidebar-content a[aria-current="page"]:focus {
-  /* accent-high (brand mixed toward the foreground) rather than the plain brand:
-   * on the pale accent-low fill the plain brand only hits 4.13:1, below WCAG AA
-   * 4.5:1. accent-high darkens in light mode / lightens in dark mode, clearing AA
-   * in both. */
-  color: var(--sl-color-accent-high);
-  background-color: var(--sl-color-accent-low);
-  font-weight: 600;
-}
-
-/* The sticky-footer rule below makes this container a flex column, and a flex
- * item with auto cross-axis margins shrinks to fit its content instead of
- * stretching, which left short pages (little text) narrow and centered.
- * width: 100% keeps it filling its capped measure. */
-.content-panel:not(:has(.hero)) .sl-container {
-  width: 100%;
-}
-
-/* Give the content a little breathing room on the left and right so it isn't
- * flush against the sidebar border and TOC. */
-.content-panel:not(:has(.hero)) {
-  padding-inline: clamp(1.5rem, 4vw, 3rem);
-}
-
-/* Drop the hairline divider + extra gap Starlight draws between the page-title
- * panel and the content panel, so the h1 sits directly above the body. Starlight
- * gives each panel 1.5rem vertical padding and a border-top on the second one;
- * we remove the line and zero the doubled top padding, leaving the title panel's
- * padding-bottom as the sole (normal) gap. */
-.content-panel + .content-panel {
-  border-top: none;
-  padding-top: 0;
-}
-
-/* Sticky footer: when a page's content is shorter than the viewport, push the
- * pagination links + footer down to the bottom rather than leaving them floating
- * mid-page. The footer + custom footer live inside the last content panel's
- * .sl-container (after .sl-markdown-content), so the flex chain has to reach
- * through main → content-panel → sl-container; the footer then takes the
- * leftover space with an auto top margin. */
-main {
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100vh - var(--sl-nav-height));
-}
-main > .content-panel:last-child,
-main > .content-panel:last-child > .sl-container {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-}
-main > .content-panel:last-child > .sl-container > footer {
-  margin-block-start: auto;
-}
-
-/* Narrow the right-hand "On this page" table of contents. Starlight sizes this
- * column off --sl-sidebar-width (18rem), which reads too wide for a short TOC;
- * cap it tighter. Only applies at the lg breakpoint where the TOC is shown. */
-@media (min-width: 72rem) {
-  .right-sidebar-container {
-    width: 17rem;
+  .sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+    overflow-wrap: anywhere;
   }
 }
 
