@@ -1,8 +1,13 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import type {
+  ExpressiveCodeTheme,
+  StarlightExpressiveCodeOptions,
+} from '@astrojs/starlight/expressive-code';
 import type { StarlightPlugin } from '@astrojs/starlight/types';
 import type { AstroIntegration } from 'astro';
+import { customizeTheme } from './code-theme';
 
 /// <reference path="./virtual.d.ts" />
 
@@ -100,6 +105,43 @@ function nebariConfigIntegration(logoHref: string | null): AstroIntegration {
   };
 }
 
+function nebariExpressiveCode(
+  consumer: StarlightExpressiveCodeOptions,
+): StarlightExpressiveCodeOptions {
+  const { styleOverrides, ...rest } = consumer;
+  const { frames, ...otherStyleOverrides } = styleOverrides ?? {};
+  return {
+    themes: ['github-dark', 'github-light'],
+    ...rest,
+    customizeTheme: (theme: ExpressiveCodeTheme) => {
+      const themed = customizeTheme(theme);
+      return consumer.customizeTheme ? consumer.customizeTheme(themed) : themed;
+    },
+    styleOverrides: {
+      borderRadius: 'var(--nbr-radius-md)',
+      borderColor: 'var(--nbr-border)',
+      ...otherStyleOverrides,
+      frames: {
+        editorBackground: 'var(--nbr-background)',
+        terminalBackground: 'var(--nbr-background)',
+        editorActiveTabBackground: 'var(--nbr-background)',
+        editorTabBarBackground: 'var(--nbr-background)',
+        terminalTitlebarBackground: 'var(--nbr-background)',
+        frameBoxShadowCssValue: 'none',
+        editorActiveTabIndicatorTopColor: 'var(--nbr-primary)',
+        editorActiveTabIndicatorHeight: '2px',
+        editorActiveTabBorderColor: 'var(--nbr-border)',
+        editorTabBarBorderColor: 'var(--nbr-border)',
+        editorTabBarBorderBottomColor: 'var(--nbr-border)',
+        terminalTitlebarBorderBottomColor: 'var(--nbr-border)',
+        terminalTitlebarDotsForeground: 'var(--nbr-border)',
+        inlineButtonForeground: 'var(--nbr-foreground)',
+        ...frames,
+      },
+    },
+  };
+}
+
 export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
   const logoHref = options.logoHref ?? null;
   return {
@@ -129,6 +171,14 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
             },
             ...(config.social ?? []),
           ],
+          expressiveCode:
+            config.expressiveCode === false
+              ? false
+              : nebariExpressiveCode(
+                  config.expressiveCode === true || !config.expressiveCode
+                    ? {}
+                    : config.expressiveCode,
+                ),
         });
         addIntegration(nebariConfigIntegration(logoHref));
       },

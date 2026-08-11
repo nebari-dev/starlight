@@ -34,10 +34,9 @@ beforeAll(async () => {
 
 test('compiled CSS maps Starlight accent onto the nebari brand (grays deferred to Starlight)', () => {
   const css = allText('.css');
-  // Accent maps to --nbr-brand, the Nebari magenta nudged toward violet, which
-  // is itself derived from the per-theme --nbr-primary.
+  // Accent maps to --nbr-brand, which is the per-theme Nebari magenta.
   expect(css).toMatch(/--sl-color-accent:\s*var\(--nbr-brand\)/);
-  expect(css).toMatch(/--nbr-brand:\s*color-mix\([^;]*var\(--nbr-primary\)/);
+  expect(css).toMatch(/--nbr-brand:\s*var\(--nbr-primary\)/);
   // Grays are intentionally NOT overridden (Starlight's are WCAG-tuned), so we do
   // not assert a --sl-color-gray-* mapping. The light-mode accent cascade fix is
   // regression-tested in the demo e2e.
@@ -56,10 +55,8 @@ test('both light and dark token blocks are present', () => {
 test('fonts are self-hosted, no external font host', () => {
   const css = allText('.css');
   const html = allText('.html');
-  expect(css).toMatch(/Inter/);
-  expect(css).toMatch(/Space Grotesk/);
-  expect(css).toMatch(/Lora/);
-  expect(css).toMatch(/Fira Code/);
+  expect(css).toMatch(/Geist/);
+  expect(css).toMatch(/IBM Plex Mono/);
   expect(css + html).not.toMatch(
     /fonts\.googleapis\.com|fonts\.gstatic\.com|use\.typekit|cdn\.[a-z0-9-]+\.[a-z]/i,
   );

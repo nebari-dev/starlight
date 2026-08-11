@@ -90,6 +90,14 @@ test('home and content pages have no serious/critical a11y violations', async ({
     '/reference/components/',
   ]) {
     await page.goto(path);
+    // Expressive Code marks horizontally scrollable code blocks keyboard
+    // accessible (tabindex + role="region") from a requestIdleCallback, so axe
+    // must not sample the DOM before that pass has run.
+    await page.waitForFunction(() =>
+      [...document.querySelectorAll('pre')].every(
+        (el) => el.scrollWidth <= el.clientWidth || el.hasAttribute('tabindex'),
+      ),
+    );
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa'])
       .analyze();
