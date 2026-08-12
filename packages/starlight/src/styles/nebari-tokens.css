@@ -138,6 +138,7 @@
 
   --nbr-background: var(--nbr-zinc-50);
   --nbr-foreground: var(--nbr-zinc-950);
+  --nbr-scrim: rgba(0, 0, 0, 0.5);
 
   --nbr-card: var(--nbr-white);
   --nbr-card-foreground: var(--nbr-zinc-950);
@@ -205,6 +206,7 @@
 :root[data-theme='dark'] {
 --nbr-background: var(--nbr-zinc-950);
   --nbr-foreground: var(--nbr-zinc-50);
+  --nbr-scrim: rgba(0, 0, 0, 0.6);
 
   --nbr-card: var(--nbr-zinc-900);
   --nbr-card-foreground: var(--nbr-zinc-50);

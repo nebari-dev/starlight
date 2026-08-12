@@ -131,6 +131,7 @@ function nebariExpressiveCode(
     styleOverrides: {
       borderRadius: 'var(--nbr-radius-md)',
       borderColor: 'var(--nbr-border)',
+      codeLineHeight: '1.375rem',
       ...otherStyleOverrides,
       frames: {
         editorBackground: 'var(--nbr-background)',

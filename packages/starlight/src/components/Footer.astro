@@ -2,7 +2,8 @@
 import Default from '@astrojs/starlight/components/Footer.astro';
 import config from 'virtual:starlight/user-config';
 import { nav } from 'virtual:nebari/config';
-import mark from '../assets/nebari-symbol.svg?url';
+import markLight from '../assets/nebari-horizontal-light.svg?url';
+import markDark from '../assets/nebari-horizontal-dark.svg?url';
 
 const year = new Date().getFullYear();
 const prefix = import.meta.env.BASE_URL.replace(/\/+$/, '');
@@ -43,7 +44,8 @@ const columns = [
 <div data-nebari-footer class="nbr-footer">
   <div class="nbr-footer__top">
     <div class="nbr-footer__brand">
-      <img src={mark} alt="Nebari" width="32" height="32" />
+      <img src={markLight} alt="Nebari" class="nbr-footer__mark--light" />
+      <img src={markDark} alt="Nebari" class="nbr-footer__mark--dark" />
       {config.description && <p>{config.description}</p>}
     </div>
     <div class="nbr-footer__cols">
@@ -72,9 +74,14 @@ const columns = [
   .nbr-footer {
     margin-top: 3rem;
     border-top: 1px solid var(--sl-color-hairline);
-    padding-top: 2rem;
+    padding-block: 2rem 0;
+    background-color: var(--nbr-surface-subtle);
     font-size: var(--sl-text-sm);
     color: var(--sl-color-gray-3);
+  }
+  :global(:root:not([data-has-sidebar])) .nbr-footer {
+    margin-inline: calc(50% - 50vw);
+    padding-inline: calc(50vw - 50%);
   }
   .nbr-footer__top {
     display: flex;
@@ -89,16 +96,28 @@ const columns = [
     max-width: 18rem;
   }
   .nbr-footer__brand img {
-    width: 2rem;
+    width: auto;
     height: 2rem;
+  }
+  .nbr-footer__mark--dark {
+    display: none;
+  }
+  :global(:root[data-theme='dark']) .nbr-footer__mark--light {
+    display: none;
+  }
+  :global(:root[data-theme='dark']) .nbr-footer__mark--dark {
+    display: inline;
   }
   .nbr-footer__brand p {
     margin: 0;
   }
   .nbr-footer__cols {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(9rem, max-content));
+    display: flex;
+    flex-wrap: wrap;
     gap: 1.5rem 3rem;
+  }
+  .nbr-footer__col {
+    min-width: 8rem;
   }
   .nbr-footer__col-title {
     margin: 0 0 0.5rem;

@@ -108,33 +108,61 @@ test('home and content pages have no serious/critical a11y violations', async ({
 }) => {
   // Cover the splash home plus a component-heavy guide and a table-heavy
   // reference page, so the a11y sweep exercises the full docs layout.
+  for (const colorScheme of ['light', 'dark'] as const) {
+    await page.emulateMedia({ colorScheme });
+    for (const [width, height] of [
+      [1440, 900],
+      [375, 800],
+    ]) {
+      await page.setViewportSize({ width, height });
+      for (const path of [
+        '/',
+        '/guides/authoring-content/',
+        '/reference/components/',
+      ]) {
+        await page.goto(path);
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-theme',
+          colorScheme,
+        );
+        await page.waitForFunction(() =>
+          [...document.querySelectorAll('pre')].every(
+            (el) =>
+              el.scrollWidth <= el.clientWidth || el.hasAttribute('tabindex'),
+          ),
+        );
+        const results = await new AxeBuilder({ page })
+          .withTags(['wcag2a', 'wcag2aa'])
+          .analyze();
+        const serious = results.violations.filter(
+          (v) => v.impact === 'serious' || v.impact === 'critical',
+        );
+        expect(
+          serious,
+          `${colorScheme} ${width}px ${path}: ${JSON.stringify(
+            serious.map((v) => v.id),
+          )}`,
+        ).toEqual([]);
+      }
+    }
+  }
+});
+
+test('exactly one "Site" nav landmark is exposed at each width', async ({
+  page,
+}) => {
   for (const [width, height] of [
     [1440, 900],
     [375, 800],
   ]) {
     await page.setViewportSize({ width, height });
-    for (const path of [
-      '/',
-      '/guides/authoring-content/',
-      '/reference/components/',
-    ]) {
-      await page.goto(path);
-      await page.waitForFunction(() =>
-        [...document.querySelectorAll('pre')].every(
-          (el) =>
-            el.scrollWidth <= el.clientWidth || el.hasAttribute('tabindex'),
-        ),
-      );
-      const results = await new AxeBuilder({ page })
-        .withTags(['wcag2a', 'wcag2aa'])
-        .analyze();
-      const serious = results.violations.filter(
-        (v) => v.impact === 'serious' || v.impact === 'critical',
-      );
-      expect(
-        serious,
-        `${width}px ${path}: ${JSON.stringify(serious.map((v) => v.id))}`,
-      ).toEqual([]);
-    }
+    await page.goto('/guides/authoring-content/');
+    const exposed = await page.evaluate(
+      () =>
+        [...document.querySelectorAll('nav[aria-label="Site"]')].filter(
+          (n) => (n as HTMLElement).offsetParent !== null,
+        ).length,
+    );
+    expect(exposed, `${width}px exposed ${exposed} "Site" navs`).toBe(1);
   }
 });
