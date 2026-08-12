@@ -19,16 +19,12 @@ div.header .right-group {
   margin-inline-start: 0.85rem;
 }
 
-/* The title cell holds the logo and the nav tabs side by side. Starlight clips
- * it to stop long site titles covering the search button; our SiteTitle renders
- * a fixed-height logo with no text node, so clipping only hides the tabs. */
 div.header .title-wrapper {
   overflow: visible;
   align-items: center;
   gap: 1.5rem;
 }
 
-/* ── Top-level nav tabs ──────────────────────────────────────────────────── */
 .nbr-nav-tabs ul {
   display: flex;
   align-items: center;
@@ -58,7 +54,6 @@ div.header .title-wrapper {
   color: var(--sl-color-white);
   border-block-end-color: var(--nbr-primary);
 }
-/* Header tabs are desktop-only; the mobile drawer renders its own copy. */
 .nbr-nav-tabs--header {
   display: none;
   flex-shrink: 0;
@@ -68,9 +63,6 @@ div.header .title-wrapper {
     display: block;
   }
 }
-/* The active underline sits just under the label, clear of the header's bottom
- * hairline (per the Docs Figma), so the tab stays a compact centered box rather
- * than spanning the full header height. */
 .nbr-nav-tabs--header a {
   padding-block: 0.1875rem;
 }
@@ -95,10 +87,6 @@ div.header .social-icons a:hover {
   background-color: var(--nbr-surface-subtle);
 }
 
-/* ── Search trigger ──────────────────────────────────────────────────────
- * Starlight already renders this as a bordered box above 50rem; recolour it as
- * a rounded input on the card surface and step the width up at the wide
- * breakpoint so it cannot overflow the header at exactly 50rem. */
 div.header site-search button[data-open-modal] {
   border-radius: var(--nbr-radius-md);
 }
@@ -183,10 +171,8 @@ div.header site-search button[data-open-modal] kbd {
   background-color: var(--nbr-surface-subtle);
 }
 
-/* Active page — the accent bar is an inset box-shadow rather than a border so it
- * adds no width and does not fight the 1px tree line Starlight already draws on
- * nested list items. Out-specifies Starlight's :where(...)[aria-current=page]
- * solid-accent + inverted-text rule. */
+/* Active page — accent bar + subtle fill (out-specifies Starlight's
+ * :where(...)[aria-current=page] solid-accent + inverted-text rule). */
 .sidebar-content a[aria-current="page"],
 .sidebar-content a[aria-current="page"]:hover,
 .sidebar-content a[aria-current="page"]:focus {
@@ -196,9 +182,6 @@ div.header site-search button[data-open-modal] kbd {
   font-weight: 600;
 }
 
-/* ── Table of contents ───────────────────────────────────────────────────
- * The heading becomes the eyebrow. text-transform is purely visual, so the
- * nav's accessible name via aria-labelledby stays "On this page". */
 #starlight__on-this-page {
   font-size: var(--nbr-text-eyebrow);
   font-weight: 600;
@@ -207,8 +190,6 @@ div.header site-search button[data-open-modal] kbd {
   color: var(--sl-color-gray-3);
 }
 
-/* Every entry carries a transparent bar and gives back its width from the inline
- * padding, so lighting the active one shifts no text. */
 .right-sidebar starlight-toc a {
   border-inline-start: 2px solid transparent;
   border-radius: 0;
@@ -222,8 +203,6 @@ div.header site-search button[data-open-modal] kbd {
   border-block-end: 1px solid var(--sl-color-hairline);
   padding-block-end: 0.75rem;
 }
-
-/* ── Page layout ─────────────────────────────────────────────────────────── */
 
 /* The sticky-footer rule below makes this container a flex column, and a flex
  * item with auto cross-axis margins shrinks to fit its content instead of
@@ -270,11 +249,9 @@ main > .content-panel:last-child > .sl-container > footer {
   margin-block-start: auto;
 }
 
-/* The Figma grid is fixed at 288 / 880 / 272, but Starlight distributes the free
- * space evenly around the content column, which lands the main pane at 840 and
- * the TOC at 312. Pin both, then inset the panel by 32px so the measure resolves
- * to --sl-content-width (816). Only applies at the lg breakpoint where the TOC
- * is shown; below it the clamp above keeps the content breathing. */
+/* Narrow the right-hand "On this page" table of contents. Starlight sizes this
+ * column off --sl-sidebar-width (18rem), which reads too wide for a short TOC;
+ * cap it tighter. Only applies at the lg breakpoint where the TOC is shown. */
 @media (min-width: 72rem) {
   .right-sidebar-container {
     width: 17rem;
@@ -287,11 +264,6 @@ main > .content-panel:last-child > .sl-container > footer {
   }
 }
 
-/* ── Mobile ──────────────────────────────────────────────────────────────
- * Starlight fixes the menu button to the inline-end edge and reserves header
- * padding there for it; the design puts the hamburger first, so both are
- * mirrored. Above the breakpoint Starlight resets its own padding and the
- * button is hidden, so only the start-side padding needs unwinding. */
 @media not all and (min-width: 50rem) {
   [data-has-sidebar] header.header {
     padding-inline-start: calc(
@@ -314,8 +286,6 @@ main > .content-panel:last-child > .sl-container > footer {
   }
 }
 
-/* Nav tabs inside the mobile drawer read as a stacked list above the sidebar
- * groups, sharing the sidebar's active treatment. */
 .nbr-nav-tabs--drawer {
   border-block-end: 1px solid var(--sl-color-hairline);
   padding-block-end: 1rem;
@@ -342,7 +312,26 @@ main > .content-panel:last-child > .sl-container > footer {
   }
 }
 
-/* ── Mobile table of contents ────────────────────────────────────────────── */
+.pagination-links a {
+  border-radius: var(--nbr-radius-md);
+  border-color: var(--nbr-border);
+  box-shadow: none;
+  color: var(--sl-color-gray-3);
+  font-size: var(--sl-text-sm);
+}
+.pagination-links a:hover {
+  border-color: var(--nbr-primary);
+}
+.pagination-links .link-title {
+  color: var(--sl-color-text-accent);
+  font-size: var(--sl-text-lg);
+  font-weight: 600;
+}
+
+.content-panel footer .meta:not(:has(*)) {
+  display: none;
+}
+
 #starlight__mobile-toc .toggle {
   border-radius: var(--nbr-radius-md);
   border-color: var(--nbr-input);

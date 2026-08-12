@@ -85,11 +85,7 @@ test('the mobile drawer exposes nav tabs and keeps accessible names', async ({
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto('/guides/deployment/build/');
 
-  // The header tabs are desktop-only; the drawer copy is what mobile gets.
   await expect(page.locator('.nbr-nav-tabs--header')).toBeHidden();
-  // Starlight tracks the open state on the custom element, not on the button
-  // (the button's own aria-expanded stays "false"), and only sets it on the
-  // first toggle — so it is absent, not "false", until the menu is opened.
   const menu = page.locator('starlight-menu-button');
   await expect(page.locator('.nbr-nav-tabs--drawer')).toBeHidden();
   await menu.locator('button').click();
@@ -99,7 +95,6 @@ test('the mobile drawer exposes nav tabs and keeps accessible names', async ({
   await expect(drawerTabs).toBeVisible();
   await expect(drawerTabs.locator('a[aria-current="page"]')).toHaveCount(1);
 
-  // Collapsible sidebar groups must keep their accessible names.
   const summaries = page.locator('#starlight__sidebar summary');
   for (let i = 0; i < (await summaries.count()); i++) {
     expect((await summaries.nth(i).innerText()).trim().length).toBeGreaterThan(
@@ -112,9 +107,7 @@ test('home and content pages have no serious/critical a11y violations', async ({
   page,
 }) => {
   // Cover the splash home plus a component-heavy guide and a table-heavy
-  // reference page, so the a11y sweep exercises the full docs layout. Both
-  // widths run: the mobile drawer, the moved menu button and the mobile table
-  // of contents are surfaces the desktop pass never reaches.
+  // reference page, so the a11y sweep exercises the full docs layout.
   for (const [width, height] of [
     [1440, 900],
     [375, 800],
@@ -126,9 +119,6 @@ test('home and content pages have no serious/critical a11y violations', async ({
       '/reference/components/',
     ]) {
       await page.goto(path);
-      // Expressive Code marks horizontally scrollable code blocks keyboard
-      // accessible (tabindex + role="region") from a requestIdleCallback, so axe
-      // must not sample the DOM before that pass has run.
       await page.waitForFunction(() =>
         [...document.querySelectorAll('pre')].every(
           (el) =>

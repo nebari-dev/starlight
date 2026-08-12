@@ -94,7 +94,6 @@ test('the nav option renders top-level tabs in the header', () => {
 });
 
 test('exactly one nav tab is marked aria-current per page', () => {
-  // The sidebar also uses aria-current="page", so scope the count to the tabs.
   for (const page of [
     'index.html',
     'reference/configuration/index.html',
@@ -106,23 +105,18 @@ test('exactly one nav tab is marked aria-current per page', () => {
 });
 
 test('the active tab is the section the page belongs to', () => {
-  // The Guides tab points at a leaf page, so this also proves segment matching
-  // carries the whole section rather than falling back to the root tab.
   expect(navTabsMarkup('guides/deployment/build/index.html')).toMatch(
     /href="\/guides\/authoring-content\/"[^>]*aria-current="page"/,
   );
   expect(navTabsMarkup('reference/components/index.html')).toMatch(
     /href="\/reference\/configuration\/"[^>]*aria-current="page"/,
   );
-  // Nothing outside a section tab falls through to the root tab.
   expect(navTabsMarkup('getting-started/installation/index.html')).toMatch(
     /href="\/"[^>]*aria-current="page"/,
   );
 });
 
 test('nav tabs render in both the header and the mobile drawer', () => {
-  // The splash home has no sidebar, so the drawer copy only exists on pages
-  // that render one.
   const html = readFileSync(
     join(DIST, 'guides/deployment/build/index.html'),
     'utf8',
@@ -132,11 +126,68 @@ test('nav tabs render in both the header and the mobile drawer', () => {
 });
 
 test('the search label is overridden through injectTranslations', () => {
-  // Proves a plugin can override a built-in Starlight UI string: the default is
-  // "Search". The same key also feeds the Pagefind modal placeholder.
   const html = readFileSync(join(DIST, 'index.html'), 'utf8');
   expect(html).toContain('Search docs');
   expect(html).toMatch(/aria-label="Search docs[^"]*"/);
+});
+
+test('a nested page renders a breadcrumb trail above the title', () => {
+  const html = readFileSync(
+    join(DIST, 'guides/deployment/build/index.html'),
+    'utf8',
+  );
+  expect(html).toMatch(/<nav class="nbr-breadcrumbs[^"]*" aria-label="[^"]+"/);
+  const trail = html.match(/<li[^>]*>([^<]+)<\/li>/g)?.join(' ') ?? '';
+  expect(trail).toContain('Guides');
+  expect(trail).toContain('Deployment');
+  expect(html).toMatch(/<li[^>]*aria-current="page"/);
+});
+
+test('the splash home renders no page header, so no breadcrumb', () => {
+  const html = readFileSync(join(DIST, 'index.html'), 'utf8');
+  expect(html).not.toContain('nbr-page-header');
+  expect(html).not.toContain('nbr-breadcrumbs');
+});
+
+test('the page title keeps the id Starlight anchors and the skip link target', () => {
+  const html = readFileSync(
+    join(DIST, 'guides/deployment/build/index.html'),
+    'utf8',
+  );
+  expect(html).toMatch(/<h1 id="_top"/);
+});
+
+test('the meta row shows the updated date and the read time', () => {
+  const html = readFileSync(
+    join(DIST, 'guides/authoring-content/index.html'),
+    'utf8',
+  );
+  expect(html).toMatch(
+    /Updated\s*<time[^>]*datetime="[^"]+"[^>]*>[^<]+<\/time>/,
+  );
+  expect(html).toMatch(/\d+ min read/);
+});
+
+test('read time is derived per page, not a constant', () => {
+  const long = readFileSync(
+    join(DIST, 'guides/authoring-content/index.html'),
+    'utf8',
+  ).match(/(\d+) min read/)?.[1];
+  const short = readFileSync(
+    join(DIST, 'getting-started/installation/index.html'),
+    'utf8',
+  ).match(/(\d+) min read/)?.[1];
+  expect(long).toBeDefined();
+  expect(short).toBeDefined();
+  expect(Number(long)).toBeGreaterThan(Number(short));
+});
+
+test('the last-updated date is not printed a second time in the footer', () => {
+  const html = readFileSync(
+    join(DIST, 'guides/authoring-content/index.html'),
+    'utf8',
+  );
+  expect(html).not.toContain('Last updated:');
 });
 
 test('the footer renders the link columns and bottom bar', () => {

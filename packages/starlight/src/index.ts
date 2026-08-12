@@ -51,15 +51,9 @@ export interface NebariThemeOptions {
    * returns users to `packs.nebari.dev/`.
    */
   logoHref?: string;
-  /**
-   * Top-level navigation tabs rendered in the header beside the logo, and used
-   * for the footer's Documentation column. Hrefs are site-relative and get the
-   * site `base` prepended. Omit the option to render no tabs at all.
-   */
   nav?: Array<{ label: string; href: string }>;
 }
 
-/** The theme options after defaulting, emitted as `virtual:nebari/config` exports. */
 interface ResolvedOptions {
   logoHref: string | null;
   nav: Array<{ label: string; href: string }> | null;
@@ -172,6 +166,9 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
           en: {
             'search.label': 'Search docs…',
             'nebari.navLabel': 'Site',
+            'nebari.breadcrumbLabel': 'Breadcrumb',
+            'nebari.updated': 'Updated',
+            'nebari.readTime': '{{minutes}} min read',
           },
         });
       },
@@ -191,8 +188,11 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
             Footer: '@nebari/starlight/components/Footer.astro',
             Sidebar: '@nebari/starlight/components/Sidebar.astro',
             ThemeSelect: '@nebari/starlight/components/ThemeSelect.astro',
+            PageTitle: '@nebari/starlight/components/PageTitle.astro',
+            LastUpdated: '@nebari/starlight/components/LastUpdated.astro',
             ...(config.components ?? {}),
           },
+          lastUpdated: config.lastUpdated ?? true,
           social: [
             {
               icon: 'github',

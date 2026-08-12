@@ -12,7 +12,6 @@ function segments(path: string, base: string): string[] {
   return out.split('/').filter(Boolean);
 }
 
-/** How many leading path segments two routes share. */
 function sharedDepth(a: string[], b: string[]): number {
   let shared = 0;
   while (shared < a.length && shared < b.length && a[shared] === b[shared]) {
@@ -21,14 +20,6 @@ function sharedDepth(a: string[], b: string[]): number {
   return shared;
 }
 
-/**
- * The `href` of the nav tab the given pathname belongs under, or `null`.
- *
- * Tabs are matched by shared leading path segments rather than raw string
- * prefix, so a tab pointing at `/guides/intro/` still lights up on
- * `/guides/deployment/build/`. A root tab (`/`) has no segments and therefore
- * acts as the fallback: it wins only when no section tab matches.
- */
 export function activeNavHref(
   pathname: string,
   items: NavItem[],

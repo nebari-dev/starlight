@@ -29,7 +29,6 @@ test('nav tab and footer hrefs carry the base exactly once', () => {
     /<nav class="nbr-nav-tabs[^"]*"[^>]*>[\s\S]*?<\/nav>/,
   );
   expect(tabs, 'no nav tabs rendered').not.toBeNull();
-  // Component-built hrefs are pre-prefixed, so withBasePrefix must not re-prefix.
   expect(tabs?.[0]).toMatch(/href="\/demo-pack\/guides\//);
   expect(html).not.toMatch(/\/demo-pack\/demo-pack\//);
 });

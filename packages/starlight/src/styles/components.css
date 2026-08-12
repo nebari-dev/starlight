@@ -59,13 +59,6 @@
   background-color: var(--nbr-destructive);
 }
 
-/* ── Tables ──────────────────────────────────────────────────────────────
- * Starlight makes every table `display: block; overflow: auto`, which turns an
- * overflowing table into a scroll container with no tabindex and no focusable
- * content — an axe `scrollable-region-focusable` failure. It only bites at
- * narrow widths, where the column is too tight for the table. Letting the table
- * lay out normally and wrap its cells removes the scroll container entirely
- * rather than leaving one nobody can reach from a keyboard. */
 @media not all and (min-width: 50rem) {
   .sl-markdown-content table:not(:where(.not-content *)) {
     display: table;

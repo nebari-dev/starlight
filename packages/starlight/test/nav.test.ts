@@ -14,8 +14,6 @@ test('a nested page lights its section tab, not the root', () => {
 });
 
 test('a tab pointing at a leaf page still lights across its section', () => {
-  // The demo config points Guides at a real page because /guides/ does not
-  // exist yet, so segment matching has to carry the whole section.
   const leafNav: NavItem[] = [
     { label: 'Docs', href: '/' },
     { label: 'Guides', href: '/guides/authoring-content/' },
@@ -30,7 +28,6 @@ test('a tab pointing at a leaf page still lights across its section', () => {
 });
 
 test('the root tab is a fallback, not a catch-all prefix', () => {
-  // It must lose to any section tab that matches, and win when none does.
   expect(activeNavHref('/getting-started/installation/', NAV)).toBe('/');
   expect(activeNavHref('/guides/deployment/', NAV)).toBe('/guides/');
 });
@@ -78,11 +75,6 @@ test('a partial segment is not treated as a prefix match', () => {
   expect(activeNavHref('/guides/authoring/', tabs)).toBeNull();
 });
 
-/**
- * The upgrade guard for every existing pack: with `nav` unset the virtual module
- * must export null, so NavTabs renders nothing and the header markup is
- * byte-identical to before this option existed.
- */
 function loadVirtualConfig(options?: Parameters<typeof nebari>[0]): string {
   const plugin = nebari(options);
   let integration: { hooks: Record<string, unknown> } | undefined;
