@@ -44,6 +44,28 @@ export function withBasePrefix(html: string, base: string): string {
   );
 }
 
+/**
+ * Make Markdown tables keyboard-reachable.
+ *
+ * `components.css` renders tables as `overflow-x: auto` blocks so that a token
+ * too long to wrap — a URL, a filesystem path — scrolls instead of pushing the
+ * whole page sideways. A scrollable region has to be focusable or keyboard users
+ * cannot reach the hidden columns (axe `scrollable-region-focusable`, WCAG 2.1.1),
+ * and `tabindex` is not expressible in CSS.
+ *
+ * Done here rather than with a rehype plugin because Astro 7 deprecated
+ * `markdown.rehypePlugins`: the legacy path needs `@astrojs/markdown-remark`
+ * installed directly and still logs a deprecation warning. This reuses the
+ * rewriter that already runs over every emitted page. Like `withBasePrefix`, it
+ * is build-only — `astro dev` serves tables without the attribute.
+ */
+export function withFocusableTables(html: string): string {
+  return html.replace(
+    /<table(?![^>]*\stabindex=)([^>]*)>/g,
+    '<table$1 tabindex="0">',
+  );
+}
+
 export interface NebariThemeOptions {
   /**
    * URL the header logo links to. Defaults to the site's own base
@@ -105,7 +127,7 @@ function nebariConfigIntegration(resolved: ResolvedOptions): AstroIntegration {
               rewrite(path);
             } else if (entry.name.endsWith('.html')) {
               const html = readFileSync(path, 'utf8');
-              const next = withBasePrefix(html, base);
+              const next = withFocusableTables(withBasePrefix(html, base));
               if (next !== html) writeFileSync(path, next);
             }
           }

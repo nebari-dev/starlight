@@ -1,3 +1,8 @@
+:focus-visible {
+  outline: 2px solid var(--nbr-ring);
+  outline-offset: 2px;
+}
+
 /* ── Header: logo + nav tabs left, search and controls right ──────────────
  * Replace Starlight's header grid with a simple flex row so the search box and
  * controls cluster on the right. Scoped to `div.header` (the inner header row)
@@ -176,6 +181,7 @@ div.header site-search button[data-open-modal] kbd {
 }
 .sidebar-content a:not(.nbr-nav-tabs a):hover {
   background-color: var(--nbr-surface-subtle);
+  text-decoration: underline;
 }
 
 .sidebar-content li + li {
@@ -192,6 +198,7 @@ div.header site-search button[data-open-modal] kbd {
   padding-inline-start: 0;
 }
 .sidebar-content ul ul a:not(.nbr-nav-tabs a) {
+  position: relative;
   padding-inline-start: var(--sl-sidebar-item-padding-inline);
 }
 
@@ -205,14 +212,16 @@ div.header site-search button[data-open-modal] kbd {
   background-color: var(--nbr-surface-subtle);
   font-weight: 500;
 }
-.sidebar-content ul ul a[aria-current="page"]:not(.nbr-nav-tabs a) {
-  position: relative;
-}
-.sidebar-content ul ul a[aria-current="page"]:not(.nbr-nav-tabs a)::before {
+.sidebar-content ul ul a[aria-current="page"]:not(.nbr-nav-tabs a)::before,
+.sidebar-content ul ul a:not(.nbr-nav-tabs a):hover::before {
   content: "";
   position: absolute;
   inset-block: 0;
   inset-inline-start: -1px;
+  width: 1px;
+  background-color: var(--nbr-foreground);
+}
+.sidebar-content ul ul a[aria-current="page"]:not(.nbr-nav-tabs a)::before {
   width: 2px;
   background-color: var(--nbr-primary);
 }

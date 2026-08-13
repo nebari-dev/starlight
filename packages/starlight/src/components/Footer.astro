@@ -85,6 +85,10 @@ const columns = [
     font-size: var(--sl-text-sm);
     color: var(--sl-color-gray-3);
   }
+  :global(main:has(.nbr-footer)),
+  :global(.content-panel:has(.nbr-footer)) {
+    padding-bottom: 0;
+  }
   .nbr-footer__top {
     display: flex;
     flex-wrap: wrap;

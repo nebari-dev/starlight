@@ -137,10 +137,17 @@ test('a nested page renders a breadcrumb trail above the title', () => {
     'utf8',
   );
   expect(html).toMatch(/<nav class="nbr-breadcrumbs[^"]*" aria-label="[^"]+"/);
-  const trail = html.match(/<li[^>]*>([^<]+)<\/li>/g)?.join(' ') ?? '';
+  const crumbs = html.match(/<nav class="nbr-breadcrumbs[\s\S]*?<\/nav>/)?.[0];
+  expect(crumbs).toBeDefined();
+  const trail = (crumbs ?? '').replace(/<[^>]+>/g, ' ');
   expect(trail).toContain('Guides');
   expect(trail).toContain('Deployment');
   expect(html).toMatch(/<li[^>]*aria-current="page"/);
+  // Ancestors are links; the current page is the only segment left as text.
+  expect(crumbs).toMatch(/<li[^>]*><a href="[^"]+"[^>]*>Guides<\/a><\/li>/);
+  expect(crumbs).toMatch(
+    /<li[^>]*aria-current="page"[^>]*>[^<]*Build &amp; Preview/,
+  );
 });
 
 test('the splash home renders no page header, so no breadcrumb', () => {
@@ -225,7 +232,9 @@ test('the kitchen sink renders every content surface', () => {
   expect(html).toContain('sl-steps');
   expect(html).toContain('sl-badge');
   expect(html).toContain('<figcaption>');
-  expect(html).toMatch(/<table>[\s\S]*<thead>/);
+  expect(html).toMatch(/<table[^>]*>[\s\S]*<thead>/);
+  // Tables scroll when a token cannot wrap, so they must be keyboard-reachable.
+  expect(html).toMatch(/<table[^>]*\stabindex="0"/);
 });
 
 test('Expressive Code frame chrome uses the muted surface and a bottom tab indicator', () => {

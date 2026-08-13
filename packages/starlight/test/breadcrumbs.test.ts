@@ -8,6 +8,7 @@ import {
 const link = (label: string, isCurrent = false): BreadcrumbEntry => ({
   type: 'link',
   label,
+  href: `/${label.toLowerCase().replace(/ /g, '-')}/`,
   isCurrent,
 });
 const group = (label: string, entries: BreadcrumbEntry[]): BreadcrumbEntry => ({
@@ -26,14 +27,47 @@ const SIDEBAR: BreadcrumbEntry[] = [
 ];
 
 test('a nested page returns group labels then its own label', () => {
-  expect(breadcrumbTrail(SIDEBAR)).toEqual(['Guides', 'Deployment', 'Build']);
+  expect(breadcrumbTrail(SIDEBAR)).toEqual([
+    { label: 'Guides', href: '/authoring-content/' },
+    { label: 'Deployment', href: '/build/' },
+    { label: 'Build' },
+  ]);
 });
 
-test('a page one level deep returns two segments', () => {
+test('the current page carries no href, so it is not rendered as a link', () => {
+  const trail = breadcrumbTrail(SIDEBAR);
+  expect(trail.at(-1)?.href).toBeUndefined();
+});
+
+test('a group resolves to its first descendant link', () => {
   const sidebar: BreadcrumbEntry[] = [
-    group('Reference', [link('Configuration', true)]),
+    group('Reference', [link('Configuration', true), link('Components')]),
   ];
-  expect(breadcrumbTrail(sidebar)).toEqual(['Reference', 'Configuration']);
+  expect(breadcrumbTrail(sidebar)).toEqual([
+    { label: 'Reference', href: '/configuration/' },
+    { label: 'Configuration' },
+  ]);
+});
+
+test('a group whose only child is a group reaches through to the deepest link', () => {
+  const sidebar: BreadcrumbEntry[] = [
+    group('Guides', [group('Deployment', [link('Build', true)])]),
+  ];
+  expect(breadcrumbTrail(sidebar)).toEqual([
+    { label: 'Guides', href: '/build/' },
+    { label: 'Deployment', href: '/build/' },
+    { label: 'Build' },
+  ]);
+});
+
+test('a group with no links anywhere yields no href rather than throwing', () => {
+  const sidebar: BreadcrumbEntry[] = [
+    group('Outer', [group('Inner', []), link('Build', true)]),
+  ];
+  expect(breadcrumbTrail(sidebar)).toEqual([
+    { label: 'Outer', href: '/build/' },
+    { label: 'Build' },
+  ]);
 });
 
 test('a flat top-level page returns a single segment, so the caller suppresses it', () => {
@@ -41,7 +75,7 @@ test('a flat top-level page returns a single segment, so the caller suppresses i
     link('Introduction', true),
     link('About'),
   ];
-  expect(breadcrumbTrail(sidebar)).toEqual(['Introduction']);
+  expect(breadcrumbTrail(sidebar)).toEqual([{ label: 'Introduction' }]);
 });
 
 test('no current link anywhere returns an empty trail', () => {
@@ -60,7 +94,10 @@ test('an empty group does not swallow a later match', () => {
     group('Empty', []),
     group('Guides', [link('Build', true)]),
   ];
-  expect(breadcrumbTrail(sidebar)).toEqual(['Guides', 'Build']);
+  expect(breadcrumbTrail(sidebar)).toEqual([
+    { label: 'Guides', href: '/build/' },
+    { label: 'Build' },
+  ]);
 });
 
 test('the first current link wins when more than one is marked', () => {
@@ -68,6 +105,8 @@ test('the first current link wins when more than one is marked', () => {
     group('Guides', [link('Build', true)]),
     group('Reference', [link('Configuration', true)]),
   ];
-  expect(breadcrumbTrail(SIDEBAR)).toEqual(['Guides', 'Deployment', 'Build']);
-  expect(breadcrumbTrail(sidebar)).toEqual(['Guides', 'Build']);
+  expect(breadcrumbTrail(sidebar)).toEqual([
+    { label: 'Guides', href: '/build/' },
+    { label: 'Build' },
+  ]);
 });

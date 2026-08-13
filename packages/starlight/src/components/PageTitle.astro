@@ -28,13 +28,13 @@ const updated = lastUpdated
         aria-label={Astro.locals.t('nebari.breadcrumbLabel')}
       >
         <ol>
-          {breadcrumbs.map((label, index) => (
+          {breadcrumbs.map((crumb, index) => (
             <li
               aria-current={
                 index === breadcrumbs.length - 1 ? 'page' : undefined
               }
             >
-              {label}
+              {crumb.href ? <a href={crumb.href}>{crumb.label}</a> : crumb.label}
             </li>
           ))}
         </ol>
@@ -80,12 +80,22 @@ const updated = lastUpdated
     padding: 0;
     list-style: none;
     font-size: var(--sl-text-sm);
-    color: var(--sl-color-gray-3);
+    color: var(--nbr-muted-foreground);
+  }
+  .nbr-breadcrumbs li[aria-current='page'] {
+    color: var(--nbr-foreground);
+  }
+  .nbr-breadcrumbs a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .nbr-breadcrumbs a:hover {
+    text-decoration: underline;
   }
   .nbr-breadcrumbs li + li::before {
     content: '›';
     margin-inline-end: 0.5rem;
-    color: var(--sl-color-gray-4);
+    color: var(--nbr-border);
   }
   .nbr-page-meta {
     display: flex;
