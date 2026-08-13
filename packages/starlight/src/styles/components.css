@@ -89,6 +89,14 @@
   border-spacing: 0;
   font-size: 0.875rem;
 }
+.sl-markdown-content
+  table:has(tr > :nth-child(3)):not(:where(.not-content *)) {
+  min-width: 30rem;
+}
+.sl-markdown-content
+  table:has(tr > :nth-child(4)):not(:where(.not-content *)) {
+  min-width: 40rem;
+}
 .sl-markdown-content :is(th, td):not(:where(.not-content *)) {
   min-width: 10rem;
   padding: 0.5rem 1rem;
