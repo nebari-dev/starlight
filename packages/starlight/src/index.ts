@@ -216,6 +216,8 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
             ThemeSelect: '@nebari/starlight/components/ThemeSelect.astro',
             PageTitle: '@nebari/starlight/components/PageTitle.astro',
             LastUpdated: '@nebari/starlight/components/LastUpdated.astro',
+            MarkdownContent:
+              '@nebari/starlight/components/MarkdownContent.astro',
             ...(config.components ?? {}),
           },
           lastUpdated: config.lastUpdated ?? true,

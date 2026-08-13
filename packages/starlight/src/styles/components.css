@@ -78,10 +78,11 @@
 
 /* ── Tables ── */
 .sl-markdown-content table:not(:where(.not-content *)) {
-  display: block;
-  overflow-x: auto;
-  width: max-content;
+  display: table;
+  width: 100%;
   max-width: 100%;
+  min-width: 20rem;
+  table-layout: fixed;
   border: 1px solid var(--nbr-border);
   border-radius: var(--nbr-radius-lg);
   border-collapse: separate;
@@ -89,10 +90,22 @@
   font-size: 0.875rem;
 }
 .sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+  min-width: 10rem;
   padding: 0.5rem 1rem;
   border-bottom: 1px solid var(--nbr-border);
   line-height: 1.375rem;
   vertical-align: middle;
+}
+.nbr-table-cell-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-wrap: normal;
+  word-break: normal;
+  white-space: normal;
+}
+.nbr-table-cell-content {
+  min-width: 0;
 }
 .sl-markdown-content
   :is(th:first-child, td:first-child):not(:where(.not-content *)) {
@@ -115,17 +128,6 @@
 }
 .sl-markdown-content tbody tr:last-child td:not(:where(.not-content *)) {
   border-bottom: 0;
-}
-
-/* Narrow widths: `break-word`, not `anywhere`. `anywhere` adds a break opportunity
- * at every character when computing min-content, which collapses columns and
- * hyphenates ordinary words like "Overridden". `break-word` leaves min-content at
- * the longest word, so words stay whole and the scroll container above absorbs
- * anything that still will not fit. */
-@media not all and (min-width: 50rem) {
-  .sl-markdown-content :is(th, td):not(:where(.not-content *)) {
-    overflow-wrap: break-word;
-  }
 }
 
 /* ── Badges ── */

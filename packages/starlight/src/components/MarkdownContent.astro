@@ -1,0 +1,36 @@
+---
+import Default from '@astrojs/starlight/components/MarkdownContent.astro';
+---
+
+<Default><slot /></Default>
+
+<script>
+  function wrapTableCells() {
+    document.querySelectorAll<HTMLTableCellElement>('.sl-markdown-content :is(th, td)').forEach((cell) => {
+      let scroller = cell.firstElementChild;
+      if (!scroller?.classList.contains('nbr-table-cell-scroll')) {
+        scroller = document.createElement('div');
+        scroller.className = 'nbr-table-cell-scroll';
+        while (cell.firstChild) scroller.append(cell.firstChild);
+        cell.append(scroller);
+      }
+
+      if (!scroller.firstElementChild?.classList.contains('nbr-table-cell-content')) {
+        const content = document.createElement('div');
+        content.className = 'nbr-table-cell-content';
+        while (scroller.firstChild) content.append(scroller.firstChild);
+        scroller.append(content);
+      }
+    });
+
+    requestAnimationFrame(() => {
+      document.querySelectorAll<HTMLElement>('.nbr-table-cell-scroll').forEach((cell) => {
+        cell.tabIndex = cell.scrollWidth > cell.clientWidth ? 0 : -1;
+      });
+    });
+  }
+
+  wrapTableCells();
+  document.addEventListener('astro:page-load', wrapTableCells);
+  window.addEventListener('resize', wrapTableCells);
+</script>
