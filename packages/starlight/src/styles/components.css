@@ -24,49 +24,196 @@
   color: var(--sl-color-accent);
 }
 
-/* ── Callouts / asides ───────────────────────────────────────────────────
- * Darby-style: rounded, tinted fill + a strong left accent bar. Each type maps
- * to a Nebari feedback pair (soft fill + strong foreground for bar/title). The
- * aside body text stays on Starlight's --sl-color-white (theme foreground), so
- * contrast holds against the pale/deep fills in light and dark. */
+/* ── Callouts / asides ── */
 .starlight-aside {
-  border-radius: var(--nbr-radius-md);
-  border-inline-start-width: 0.25rem;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--nbr-border);
+  border-inline-start-width: 1px;
+  border-radius: var(--nbr-radius-lg);
+  background-color: var(--nbr-card);
+}
+
+.starlight-aside__title {
+  gap: 0.375rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: var(--nbr-aside-fg);
+  background-color: var(--nbr-aside-tint);
+  border-bottom: 1px solid var(--nbr-border);
+}
+
+.starlight-aside__icon {
+  font-size: 1em;
+}
+
+.starlight-aside__content,
+.starlight-aside__title + .starlight-aside__content {
+  margin-top: 0;
+  padding: 0.875rem 1rem;
 }
 
 .starlight-aside--note {
-  --sl-color-asides-border: var(--sl-color-accent);
-  --sl-color-asides-text-accent: var(--sl-color-accent-high);
-  background-color: color-mix(
-    in oklab,
-    var(--nbr-brand),
-    var(--nbr-background) 88%
-  );
+  --nbr-aside-tint: var(--nbr-callout-note);
+  --nbr-aside-fg: var(--sl-color-text-accent);
+  --sl-color-asides-text-accent: var(--sl-color-text-accent);
 }
 .starlight-aside--tip {
-  --sl-color-asides-border: var(--nbr-success-foreground);
+  --nbr-aside-tint: var(--nbr-success);
+  --nbr-aside-fg: var(--nbr-success-foreground);
   --sl-color-asides-text-accent: var(--nbr-success-foreground);
-  background-color: var(--nbr-success);
 }
 .starlight-aside--caution {
-  --sl-color-asides-border: var(--nbr-warning-foreground);
+  --nbr-aside-tint: var(--nbr-warning);
+  --nbr-aside-fg: var(--nbr-warning-foreground);
   --sl-color-asides-text-accent: var(--nbr-warning-foreground);
-  background-color: var(--nbr-warning);
 }
 .starlight-aside--danger {
-  --sl-color-asides-border: var(--nbr-destructive-foreground);
+  --nbr-aside-tint: var(--nbr-destructive);
+  --nbr-aside-fg: var(--nbr-destructive-foreground);
   --sl-color-asides-text-accent: var(--nbr-destructive-foreground);
-  background-color: var(--nbr-destructive);
+}
+
+/* ── Tables ── */
+.sl-markdown-content table:not(:where(.not-content *)) {
+  display: table;
+  width: 100%;
+  border: 1px solid var(--nbr-border);
+  border-radius: var(--nbr-radius-lg);
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+}
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--nbr-border);
+  line-height: 1.375rem;
+  vertical-align: middle;
+}
+.sl-markdown-content
+  :is(th:first-child, td:first-child):not(:where(.not-content *)) {
+  padding-inline-start: 1rem;
+}
+.sl-markdown-content
+  :is(th:last-child, td:last-child):not(:where(.not-content *)) {
+  padding-inline-end: 1rem;
+}
+.sl-markdown-content th:not(:where(.not-content *)) {
+  color: var(--nbr-foreground);
+  background-color: var(--nbr-background);
+  line-height: 1.25rem;
+}
+.sl-markdown-content thead th:first-child:not(:where(.not-content *)) {
+  border-start-start-radius: var(--nbr-radius-lg);
+}
+.sl-markdown-content thead th:last-child:not(:where(.not-content *)) {
+  border-start-end-radius: var(--nbr-radius-lg);
+}
+.sl-markdown-content tbody tr:last-child td:not(:where(.not-content *)) {
+  border-bottom: 0;
 }
 
 @media not all and (min-width: 50rem) {
-  .sl-markdown-content table:not(:where(.not-content *)) {
-    display: table;
-    width: 100%;
-  }
   .sl-markdown-content :is(th, td):not(:where(.not-content *)) {
     overflow-wrap: anywhere;
   }
+}
+
+/* ── Badges ── */
+.sl-badge {
+  border-color: transparent;
+  border-radius: var(--nbr-radius-full);
+  font-family: var(--sl-font);
+  font-weight: 500;
+}
+.sl-badge.small {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding: 0.125rem 0.5rem;
+}
+
+/* ── Steps ── */
+.sl-markdown-content .sl-steps {
+  --bullet-size: 2rem;
+}
+.sl-markdown-content .sl-steps > li {
+  padding-inline-start: calc(var(--bullet-size) + 0.75rem);
+}
+.sl-markdown-content .sl-steps > li::before {
+  font-size: 0.875rem;
+  color: var(--nbr-foreground);
+  background-color: var(--nbr-background);
+  box-shadow: inset 0 0 0 1px var(--nbr-border);
+}
+
+/* ── Figures ── */
+.sl-markdown-content figure:not(.frame) > :is(img, picture, svg) {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--nbr-border);
+  border-radius: var(--nbr-radius-lg);
+  background-color: var(--nbr-muted);
+}
+.sl-markdown-content figure:not(.frame) > figcaption {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  color: var(--nbr-muted-foreground);
+}
+
+/* ── Inline code ── */
+.sl-markdown-content :not(pre) > code:not(:where(.not-content *)) {
+  padding: 0;
+  background-color: transparent;
+  color: var(--sl-color-text-accent);
+}
+
+/* ── Tabs ── */
+starlight-tabs .tablist-wrapper {
+  background-color: var(--nbr-muted);
+  border: 1px solid var(--nbr-border);
+  border-radius: var(--nbr-radius-lg) var(--nbr-radius-lg) 0 0;
+}
+starlight-tabs [role="tablist"] {
+  border-bottom: 0;
+}
+starlight-tabs .tab > [role="tab"] {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--nbr-muted-foreground-strong);
+  box-shadow: none;
+}
+starlight-tabs .tab > [role="tab"][aria-selected="true"] {
+  color: var(--nbr-foreground);
+  background-color: var(--nbr-background);
+  box-shadow: inset 0 -2px 0 var(--nbr-primary);
+}
+starlight-tabs .tablist-wrapper ~ [role="tabpanel"] {
+  margin-top: -1px;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--nbr-border);
+  border-radius: 0 0 var(--nbr-radius-lg) var(--nbr-radius-lg);
+}
+
+starlight-tabs
+  .tablist-wrapper
+  ~ [role="tabpanel"]:has(> .expressive-code:only-child) {
+  padding: 0;
+  border-top-width: 0;
+}
+starlight-tabs
+  [role="tabpanel"]
+  > .expressive-code:only-child
+  :is(.frame, pre) {
+  border-width: 0;
+  border-radius: 0;
+}
+
+:is(starlight-tabs, starlight-tabs + script) + .expressive-code {
+  margin-top: -1px;
 }
 
 /* ── Splash hero ─────────────────────────────────────────────────────────

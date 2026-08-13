@@ -65,6 +65,7 @@ export default defineConfig({
               link: '/reference/configuration/',
             },
             { label: 'Components', link: '/reference/components/' },
+            { label: 'Kitchen Sink', link: '/reference/kitchen-sink/' },
           ],
         },
       ],

@@ -119,6 +119,7 @@ test('home and content pages have no serious/critical a11y violations', async ({
         '/',
         '/guides/authoring-content/',
         '/reference/components/',
+        '/reference/kitchen-sink/',
       ]) {
         await page.goto(path);
         await expect(page.locator('html')).toHaveAttribute(

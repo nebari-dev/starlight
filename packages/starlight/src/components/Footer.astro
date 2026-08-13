@@ -5,6 +5,8 @@ import { nav } from 'virtual:nebari/config';
 import markLight from '../assets/nebari-horizontal-light.svg?url';
 import markDark from '../assets/nebari-horizontal-dark.svg?url';
 
+const { hasSidebar } = Astro.locals.starlightRoute;
+
 const year = new Date().getFullYear();
 const prefix = import.meta.env.BASE_URL.replace(/\/+$/, '');
 const hrefFor = (href: string) => `${prefix}/${href.replace(/^\/+/, '')}`;
@@ -41,6 +43,7 @@ const columns = [
 ];
 ---
 <Default><slot /></Default>
+{!hasSidebar && (
 <div data-nebari-footer class="nbr-footer">
   <div class="nbr-footer__top">
     <div class="nbr-footer__brand">
@@ -70,18 +73,17 @@ const columns = [
     <a href="https://starlight.astro.build">Built with Astro Starlight</a>
   </div>
 </div>
+)}
 <style>
   .nbr-footer {
     margin-top: 3rem;
+    margin-inline: calc(50% - 50vw);
     border-top: 1px solid var(--sl-color-hairline);
     padding-block: 2rem 0;
+    padding-inline: calc(50vw - 50%);
     background-color: var(--nbr-surface-subtle);
     font-size: var(--sl-text-sm);
     color: var(--sl-color-gray-3);
-  }
-  :global(:root:not([data-has-sidebar])) .nbr-footer {
-    margin-inline: calc(50% - 50vw);
-    padding-inline: calc(50vw - 50%);
   }
   .nbr-footer__top {
     display: flex;

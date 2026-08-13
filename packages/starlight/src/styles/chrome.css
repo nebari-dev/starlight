@@ -153,8 +153,16 @@ div.header site-search button[data-open-modal] kbd {
  * their normal size. */
 .sidebar-content .group-label .large {
   font-size: var(--sl-text-sm);
-  font-weight: 600;
-  color: var(--sl-color-white);
+  font-weight: 400;
+  color: var(--nbr-muted-foreground);
+}
+.sidebar-content
+  details:has(a[aria-current="page"])
+  > summary
+  .group-label
+  .large {
+  color: var(--nbr-foreground);
+  font-weight: 500;
 }
 
 .sidebar-content summary .caret {
@@ -162,23 +170,28 @@ div.header site-search button[data-open-modal] kbd {
 }
 
 .sidebar-content a:not(.nbr-nav-tabs a) {
-  border-start-start-radius: 0.25rem;
-  border-end-start-radius: 0.25rem;
-  border-start-end-radius: 0;
-  border-end-end-radius: 0;
+  border-radius: 0;
   padding-block: 0.375rem;
-  margin-inline-end: calc(-1 * var(--sl-sidebar-pad-x));
-  padding-inline-end: var(--sl-sidebar-pad-x);
+  color: var(--nbr-muted-foreground);
 }
 .sidebar-content a:not(.nbr-nav-tabs a):hover {
   background-color: var(--nbr-surface-subtle);
 }
 
+.sidebar-content li + li {
+  margin-block-start: 0.25rem;
+}
+
+.sidebar-content ul ul {
+  margin-inline-start: 1rem;
+  border-inline-start: 1px solid var(--sl-color-hairline);
+}
 .sidebar-content ul ul li {
-  margin-inline-start: 1.5rem;
+  margin-inline-start: 0;
+  border-inline-start: 0;
+  padding-inline-start: 0;
 }
 .sidebar-content ul ul a:not(.nbr-nav-tabs a) {
-  margin-inline-start: calc(-1 * var(--sl-sidebar-item-padding-inline));
   padding-inline-start: var(--sl-sidebar-item-padding-inline);
 }
 
@@ -188,13 +201,20 @@ div.header site-search button[data-open-modal] kbd {
 .sidebar-content a[aria-current="page"]:not(.nbr-nav-tabs a),
 .sidebar-content a[aria-current="page"]:not(.nbr-nav-tabs a):hover,
 .sidebar-content a[aria-current="page"]:not(.nbr-nav-tabs a):focus {
-  color: var(--sl-color-white);
+  color: var(--nbr-foreground);
   background-color: var(--nbr-surface-subtle);
-  font-weight: 600;
+  font-weight: 500;
 }
-.sidebar-content ul ul li:has(> a[aria-current="page"]) {
-  border-inline-start-color: var(--nbr-primary);
-  box-shadow: inset 1px 0 0 var(--nbr-primary);
+.sidebar-content ul ul a[aria-current="page"]:not(.nbr-nav-tabs a) {
+  position: relative;
+}
+.sidebar-content ul ul a[aria-current="page"]:not(.nbr-nav-tabs a)::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: -1px;
+  width: 2px;
+  background-color: var(--nbr-primary);
 }
 
 #starlight__on-this-page {
@@ -266,6 +286,7 @@ main > .content-panel:last-child > .sl-container {
 }
 main > .content-panel:last-child > .sl-container > footer {
   margin-block-start: auto;
+  padding-block-start: 2rem;
 }
 
 /* Narrow the right-hand "On this page" table of contents. Starlight sizes this

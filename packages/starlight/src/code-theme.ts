@@ -2,7 +2,8 @@ import type { ExpressiveCodeTheme } from '@astrojs/starlight/expressive-code';
 
 const PUNCTUATION = '#262628';
 const COMMENT = '#5a5a61';
-const KEYWORD = '#1848d2';
+const KEYWORD = '#9547c0';
+const PROPERTY = '#1848d2';
 const STRING = '#236762';
 
 const nebariSyntaxSettings = [
@@ -15,17 +16,17 @@ const nebariSyntaxSettings = [
     settings: { foreground: COMMENT },
   },
   {
+    scope: ['keyword', 'storage', 'storage.type', 'support.type'],
+    settings: { foreground: KEYWORD },
+  },
+  {
     scope: [
-      'keyword',
-      'storage',
-      'storage.type',
-      'support.type',
       'variable.other.enummember',
       'meta.object-literal.key',
       'support.type.property-name',
       'entity.name.tag',
     ],
-    settings: { foreground: KEYWORD },
+    settings: { foreground: PROPERTY },
   },
   {
     scope: [
@@ -41,6 +42,7 @@ const nebariSyntaxSettings = [
 export function customizeTheme(
   theme: ExpressiveCodeTheme,
 ): ExpressiveCodeTheme {
+  if (theme.type !== 'light') return theme;
   theme.settings.push(...structuredClone(nebariSyntaxSettings));
   return theme;
 }

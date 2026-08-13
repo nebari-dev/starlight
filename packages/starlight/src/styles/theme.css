@@ -30,7 +30,29 @@
 
   --nbr-radius-sm: 0.25rem;
   --nbr-radius-md: 0.375rem;
+  --nbr-radius-lg: 0.5rem;
   --nbr-radius-full: 9999px;
+
+  --nbr-callout-note: var(--nbr-primary-magenta-100);
+
+  --sl-badge-default-bg: var(--nbr-muted);
+  --sl-badge-default-border: var(--nbr-border);
+  --sl-badge-default-text: var(--nbr-muted-foreground-strong);
+  --sl-badge-note-bg: var(--nbr-callout-note);
+  --sl-badge-note-border: var(--sl-color-text-accent);
+  --sl-badge-note-text: var(--sl-color-text-accent);
+  --sl-badge-tip-bg: var(--nbr-callout-note);
+  --sl-badge-tip-border: var(--sl-color-text-accent);
+  --sl-badge-tip-text: var(--sl-color-text-accent);
+  --sl-badge-success-bg: var(--nbr-success);
+  --sl-badge-success-border: var(--nbr-success-foreground);
+  --sl-badge-success-text: var(--nbr-success-foreground);
+  --sl-badge-caution-bg: var(--nbr-warning);
+  --sl-badge-caution-border: var(--nbr-warning-foreground);
+  --sl-badge-caution-text: var(--nbr-warning-foreground);
+  --sl-badge-danger-bg: var(--nbr-destructive);
+  --sl-badge-danger-border: var(--nbr-destructive-foreground);
+  --sl-badge-danger-text: var(--nbr-destructive-foreground);
 
   --sl-shadow-sm:
     0 1px 2px rgb(15 23 42 / 0.05), 0 2px 8px rgb(15 23 42 / 0.05);
@@ -47,6 +69,7 @@
 
   /* ── Layout widths ─────────────────────────────────────────────────────── */
   --sl-sidebar-width: 18rem;
+  --sl-sidebar-pad-x: 1.5rem;
 
   /* ── Typography — self-hosted (no CDN) ─────────────────────────────────── */
   --sl-font: "Geist", ui-sans-serif, system-ui, sans-serif;
@@ -84,6 +107,8 @@
 
   --sl-color-gray-3: var(--nbr-muted-foreground-strong);
   --sl-color-text-accent: var(--sl-color-accent-high);
+
+  --nbr-callout-note: var(--nbr-primary-magenta-900);
 }
 
 .nbr-page-header h1,

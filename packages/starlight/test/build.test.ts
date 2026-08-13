@@ -208,3 +208,29 @@ test('SiteTitle links the header logo to the site root by default', () => {
   // token rather than the full attribute value.
   expect(html).toMatch(/<a[^>]*href="\/"[^>]*class="nbr-site-title\b/);
 });
+
+test('the kitchen sink renders every content surface', () => {
+  const html = readFileSync(
+    join(DIST, 'reference/kitchen-sink/index.html'),
+    'utf8',
+  );
+  // One assertion per surface Phase 4 styles, so a surface that silently stops
+  // rendering fails here rather than only in a visual review.
+  expect(html).toContain('starlight-aside--note');
+  expect(html).toContain('starlight-aside--tip');
+  expect(html).toContain('starlight-aside--caution');
+  expect(html).toContain('starlight-aside--danger');
+  expect(html).toMatch(/class="frame is-terminal/);
+  expect(html).toMatch(/<starlight-tabs[\s>]/);
+  expect(html).toContain('sl-steps');
+  expect(html).toContain('sl-badge');
+  expect(html).toContain('<figcaption>');
+  expect(html).toMatch(/<table>[\s\S]*<thead>/);
+});
+
+test('Expressive Code frame chrome uses the muted surface and a bottom tab indicator', () => {
+  const css = allText('.css');
+  expect(css).toMatch(/--ec-frm-edTabBarBg:\s*var\(--nbr-muted\)/);
+  expect(css).toMatch(/--ec-frm-trmTtbBg:\s*var\(--nbr-muted\)/);
+  expect(css).toMatch(/--ec-frm-edActTabIndBtmCol:\s*var\(--nbr-primary\)/);
+});
