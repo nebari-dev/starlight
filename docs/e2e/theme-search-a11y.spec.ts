@@ -149,6 +149,58 @@ test('home and content pages have no serious/critical a11y violations', async ({
   }
 });
 
+// Nothing in the suite asserted computed type before this: build.test.ts greps class
+// names and token mappings, and axe checks contrast. A 13px TOC entry where the design
+// binds 14px therefore passed every gate. Size and weight only, never colour — Chromium
+// returns colours in their authored space, as the note above explains.
+const TYPE_SCALE: Array<{
+  selector: string;
+  fontSize?: string;
+  fontWeight?: string;
+}> = [
+  { selector: '#starlight__on-this-page', fontSize: '11px', fontWeight: '500' },
+  { selector: '.right-sidebar starlight-toc a', fontSize: '14px' },
+  {
+    selector: '.right-sidebar starlight-toc a[aria-current="true"]',
+    fontWeight: '500',
+  },
+  { selector: '.pagination-links a', fontSize: '12px', fontWeight: '500' },
+  { selector: '.pagination-links .link-title', fontSize: '16px' },
+  { selector: '.nbr-page-header h1', fontSize: '34px', fontWeight: '700' },
+  { selector: '.nbr-page-meta', fontSize: '13px' },
+  {
+    selector: '.sidebar-content .group-label .large',
+    fontSize: '14px',
+    fontWeight: '400',
+  },
+];
+
+test('page chrome renders at the design type scale', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/guides/deployment/build/');
+
+  // starlight-toc marks the current entry client-side on first intersection, so
+  // the aria-current row does not exist in the served HTML.
+  await expect(
+    page.locator('.right-sidebar starlight-toc a[aria-current="true"]'),
+  ).toHaveCount(1);
+
+  for (const { selector, fontSize, fontWeight } of TYPE_SCALE) {
+    const target = page.locator(selector).first();
+    await expect(target, `${selector} is missing`).toBeAttached();
+    const actual = await target.evaluate((el) => {
+      const style = getComputedStyle(el);
+      return { fontSize: style.fontSize, fontWeight: style.fontWeight };
+    });
+    if (fontSize) {
+      expect(actual.fontSize, `${selector} font-size`).toBe(fontSize);
+    }
+    if (fontWeight) {
+      expect(actual.fontWeight, `${selector} font-weight`).toBe(fontWeight);
+    }
+  }
+});
+
 test('exactly one "Site" nav landmark is exposed at each width', async ({
   page,
 }) => {
