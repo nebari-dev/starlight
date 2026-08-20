@@ -306,6 +306,12 @@ main > .content-panel:last-child > .sl-container > footer {
     width: 17rem;
   }
   [data-has-sidebar][data-has-toc] .main-pane {
+    /* Starlight pairs `--sl-content-margin-inline: auto 0` with a pane sized
+     * `content + half the slack`, so right-aligning the content lands it
+     * centred. We size the pane as a flat `100% - 17rem` instead, so centre
+     * it ourselves — the inherited `auto 0` would push every spare pixel
+     * into the left margin. */
+    --sl-content-margin-inline: auto;
     width: calc(100% - 17rem);
   }
   .content-panel:not(:has(.hero)) {

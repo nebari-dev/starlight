@@ -149,6 +149,80 @@ test('home and content pages have no serious/critical a11y violations', async ({
   }
 });
 
+test('wide viewports centre the content panel when a TOC is present', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1896, height: 940 });
+  await page.goto('/getting-started/quickstart/');
+
+  const [left, right] = await page.evaluate(() => {
+    const panel = document.querySelector('main > .content-panel');
+    const container = panel?.querySelector('.sl-container');
+    if (!panel || !container) return [NaN, NaN];
+    const pr = panel.getBoundingClientRect();
+    const cr = container.getBoundingClientRect();
+    return [cr.left - pr.left, pr.right - cr.right];
+  });
+  expect(left).toBeGreaterThan(0);
+  expect(Math.abs(left - right)).toBeLessThan(1);
+});
+
+test('narrow viewports scroll tables instead of the page', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+
+  for (const path of [
+    '/reference/configuration/',
+    '/reference/kitchen-sink/',
+  ]) {
+    await page.goto(path);
+    const layout = await page.evaluate(() => {
+      const tables = [
+        ...document.querySelectorAll('.sl-markdown-content table'),
+      ];
+      return {
+        pageWidth: document.documentElement.scrollWidth,
+        viewport: document.documentElement.clientWidth,
+        tables: tables.map((table) => ({
+          client: table.clientWidth,
+          scroll: table.scrollWidth,
+          tabIndex: table.getAttribute('tabindex'),
+        })),
+      };
+    });
+    expect(layout.pageWidth, path).toBe(layout.viewport);
+    expect(
+      layout.tables.some((table) => table.scroll > table.client),
+      `${path} should have a locally scrollable table`,
+    ).toBe(true);
+    expect(
+      layout.tables.every((table) => table.tabIndex === '0'),
+      `${path} tables must be keyboard-reachable`,
+    ).toBe(true);
+  }
+});
+
+test('an unbreakable table value scrolls inside its cell', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/reference/configuration/');
+
+  const overflow = await page.evaluate(() => {
+    const cell = document.querySelector('.sl-markdown-content td');
+    const scroller = cell?.querySelector('.nbr-table-cell-scroll');
+    const content = scroller?.querySelector('.nbr-table-cell-content');
+    if (!scroller || !content) return null;
+    content.textContent = 'x'.repeat(200);
+    return {
+      pageWidth: document.documentElement.scrollWidth,
+      viewport: document.documentElement.clientWidth,
+      cellScroll: scroller.scrollWidth,
+      cellClient: scroller.clientWidth,
+    };
+  });
+  expect(overflow).not.toBeNull();
+  expect(overflow?.pageWidth).toBe(overflow?.viewport);
+  expect((overflow?.cellScroll ?? 0) > (overflow?.cellClient ?? 0)).toBe(true);
+});
+
 test('exactly one "Site" nav landmark is exposed at each width', async ({
   page,
 }) => {
