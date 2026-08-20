@@ -167,43 +167,64 @@ test('wide viewports centre the content panel when a TOC is present', async ({
   expect(Math.abs(left - right)).toBeLessThan(1);
 });
 
-test('narrow viewports scroll tables instead of the page', async ({ page }) => {
-  await page.setViewportSize({ width: 375, height: 800 });
+test('tables stay in column and scroll locally', async ({ page }) => {
+  for (const width of [375, 620, 900]) {
+    await page.setViewportSize({ width, height: 800 });
 
-  for (const path of [
-    '/reference/configuration/',
-    '/reference/kitchen-sink/',
-  ]) {
-    await page.goto(path);
-    const layout = await page.evaluate(() => {
-      const tables = [
-        ...document.querySelectorAll('.sl-markdown-content table'),
-      ];
-      return {
-        pageWidth: document.documentElement.scrollWidth,
-        viewport: document.documentElement.clientWidth,
-        tables: tables.map((table) => ({
-          client: table.clientWidth,
-          scroll: table.scrollWidth,
-          tabIndex: table.getAttribute('tabindex'),
-        })),
-      };
-    });
-    expect(layout.pageWidth, path).toBe(layout.viewport);
-    expect(
-      layout.tables.some((table) => table.scroll > table.client),
-      `${path} should have a locally scrollable table`,
-    ).toBe(true);
-    expect(
-      layout.tables.every((table) => table.tabIndex === '0'),
-      `${path} tables must be keyboard-reachable`,
-    ).toBe(true);
+    for (const path of [
+      '/reference/configuration/',
+      '/reference/kitchen-sink/',
+    ]) {
+      await page.goto(path);
+      await page.waitForFunction(
+        () => document.querySelector('.nbr-table-scroll') !== null,
+      );
+      const layout = await page.evaluate(() => {
+        const wrappers = [
+          ...document.querySelectorAll<HTMLElement>('.nbr-table-scroll'),
+        ];
+        return {
+          pageWidth: document.documentElement.scrollWidth,
+          viewport: document.documentElement.clientWidth,
+          wrappers: wrappers.map((wrapper) => {
+            const table = wrapper.querySelector('table');
+            const row = table?.querySelector('tr');
+            return {
+              client: wrapper.clientWidth,
+              scroll: wrapper.scrollWidth,
+              tabIndex: wrapper.tabIndex,
+              tableWidth: table?.clientWidth ?? 0,
+              rowWidth: row?.getBoundingClientRect().width ?? 0,
+            };
+          }),
+        };
+      });
+      const label = `${width}px ${path}`;
+      expect(layout.pageWidth, label).toBe(layout.viewport);
+      expect(
+        layout.wrappers.every(
+          (wrapper) => wrapper.tableWidth <= wrapper.rowWidth + 2,
+        ),
+        `${label} table grid must meet its border`,
+      ).toBe(true);
+      expect(
+        layout.wrappers.every((wrapper) =>
+          wrapper.scroll > wrapper.client
+            ? wrapper.tabIndex === 0
+            : wrapper.tabIndex <= 0,
+        ),
+        `${label} wrapper must be keyboard-reachable when it scrolls`,
+      ).toBe(true);
+    }
   }
 });
 
 test('an unbreakable table value scrolls inside its cell', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/reference/configuration/');
+  await page.waitForFunction(
+    () => document.querySelector('.nbr-table-cell-scroll') !== null,
+  );
 
   const overflow = await page.evaluate(() => {
     const cell = document.querySelector('.sl-markdown-content td');

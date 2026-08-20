@@ -95,26 +95,10 @@
 .sl-markdown-content table:has(tr > :nth-child(4)):not(:where(.not-content *)) {
   min-width: 40rem;
 }
-/* Below the sidebar breakpoint a 4-column table's 40rem minimum cannot fit a
- * phone. Reset the min-width off the table *box* and let it scroll: the 10rem
- * cell minimum below still gives the inner table its 40rem intrinsic width, so
- * columns stay readable and the page itself stops scrolling sideways.
- * ponytail: only tables that overflow *below* 50rem are handled. A 6+ column
- * table (6 x 10rem = 60rem > the 51rem measure) would still push the page
- * sideways at desktop widths; no docs table has more than 4 columns today.
- * Drop the media query to make this width-agnostic if one ever does. */
-@media not all and (min-width: 50rem) {
-  .sl-markdown-content table:not(:where(.not-content *)),
-  .sl-markdown-content
-    table:has(tr > :nth-child(3)):not(:where(.not-content *)),
-  .sl-markdown-content
-    table:has(tr > :nth-child(4)):not(:where(.not-content *)) {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    overflow-x: auto;
-  }
+.nbr-table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
 }
 .sl-markdown-content :is(th, td):not(:where(.not-content *)) {
   min-width: 10rem;
