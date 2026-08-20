@@ -429,3 +429,89 @@ main > .content-panel:last-child > .sl-container > footer {
   border-radius: var(--nbr-radius-md);
   background-color: var(--nbr-card);
 }
+
+main:has(.hero) .pagination-links {
+  display: none;
+}
+main:has(.hero) {
+  overflow-x: clip;
+}
+
+#starlight__search {
+  --pagefind-ui-primary: var(--nbr-foreground);
+  --pagefind-ui-text: var(--nbr-muted-foreground);
+  --pagefind-ui-background: var(--nbr-card);
+  --pagefind-ui-border: var(--nbr-border);
+  --pagefind-ui-border-width: 0;
+  --pagefind-ui-tag: var(--nbr-muted);
+  --sl-search-corners: var(--nbr-radius-md);
+}
+site-search dialog {
+  background-color: var(--nbr-card);
+  border-color: var(--nbr-border);
+  box-shadow: var(--sl-shadow-md);
+}
+site-search dialog::backdrop {
+  background-color: var(--nbr-scrim);
+}
+#starlight__search .pagefind-ui__search-input {
+  border: 0;
+  border-radius: 0;
+  border-block-end: 1px solid var(--sl-color-hairline);
+  background-color: transparent;
+  box-shadow: none;
+}
+#starlight__search .pagefind-ui__form {
+  border-block-end: 0;
+}
+#starlight__search .pagefind-ui__form::after {
+  content: "↵ open   esc close";
+  display: block;
+  margin-block-start: 0.75rem;
+  padding-block-start: 0.75rem;
+  border-block-start: 1px solid var(--sl-color-hairline);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--nbr-muted-foreground);
+}
+@media (min-width: 50rem) {
+  site-search .dialog-frame {
+    padding: 0;
+  }
+  #starlight__search .pagefind-ui__form {
+    padding: 1.5rem;
+  }
+}
+#starlight__search
+  .pagefind-ui__result-title:not(:where(.pagefind-ui__result-nested *)),
+#starlight__search .pagefind-ui__result-nested {
+  background-color: transparent;
+}
+#starlight__search
+  .pagefind-ui__result-title:not(:where(.pagefind-ui__result-nested *)):hover,
+#starlight__search
+  .pagefind-ui__result-title:not(
+    :where(.pagefind-ui__result-nested *)
+  ):focus-within,
+#starlight__search .pagefind-ui__result-nested:hover,
+#starlight__search .pagefind-ui__result-nested:focus-within {
+  outline: none;
+  background-color: transparent;
+}
+#starlight__search .pagefind-ui__result {
+  position: relative;
+}
+#starlight__search .pagefind-ui__result:hover,
+#starlight__search .pagefind-ui__result:focus-within {
+  background-color: var(--nbr-callout-note);
+  border-radius: var(--nbr-radius-md);
+}
+#starlight__search .pagefind-ui__result:hover::after,
+#starlight__search .pagefind-ui__result:focus-within::after {
+  content: "↵";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: 1rem;
+  transform: translateY(-50%);
+  color: var(--nbr-muted-foreground);
+}

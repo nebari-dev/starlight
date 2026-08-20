@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "bun run --filter '@nebari/starlight-docs' dev",
     "build": "bun run --filter '@nebari/starlight' build",
-    "test": "bun test packages/starlight/test",
+    "test": "bun test && cd docs && bun test",
     "sync-tokens": "bun packages/starlight/scripts/sync-tokens.ts",
     "check": "biome check .",
     "check:fix": "biome check --write .",

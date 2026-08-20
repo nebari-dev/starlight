@@ -74,7 +74,9 @@ test('search returns the seeded token', async ({ page }) => {
 
   // The probe token lives in the Components reference page; Pagefind surfaces it
   // under that page's title.
-  await expect(page.locator('text=Components').first()).toBeVisible({
+  await expect(
+    page.locator('#starlight__search .pagefind-ui__result-link').first(),
+  ).toBeVisible({
     timeout: 15_000,
   });
 });
@@ -117,9 +119,11 @@ test('home and content pages have no serious/critical a11y violations', async ({
       await page.setViewportSize({ width, height });
       for (const path of [
         '/',
+        '/guides/',
         '/guides/authoring-content/',
         '/reference/components/',
         '/reference/kitchen-sink/',
+        '/this-page-does-not-exist/',
       ]) {
         await page.goto(path);
         await expect(page.locator('html')).toHaveAttribute(
@@ -132,6 +136,14 @@ test('home and content pages have no serious/critical a11y violations', async ({
               el.scrollWidth <= el.clientWidth || el.hasAttribute('tabindex'),
           ),
         );
+        const pageOverflow = await page.evaluate(() => ({
+          scroll: document.documentElement.scrollWidth,
+          client: document.documentElement.clientWidth,
+        }));
+        expect(
+          pageOverflow.scroll,
+          `${colorScheme} ${width}px ${path} overflow`,
+        ).toBe(pageOverflow.client);
         const results = await new AxeBuilder({ page })
           .withTags(['wcag2a', 'wcag2aa'])
           .analyze();
@@ -313,4 +325,81 @@ test('exactly one "Site" nav landmark is exposed at each width', async ({
     );
     expect(exposed, `${width}px exposed ${exposed} "Site" navs`).toBe(1);
   }
+});
+
+test('the TOC current entry tracks the last heading at the bottom of the page', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/reference/components/');
+
+  const current = page.locator(
+    '.right-sidebar starlight-toc a[aria-current="true"]',
+  );
+  await expect(current).toHaveCount(1);
+
+  await page.evaluate(() => {
+    const el = document.scrollingElement ?? document.documentElement;
+    el.scrollTop = el.scrollHeight;
+  });
+  await expect(current).toHaveCount(1);
+  await expect(current).toHaveJSProperty('hash', '#guide-cards');
+
+  await page.locator('#card-grids-at-a-glance').evaluate((el) => {
+    const nav =
+      document.querySelector('header')?.getBoundingClientRect().height ?? 0;
+    window.scrollTo(
+      0,
+      el.getBoundingClientRect().top + window.scrollY - nav - 32,
+    );
+  });
+  await expect(current).toHaveCount(1);
+  await expect(current).not.toHaveJSProperty('hash', '#guide-cards');
+
+  await page.evaluate(() => {
+    const el = document.scrollingElement ?? document.documentElement;
+    el.scrollTop = el.scrollHeight;
+  });
+  await expect(current).toHaveJSProperty('hash', '#guide-cards');
+
+  await page.locator('#badge-variants').evaluate((el) => {
+    const nav =
+      document.querySelector('header')?.getBoundingClientRect().height ?? 0;
+    window.scrollTo(
+      0,
+      el.getBoundingClientRect().top + window.scrollY - nav - 32,
+    );
+  });
+  await expect(current).toHaveCount(1);
+
+  await page.evaluate(() => {
+    document
+      .querySelector('.right-sidebar-panel starlight-toc a[href="#full-docs"]')
+      ?.setAttribute('aria-current', 'true');
+  });
+  await expect(current).toHaveCount(1);
+});
+
+test('a page that does not scroll does not force the last TOC entry', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 3000 });
+  await page.goto('/guides/deployment/build/');
+  const current = page.locator(
+    '.right-sidebar starlight-toc a[aria-current="true"]',
+  );
+  await expect(current).toHaveCount(1);
+  await expect(current).toHaveJSProperty('hash', '#_top');
+});
+
+test('the mobile TOC label tracks the last heading at the bottom of the page', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto('/reference/components/');
+  await page.evaluate(() => {
+    const el = document.scrollingElement ?? document.documentElement;
+    el.scrollTop = el.scrollHeight;
+  });
+  await expect(page.locator('.display-current')).toHaveText('Guide cards');
 });

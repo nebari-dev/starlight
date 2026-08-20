@@ -67,9 +67,10 @@ Set light and dark values separately. The theme defines tokens under both
 ## Add your own components overrides <Badge text="Advanced" variant="caution" />
 
 Starlight lets you swap individual layout components. The theme already overrides
-`SiteTitle`, `Head`, `Footer`, and `ThemeSelect`. You can override *others*
-freely, but if you override one the theme also sets, list yours **after** the
-plugin so it wins:
+eight: `SiteTitle`, `Head`, `Footer`, `Sidebar`, `ThemeSelect`, `PageTitle`,
+`LastUpdated`, and `MarkdownContent`. You can override *others* freely, but if
+you override one the theme also sets, list yours **after** the plugin so it
+wins:
 
 ```js title="astro.config.mjs"
 starlight({
@@ -82,10 +83,11 @@ starlight({
 ```
 
 :::danger
-Overriding `SiteTitle`, `Head`, `Footer`, or `ThemeSelect` replaces the theme's
-versions of them — you lose the branded logo, self-hosted fonts, footer, or the
-Nebari theme toggle respectively. Only do this if you're deliberately replacing
-that piece.
+Overriding `SiteTitle`, `Head`, `Footer`, `Sidebar`, `ThemeSelect`, `PageTitle`,
+`LastUpdated`, or `MarkdownContent` replaces the theme's version — you lose the
+branded logo, fonts, splash footer, nav tabs, theme toggle, breadcrumbs, or
+table scrolling and TOC bottom-tracking respectively. Only do this if you're deliberately replacing that
+piece.
 :::
 
 ## Where files go

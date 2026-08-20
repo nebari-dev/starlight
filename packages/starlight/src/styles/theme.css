@@ -34,6 +34,9 @@
   --nbr-radius-full: 9999px;
 
   --nbr-callout-note: var(--nbr-primary-magenta-100);
+  --nbr-wash-1: var(--nbr-primary-magenta-100);
+  --nbr-wash-2: var(--nbr-accent-teal-100);
+  --nbr-wash-3: var(--nbr-highlight-yellow-100);
 
   --sl-badge-default-bg: var(--nbr-muted);
   --sl-badge-default-border: var(--nbr-border);
@@ -109,6 +112,9 @@
   --sl-color-text-accent: var(--sl-color-accent-high);
 
   --nbr-callout-note: var(--nbr-primary-magenta-900);
+  --nbr-wash-1: var(--nbr-primary-magenta-900);
+  --nbr-wash-2: var(--nbr-accent-teal-900);
+  --nbr-wash-3: var(--nbr-highlight-yellow-900);
 }
 
 .nbr-page-header h1,

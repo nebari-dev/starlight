@@ -40,7 +40,8 @@ export default defineConfig({
 ```
 
 That's it - the plugin wires in the theme CSS, self-hosted fonts, the branded
-`SiteTitle`/`Head`/`Footer` components, and a default GitHub social link.
+header, splash footer, and a default GitHub social link. Pass `nav` if you want
+top-level Docs / Guides / Reference tabs.
 
 ### Serving under a subpath
 
@@ -71,9 +72,12 @@ starlight({ plugins: [nebari({ logoHref: 'https://packs.nebari.dev/' })] })
 - **Typography** - Geist for body and headings, IBM Plex Mono for code, both
   self-hosted (no external font requests at runtime).
 - **Logo, favicon, and footer** - the Nebari mark in the header, an inlined
-  symbol favicon, and a branded footer on every page.
-- **Search** - Starlight's built-in Pagefind, ready to merge additional pack
-  indexes for portal-wide multisite search.
+  symbol favicon, and a branded multi-column footer on splash pages (home, 404).
+  Doc pages with a sidebar end at their content.
+- **Nav tabs** - optional `nav` items render as header tabs and in the mobile
+  drawer. Omit the option and the header stays stock Starlight.
+- **Search** - Starlight's built-in Pagefind, styled to the Docs theme, ready to
+  merge additional pack indexes for portal-wide multisite search.
 
 Everything is overridable: your own `customCss`, `components`, and `social`
 entries are merged after the theme's, so a consumer always wins.
@@ -109,6 +113,19 @@ Run the test suite (builds the package and docs, then runs the tests):
 
 ```sh
 bun test
+```
+
+The root `test` script covers `packages/starlight/test` and `docs/test` (the
+`--base /demo-pack` build). End-to-end checks live in `docs/`:
+
+```sh
+cd docs && bun run e2e
+```
+
+Regenerate the README screenshots (out of CI, 1440×900):
+
+```sh
+cd docs && bun run screenshots
 ```
 
 ### Linting and formatting
@@ -161,8 +178,19 @@ This package follows [EffVer](https://jacobtomlinson.dev/effver/)
 your build unexpectedly:
 
 ```jsonc
-{ "dependencies": { "@nebari/starlight": "^0.1.0" } }
+{ "dependencies": { "@nebari/starlight": "^0.3.0" } }
 ```
+
+### 0.3.0
+
+EffVer meso. Four behaviours change without an opt-in:
+
+1. The footer no longer renders on doc pages — splash pages only.
+2. `lastUpdated` defaults to `true`, so a date appears on pages that had none.
+3. Nav tabs appear only if `nav` is set; absent, the header is byte-identical.
+4. Tables scroll rather than wrap. Long values scroll inside the cell or the
+   table instead of breaking across lines. With JavaScript disabled, a wide
+   table can overflow the page.
 
 ## Releasing
 

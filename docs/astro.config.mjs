@@ -11,7 +11,7 @@ export default defineConfig({
         nebari({
           nav: [
             { label: 'Docs', href: '/' },
-            { label: 'Guides', href: '/guides/authoring-content/' },
+            { label: 'Guides', href: '/guides/' },
             { label: 'Reference', href: '/reference/configuration/' },
           ],
         }),
@@ -32,6 +32,7 @@ export default defineConfig({
         {
           label: 'Guides',
           items: [
+            { label: 'Overview', link: '/guides/' },
             {
               label: 'Authoring Content',
               link: '/guides/authoring-content/',

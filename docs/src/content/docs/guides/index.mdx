@@ -1,0 +1,63 @@
+---
+title: Guides
+description: Task-oriented walkthroughs for installing, authoring, customizing, and deploying a Nebari docs pack.
+tableOfContents: false
+---
+
+import GuideCard from '@nebari/starlight/components/GuideCard.astro';
+
+How to get a pack's docs on-brand and shipped. Start with install, then pick the
+task that matches what you're doing.
+
+<div class="nbr-chips">
+  <a class="nbr-chip is-active" href="/guides/">All</a>
+  <a class="nbr-chip" href="/getting-started/installation/">Getting started</a>
+  <a class="nbr-chip" href="/guides/authoring-content/">Authoring</a>
+  <a class="nbr-chip" href="/guides/customizing/">Customizing</a>
+  <a class="nbr-chip" href="/guides/deployment/build/">Deployment</a>
+</div>
+
+<div class="nbr-guide-list">
+  <GuideCard
+    title="Installation"
+    href="/getting-started/installation/"
+    description="Add the theme to a new or existing Starlight site."
+    category="Getting started"
+    time="2 min"
+  />
+  <GuideCard
+    title="Quickstart"
+    href="/getting-started/quickstart/"
+    description="Scaffold a docs pack and see the theme running in five minutes."
+    category="Getting started"
+    time="5 min"
+  />
+  <GuideCard
+    title="Authoring content"
+    href="/guides/authoring-content/"
+    description="Learn the components and Markdown conventions this theme adds."
+    category="Authoring"
+    time="8 min"
+  />
+  <GuideCard
+    title="Customizing the theme"
+    href="/guides/customizing/"
+    description="Adjust colors, the logo, and other presentation without forking."
+    category="Customizing"
+    time="6 min"
+  />
+  <GuideCard
+    title="Build & preview"
+    href="/guides/deployment/build/"
+    description="Produce a production build and preview it locally."
+    category="Deployment"
+    time="3 min"
+  />
+  <GuideCard
+    title="Deploy to production"
+    href="/guides/deployment/deploy/"
+    description="Ship the built site to GitHub Pages or another static host."
+    category="Deployment"
+    time="4 min"
+  />
+</div>
