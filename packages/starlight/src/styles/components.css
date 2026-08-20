@@ -95,6 +95,11 @@
 .sl-markdown-content table:has(tr > :nth-child(4)):not(:where(.not-content *)) {
   min-width: 40rem;
 }
+.nbr-table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
 .sl-markdown-content :is(th, td):not(:where(.not-content *)) {
   min-width: 10rem;
   padding: 0.5rem 1rem;

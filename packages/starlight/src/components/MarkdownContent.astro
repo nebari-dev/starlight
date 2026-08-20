@@ -5,7 +5,15 @@ import Default from '@astrojs/starlight/components/MarkdownContent.astro';
 <Default><slot /></Default>
 
 <script>
-  function wrapTableCells() {
+  function wrapTables() {
+    document.querySelectorAll<HTMLTableElement>('.sl-markdown-content table').forEach((table) => {
+      if (table.parentElement?.classList.contains('nbr-table-scroll')) return;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'nbr-table-scroll';
+      table.before(wrapper);
+      wrapper.append(table);
+    });
+
     document.querySelectorAll<HTMLTableCellElement>('.sl-markdown-content :is(th, td)').forEach((cell) => {
       let scroller = cell.firstElementChild;
       if (!scroller?.classList.contains('nbr-table-cell-scroll')) {
@@ -24,13 +32,15 @@ import Default from '@astrojs/starlight/components/MarkdownContent.astro';
     });
 
     requestAnimationFrame(() => {
-      document.querySelectorAll<HTMLElement>('.nbr-table-cell-scroll').forEach((cell) => {
-        cell.tabIndex = cell.scrollWidth > cell.clientWidth ? 0 : -1;
-      });
+      document
+        .querySelectorAll<HTMLElement>('.nbr-table-scroll, .nbr-table-cell-scroll')
+        .forEach((el) => {
+          el.tabIndex = el.scrollWidth > el.clientWidth ? 0 : -1;
+        });
     });
   }
 
-  wrapTableCells();
-  document.addEventListener('astro:page-load', wrapTableCells);
-  window.addEventListener('resize', wrapTableCells);
+  wrapTables();
+  document.addEventListener('astro:page-load', wrapTables);
+  window.addEventListener('resize', wrapTables);
 </script>

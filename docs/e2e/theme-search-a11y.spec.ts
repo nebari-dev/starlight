@@ -201,6 +201,101 @@ test('page chrome renders at the design type scale', async ({ page }) => {
   }
 });
 
+test('wide viewports centre the content panel when a TOC is present', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1896, height: 940 });
+  await page.goto('/getting-started/quickstart/');
+
+  const [left, right] = await page.evaluate(() => {
+    const panel = document.querySelector('main > .content-panel');
+    const container = panel?.querySelector('.sl-container');
+    if (!panel || !container) return [NaN, NaN];
+    const pr = panel.getBoundingClientRect();
+    const cr = container.getBoundingClientRect();
+    return [cr.left - pr.left, pr.right - cr.right];
+  });
+  expect(left).toBeGreaterThan(0);
+  expect(Math.abs(left - right)).toBeLessThan(1);
+});
+
+test('tables stay in column and scroll locally', async ({ page }) => {
+  for (const width of [375, 620, 900]) {
+    await page.setViewportSize({ width, height: 800 });
+
+    for (const path of [
+      '/reference/configuration/',
+      '/reference/kitchen-sink/',
+    ]) {
+      await page.goto(path);
+      await page.waitForFunction(
+        () => document.querySelector('.nbr-table-scroll') !== null,
+      );
+      const layout = await page.evaluate(() => {
+        const wrappers = [
+          ...document.querySelectorAll<HTMLElement>('.nbr-table-scroll'),
+        ];
+        return {
+          pageWidth: document.documentElement.scrollWidth,
+          viewport: document.documentElement.clientWidth,
+          wrappers: wrappers.map((wrapper) => {
+            const table = wrapper.querySelector('table');
+            const row = table?.querySelector('tr');
+            return {
+              client: wrapper.clientWidth,
+              scroll: wrapper.scrollWidth,
+              tabIndex: wrapper.tabIndex,
+              tableWidth: table?.clientWidth ?? 0,
+              rowWidth: row?.getBoundingClientRect().width ?? 0,
+            };
+          }),
+        };
+      });
+      const label = `${width}px ${path}`;
+      expect(layout.pageWidth, label).toBe(layout.viewport);
+      expect(
+        layout.wrappers.every(
+          (wrapper) => wrapper.tableWidth <= wrapper.rowWidth + 2,
+        ),
+        `${label} table grid must meet its border`,
+      ).toBe(true);
+      expect(
+        layout.wrappers.every((wrapper) =>
+          wrapper.scroll > wrapper.client
+            ? wrapper.tabIndex === 0
+            : wrapper.tabIndex <= 0,
+        ),
+        `${label} wrapper must be keyboard-reachable when it scrolls`,
+      ).toBe(true);
+    }
+  }
+});
+
+test('an unbreakable table value scrolls inside its cell', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/reference/configuration/');
+  await page.waitForFunction(
+    () => document.querySelector('.nbr-table-cell-scroll') !== null,
+  );
+
+  const overflow = await page.evaluate(() => {
+    const cell = document.querySelector('.sl-markdown-content td');
+    const scroller = cell?.querySelector('.nbr-table-cell-scroll');
+    const content = scroller?.querySelector('.nbr-table-cell-content');
+    if (!scroller || !content) return null;
+    content.textContent = 'x'.repeat(200);
+    return {
+      pageWidth: document.documentElement.scrollWidth,
+      viewport: document.documentElement.clientWidth,
+      cellScroll: scroller.scrollWidth,
+      cellClient: scroller.clientWidth,
+    };
+  });
+  expect(overflow).not.toBeNull();
+  expect(overflow?.pageWidth).toBe(overflow?.viewport);
+  expect((overflow?.cellScroll ?? 0) > (overflow?.cellClient ?? 0)).toBe(true);
+});
+
 test('exactly one "Site" nav landmark is exposed at each width', async ({
   page,
 }) => {

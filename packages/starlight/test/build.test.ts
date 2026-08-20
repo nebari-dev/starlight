@@ -233,8 +233,6 @@ test('the kitchen sink renders every content surface', () => {
   expect(html).toContain('sl-badge');
   expect(html).toContain('<figcaption>');
   expect(html).toMatch(/<table[^>]*>[\s\S]*<thead>/);
-  // Tables scroll when a token cannot wrap, so they must be keyboard-reachable.
-  expect(html).toMatch(/<table[^>]*\stabindex="0"/);
 });
 
 test('Expressive Code frame chrome uses the muted surface and a bottom tab indicator', () => {
