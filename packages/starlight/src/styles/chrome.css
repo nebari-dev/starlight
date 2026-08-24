@@ -251,6 +251,10 @@ div.header site-search button[data-open-modal] kbd {
 .right-sidebar starlight-toc li + li {
   margin-block-start: 0.5rem;
 }
+.right-sidebar starlight-toc a:hover {
+  background-color: var(--nbr-surface-subtle);
+  text-decoration: underline;
+}
 .right-sidebar starlight-toc a[aria-current="true"] {
   color: var(--nbr-foreground);
   font-weight: 500;
