@@ -28,6 +28,7 @@ import { Card, CardGrid, Tabs, TabItem, Steps, FileTree, Badge, Aside }
 | `LinkButton`         | Prominent call-to-action link                   | <Badge text="Stable" variant="success" />     |
 | `Icon`               | Built-in icon set                               | <Badge text="Stable" variant="success" />     |
 | `GuideCard`          | Guides-landing row (badge, read time, arrow)    | <Badge text="Stable" variant="success" />     |
+| `GuideFilter`        | Category chips that filter a stack of cards     | <Badge text="Stable" variant="success" />     |
 
 ## Badge variants
 
@@ -82,13 +83,28 @@ This theme changes their appearance, not their API.
 ## Guide cards
 
 `GuideCard` is the one extra component. Import it from the theme, not from
-Starlight:
+Starlight. Wrap a stack in `GuideFilter` to get the category chips; it also
+supplies `.nbr-guide-list`, so the page drops breadcrumbs, the meta row, and
+the title hairline.
 
 ```js
 import GuideCard from '@nebari/starlight/components/GuideCard.astro';
+import GuideFilter from '@nebari/starlight/components/GuideFilter.astro';
 ```
 
-Wrap a stack of them in `.nbr-guide-list` so the page drops breadcrumbs, the
-meta row, and the title hairline. See the [guides landing](/guides/) for a
-working example, and the [layout classes](/reference/configuration/#layout-classes)
-for the other landing contracts (`.nbr-grid-3`, `.nbr-cols-2`, `.nbr-chip`).
+```mdx
+<GuideFilter categories={['Getting started', 'Authoring']}>
+  <GuideCard
+    title="Installation"
+    href="/getting-started/installation/"
+    description="Add the theme to a new or existing Starlight site."
+    category="Getting started"
+    time="2 min"
+  />
+</GuideFilter>
+```
+
+`categories` must match each card's `category` prop. See the [guides
+landing](/guides/) for a working example, and the [layout
+classes](/reference/configuration/#layout-classes) for the other landing
+contracts (`.nbr-grid-3`, `.nbr-cols-2`, `.nbr-chip`).

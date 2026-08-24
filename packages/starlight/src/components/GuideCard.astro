@@ -10,7 +10,7 @@ interface Props {
 const { title, href, description, category, time } = Astro.props;
 ---
 
-<article class="nbr-guide-card">
+<article class="nbr-guide-card" data-category={category}>
   <div class="nbr-guide-card__copy">
     <a href={href}>{title}</a>
     <p>{description}</p>
@@ -35,6 +35,15 @@ const { title, href, description, category, time } = Astro.props;
     border: 1px solid var(--nbr-border);
     border-radius: var(--nbr-radius-lg);
     background-color: var(--nbr-card);
+  }
+  .nbr-guide-card:hover {
+    border-color: var(--nbr-border-strong);
+  }
+  .nbr-guide-card:hover a {
+    text-decoration: underline;
+  }
+  .nbr-guide-card[hidden] {
+    display: none;
   }
   a {
     color: var(--nbr-foreground);

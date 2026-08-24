@@ -5,19 +5,12 @@ tableOfContents: false
 ---
 
 import GuideCard from '@nebari/starlight/components/GuideCard.astro';
+import GuideFilter from '@nebari/starlight/components/GuideFilter.astro';
 
 How to get a pack's docs on-brand and shipped. Start with install, then pick the
 task that matches what you're doing.
 
-<div class="nbr-chips">
-  <a class="nbr-chip is-active" href="/guides/">All</a>
-  <a class="nbr-chip" href="/getting-started/installation/">Getting started</a>
-  <a class="nbr-chip" href="/guides/authoring-content/">Authoring</a>
-  <a class="nbr-chip" href="/guides/customizing/">Customizing</a>
-  <a class="nbr-chip" href="/guides/deployment/build/">Deployment</a>
-</div>
-
-<div class="nbr-guide-list">
+<GuideFilter categories={['Getting started', 'Authoring', 'Customizing', 'Deployment']}>
   <GuideCard
     title="Installation"
     href="/getting-started/installation/"
@@ -60,4 +53,4 @@ task that matches what you're doing.
     category="Deployment"
     time="4 min"
   />
-</div>
+</GuideFilter>

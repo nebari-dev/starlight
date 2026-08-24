@@ -326,6 +326,18 @@ starlight-tabs
   border-color: var(--nbr-input);
   color: var(--nbr-foreground);
 }
+.sl-link-button:hover,
+.sl-link-button:focus-visible {
+  text-decoration: underline;
+}
+.sl-link-button.primary:hover {
+  background-color: var(--nbr-primary-hover);
+  border-color: var(--nbr-primary-hover);
+}
+.sl-link-button.secondary:hover {
+  background-color: var(--nbr-accent);
+  border-color: var(--nbr-muted-foreground);
+}
 
 .content-panel:has(.hero) .sl-container {
   max-width: 70rem;
@@ -348,23 +360,31 @@ starlight-tabs
   list-style: none;
 }
 .sl-markdown-content .nbr-cols-2 ul li {
+  position: relative;
+  justify-content: space-between;
   break-inside: avoid;
   display: flex;
   align-items: center;
   min-height: 3.5rem;
   border-block-end: 1px solid var(--sl-color-hairline);
 }
+.sl-markdown-content .nbr-cols-2 ul li::after {
+  content: "→";
+  color: var(--nbr-muted-foreground);
+}
 .sl-markdown-content .nbr-cols-2 ul a {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
+  display: inline;
+  width: auto;
   color: var(--nbr-foreground);
   text-decoration: none;
 }
-.sl-markdown-content .nbr-cols-2 ul a::after {
-  content: "→";
-  color: var(--nbr-muted-foreground);
+.sl-markdown-content .nbr-cols-2 ul a::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.sl-markdown-content .nbr-cols-2 ul li:has(a:hover) {
+  background-color: var(--nbr-surface-subtle);
 }
 .card .body > p:last-child a {
   display: inline-flex;
@@ -389,12 +409,23 @@ starlight-tabs
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  margin: 0;
   margin-block: 1.5rem;
+  border: 0;
+  padding: 0;
+}
+.nbr-chips input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  pointer-events: none;
 }
 .nbr-chip {
   display: inline-flex;
   align-items: center;
-  height: 1.25rem;
+  height: 1.5rem;
   padding-inline: 0.625rem;
   border: 1px solid var(--nbr-border);
   border-radius: var(--nbr-radius-full);
@@ -404,11 +435,19 @@ starlight-tabs
   font-weight: 500;
   color: var(--nbr-foreground);
   text-decoration: none;
+  cursor: pointer;
 }
-.nbr-chip.is-active {
+.nbr-chip:hover {
+  text-decoration: underline;
+}
+.nbr-chips input:checked + .nbr-chip {
   background-color: var(--nbr-primary);
   border-color: var(--nbr-primary);
   color: var(--nbr-primary-foreground);
+}
+.nbr-chips input:focus-visible + .nbr-chip {
+  outline: 2px solid var(--nbr-ring);
+  outline-offset: 2px;
 }
 
 .nbr-guide-list {
@@ -425,8 +464,35 @@ main:has(.nbr-guide-list) .nbr-page-header {
   padding-block-end: 0;
 }
 
-main:has(.nbr-404) .hero {
+main:has(.nbr-404) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   min-height: calc(100vh - var(--sl-nav-height));
+  background-image:
+    radial-gradient(
+      ellipse 80% 90% at 0% 50%,
+      var(--nbr-wash-1),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 70% 80% at 90% 10%,
+      var(--nbr-wash-2),
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 70% 80% at 90% 90%,
+      var(--nbr-wash-3),
+      transparent 65%
+    );
+}
+main:has(.nbr-404) .hero {
+  min-height: 0;
+  padding-block: 2rem 1rem;
+  background: none;
+}
+main:has(.nbr-404) .nbr-footer {
+  display: none;
 }
 main:has(.nbr-404) .hero h1 {
   font-size: var(--sl-text-h1);
@@ -447,16 +513,4 @@ main:has(.nbr-404) .hero .copy::before {
   text-align: center;
   font-size: 0.875rem;
   color: var(--nbr-muted-foreground-strong);
-}
-.sl-link-button:hover,
-.sl-link-button:focus-visible {
-  text-decoration: underline;
-}
-.sl-link-button.primary:hover {
-  background-color: var(--nbr-primary-hover);
-  border-color: var(--nbr-primary-hover);
-}
-.sl-link-button.secondary:hover {
-  background-color: var(--nbr-accent);
-  border-color: var(--nbr-muted-foreground);
 }

@@ -403,3 +403,21 @@ test('the mobile TOC label tracks the last heading at the bottom of the page', a
   });
   await expect(page.locator('.display-current')).toHaveText('Guide cards');
 });
+
+test('guide chips filter the list in place', async ({ page }) => {
+  await page.goto('/guides/');
+  const visible = page.locator('.nbr-guide-card:visible');
+  await expect(visible).toHaveCount(6);
+  const url = page.url();
+
+  await page.locator('label[for="gf-getting-started"]').click();
+  await expect(visible).toHaveCount(2);
+  expect(page.url()).toBe(url);
+
+  await page.locator('label[for="gf-deployment"]').click();
+  await expect(visible).toHaveCount(2);
+
+  await page.locator('label[for="gf-all"]').click();
+  await expect(visible).toHaveCount(6);
+  expect(page.url()).toBe(url);
+});

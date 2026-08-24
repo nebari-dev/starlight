@@ -1,0 +1,28 @@
+---
+interface Props {
+  categories: string[];
+}
+const { categories } = Astro.props;
+const idFor = (c: string) => `gf-${c.toLowerCase().replace(/\s+/g, '-')}`;
+---
+
+<div class="nbr-guide-filter">
+  <fieldset class="nbr-chips">
+    <legend class="sr-only">Filter guides by category</legend>
+    <input type="radio" name="guide-filter" id="gf-all" value="" checked />
+    <label class="nbr-chip" for="gf-all">All</label>
+    {
+      categories.map((c) => (
+        <>
+          <input type="radio" name="guide-filter" id={idFor(c)} value={c} />
+          <label class="nbr-chip" for={idFor(c)}>
+            {c}
+          </label>
+        </>
+      ))
+    }
+  </fieldset>
+  <div class="nbr-guide-list">
+    <slot />
+  </div>
+</div>
