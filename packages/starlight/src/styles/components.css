@@ -185,11 +185,19 @@
   color: var(--nbr-muted-foreground);
 }
 
-/* ── Inline code ── */
-.sl-markdown-content :not(pre) > code:not(:where(.not-content *)) {
-  padding: 0;
-  background-color: transparent;
+.sl-markdown-content a:not(:where(.not-content *)):hover {
   color: var(--sl-color-text-accent);
+  text-decoration: underline;
+}
+
+.sl-markdown-content :not(pre) > code:not(:where(.not-content *)) {
+  margin-block: 0;
+  padding: 0.0625rem 0.375rem;
+  border-radius: var(--nbr-radius-sm);
+  background-color: var(--nbr-muted);
+  color: var(--nbr-foreground);
+  font-size: 0.9375em;
+  font-weight: 500;
 }
 
 /* ── Tabs ── */
@@ -224,6 +232,7 @@ starlight-tabs
   ~ [role="tabpanel"]:has(> .expressive-code:only-child) {
   padding: 0;
   border-top-width: 0;
+  overflow: hidden;
 }
 starlight-tabs
   [role="tabpanel"]
@@ -271,4 +280,16 @@ starlight-tabs
 }
 .hero .tagline {
   color: var(--sl-color-gray-2);
+}
+.sl-link-button:hover,
+.sl-link-button:focus-visible {
+  text-decoration: underline;
+}
+.sl-link-button.primary:hover {
+  background-color: var(--nbr-primary-hover);
+  border-color: var(--nbr-primary-hover);
+}
+.sl-link-button.secondary:hover {
+  background-color: var(--nbr-accent);
+  border-color: var(--nbr-muted-foreground);
 }

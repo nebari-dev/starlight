@@ -243,6 +243,10 @@ div.header site-search button[data-open-modal] kbd {
   border-radius: 0;
   padding-inline-start: calc(1rem * var(--depth) + 0.5rem - 2px);
 }
+.right-sidebar starlight-toc a:hover {
+  background-color: var(--nbr-surface-subtle);
+  text-decoration: underline;
+}
 .right-sidebar starlight-toc a[aria-current="true"] {
   border-inline-start-color: var(--nbr-primary);
   color: var(--sl-color-white);
