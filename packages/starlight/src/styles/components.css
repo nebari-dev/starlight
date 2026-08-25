@@ -241,10 +241,7 @@ starlight-tabs
   border-width: 0;
   border-radius: 0;
 }
-starlight-tabs
-  [role="tabpanel"]
-  > .expressive-code:only-child
-  .header {
+starlight-tabs [role="tabpanel"] > .expressive-code:only-child .header {
   display: none;
 }
 
