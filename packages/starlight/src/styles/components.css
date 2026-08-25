@@ -381,9 +381,6 @@ starlight-tabs
   }
 }
 
-.nbr-grid-3 .card {
-  border-radius: 12px;
-}
 .nbr-grid-3 .card-grid {
   grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
   gap: 1.25rem;
