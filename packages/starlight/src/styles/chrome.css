@@ -43,7 +43,7 @@ div.header .title-wrapper {
   display: inline-flex;
   align-items: center;
   padding-block: 0.375rem;
-  border-block-end: 2px solid transparent;
+  border-block-end: 3px solid transparent;
   color: var(--sl-color-gray-2);
   font-size: var(--sl-text-sm);
   line-height: 1.25rem;
@@ -107,7 +107,7 @@ div.header site-search button[data-open-modal] kbd {
     width: 12.5rem;
     max-width: 100%;
     border-color: var(--nbr-input);
-    background-color: var(--nbr-card);
+    background-color: var(--nbr-background);
     color: var(--sl-color-gray-2);
   }
   div.header site-search button[data-open-modal]:hover {
@@ -124,13 +124,13 @@ div.header site-search button[data-open-modal] kbd {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 1.75rem;
+  height: 1.75rem;
   padding: 0;
   color: var(--sl-color-gray-1);
   background-color: transparent;
   border: none;
-  border-radius: var(--nbr-radius-full);
+  border-radius: var(--nbr-radius-md);
   cursor: pointer;
   transition:
     color var(--nbr-duration-fast) var(--nbr-ease-standard),
@@ -175,6 +175,7 @@ div.header site-search button[data-open-modal] kbd {
 }
 
 .sidebar-content a:not(.nbr-nav-tabs a) {
+  position: relative;
   border-radius: 0;
   padding-block: 0.375rem;
   color: var(--nbr-muted-foreground);
@@ -198,13 +199,11 @@ div.header site-search button[data-open-modal] kbd {
   padding-inline-start: 0;
 }
 .sidebar-content ul ul a:not(.nbr-nav-tabs a) {
-  position: relative;
   padding-inline-start: var(--sl-sidebar-item-padding-inline);
 }
 
-/* Active page — the nested tree line itself carries the accent (the design uses
- * one line that changes colour, not a second bar), plus a subtle fill.
- * Out-specifies Starlight's :where(...)[aria-current=page] rule. */
+/* Active page — left bar + fill. Hover uses a 1px gray bar; current is 2px purple.
+ * Nested items sit the bar on the tree hairline. */
 .sidebar-content a[aria-current="page"]:not(.nbr-nav-tabs a),
 .sidebar-content a[aria-current="page"]:not(.nbr-nav-tabs a):hover,
 .sidebar-content a[aria-current="page"]:not(.nbr-nav-tabs a):focus {
@@ -212,16 +211,20 @@ div.header site-search button[data-open-modal] kbd {
   background-color: var(--nbr-surface-subtle);
   font-weight: 500;
 }
-.sidebar-content ul ul a[aria-current="page"]:not(.nbr-nav-tabs a)::before,
-.sidebar-content ul ul a:not(.nbr-nav-tabs a):hover::before {
+.sidebar-content a[aria-current="page"]:not(.nbr-nav-tabs a)::before,
+.sidebar-content a:not(.nbr-nav-tabs a):hover::before {
   content: "";
   position: absolute;
   inset-block: 0;
-  inset-inline-start: -1px;
+  inset-inline-start: 0;
   width: 1px;
   background-color: var(--nbr-foreground);
 }
-.sidebar-content ul ul a[aria-current="page"]:not(.nbr-nav-tabs a)::before {
+.sidebar-content ul ul a[aria-current="page"]:not(.nbr-nav-tabs a)::before,
+.sidebar-content ul ul a:not(.nbr-nav-tabs a):hover::before {
+  inset-inline-start: -1px;
+}
+.sidebar-content a[aria-current="page"]:not(.nbr-nav-tabs a)::before {
   width: 2px;
   background-color: var(--nbr-primary);
 }
@@ -229,27 +232,55 @@ div.header site-search button[data-open-modal] kbd {
 #starlight__on-this-page {
   font-size: var(--nbr-text-eyebrow);
   line-height: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  color: var(--sl-color-gray-3);
+  color: var(--nbr-muted-foreground);
+  margin-bottom: 0.75rem;
 }
 
 .right-sidebar starlight-toc nav {
-  padding-inline-start: 0.4375rem;
+  padding-inline-start: 0;
 }
 .right-sidebar starlight-toc a {
-  border-inline-start: 2px solid transparent;
+  position: relative;
   border-radius: 0;
-  padding-inline-start: calc(1rem * var(--depth) + 0.5rem - 2px);
+  padding-block: 0.125rem;
+  padding-inline-start: calc(1rem * var(--depth) + 0.875rem);
+  font-size: var(--sl-text-sm);
+  line-height: 1.25rem;
+  color: var(--nbr-muted-foreground);
+}
+.right-sidebar starlight-toc li + li {
+  margin-block-start: 0.5rem;
 }
 .right-sidebar starlight-toc a:hover {
   background-color: var(--nbr-surface-subtle);
   text-decoration: underline;
 }
+.right-sidebar starlight-toc a:hover::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 50%;
+  width: 1px;
+  height: 1.25rem;
+  transform: translateY(-50%);
+  background-color: var(--nbr-foreground);
+}
 .right-sidebar starlight-toc a[aria-current="true"] {
-  border-inline-start-color: var(--nbr-primary);
-  color: var(--sl-color-white);
+  color: var(--nbr-foreground);
+  font-weight: 500;
+}
+.right-sidebar starlight-toc a[aria-current="true"]::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 50%;
+  width: 2px;
+  height: 1.25rem;
+  transform: translateY(-50%);
+  background-color: var(--nbr-primary);
 }
 .right-sidebar starlight-toc nav > ul {
   border-block-end: 1px solid var(--sl-color-hairline);
