@@ -43,7 +43,7 @@ div.header .title-wrapper {
   display: inline-flex;
   align-items: center;
   padding-block: 0.375rem;
-  border-block-end: 3px solid transparent;
+  border-block-end: 2px solid transparent;
   color: var(--sl-color-gray-2);
   font-size: var(--sl-text-sm);
   line-height: 1.25rem;
@@ -97,7 +97,7 @@ div.header .social-icons a:hover {
 div.header site-search button[data-open-modal] {
   border-radius: var(--nbr-radius-md);
 }
-div.header site-search button[data-open-modal] kbd {
+div.header site-search button[data-open-modal] > kbd {
   border-radius: var(--nbr-radius-sm);
   background-color: var(--nbr-muted);
   color: var(--sl-color-gray-2);
