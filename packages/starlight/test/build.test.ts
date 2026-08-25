@@ -243,12 +243,21 @@ test('Expressive Code frame chrome uses the muted surface and a bottom tab indic
 });
 
 test('the landing, guides index and 404 emit their layout markers', () => {
-  const html = allText('.html');
-  expect(html).toContain('nbr-grid-3');
-  expect(html).toContain('nbr-cols-2');
-  expect(html).toContain('nbr-guide-list');
-  expect(html).toContain('nbr-chip');
+  const home = readFileSync(join(DIST, 'index.html'), 'utf8');
+  expect(home).toContain('nbr-grid-3');
+  expect(home).toContain('nbr-cols-2');
+  const guides = readFileSync(join(DIST, 'guides/index.html'), 'utf8');
+  expect(guides).toContain('nbr-guide-list');
+  expect(guides).toContain('nbr-chip');
   const notFound = readFileSync(join(DIST, '404.html'), 'utf8');
   expect(notFound).toContain('hero');
   expect(notFound).toContain('nbr-404');
+});
+
+test('guide filter CSS hides cards that do not match the checked category', () => {
+  const css =
+    allText('.css') + readFileSync(join(DIST, 'guides/index.html'), 'utf8');
+  expect(css).toContain(
+    '.nbr-guide-filter:has(#gf-getting-started:checked) .nbr-guide-card:not([data-category="Getting started"])',
+  );
 });

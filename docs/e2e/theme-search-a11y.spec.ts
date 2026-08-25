@@ -145,7 +145,7 @@ test('home and content pages have no serious/critical a11y violations', async ({
           `${colorScheme} ${width}px ${path} overflow`,
         ).toBe(pageOverflow.client);
         const results = await new AxeBuilder({ page })
-          .withTags(['wcag2a', 'wcag2aa'])
+          .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
           .analyze();
         const serious = results.violations.filter(
           (v) => v.impact === 'serious' || v.impact === 'critical',

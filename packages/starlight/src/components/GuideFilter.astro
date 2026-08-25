@@ -4,6 +4,12 @@ interface Props {
 }
 const { categories } = Astro.props;
 const idFor = (c: string) => `gf-${c.toLowerCase().replace(/\s+/g, '-')}`;
+const filterCss = categories
+  .map(
+    (c) =>
+      `.nbr-guide-filter:has(#${idFor(c)}:checked) .nbr-guide-card:not([data-category="${c}"]){display:none}`,
+  )
+  .join('');
 ---
 
 <div class="nbr-guide-filter">
@@ -26,3 +32,4 @@ const idFor = (c: string) => `gf-${c.toLowerCase().replace(/\s+/g, '-')}`;
     <slot />
   </div>
 </div>
+<Fragment set:html={`<style>${filterCss}</style>`} />

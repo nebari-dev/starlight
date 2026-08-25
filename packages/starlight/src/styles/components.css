@@ -189,8 +189,11 @@
 }
 
 .sl-markdown-content a:not(:where(.not-content *)):hover {
-  color: var(--sl-color-text-accent);
   text-decoration: underline;
+}
+.sl-markdown-content
+  a:not(:where(.not-content *, .nbr-guide-card *, .nbr-cols-2 *)):hover {
+  color: var(--sl-color-text-accent);
 }
 
 .sl-markdown-content :not(pre) > code:not(:where(.not-content *)) {
@@ -253,7 +256,7 @@ starlight-tabs
   margin-inline: calc(50% - 50vw);
   padding-inline: calc(50vw - 50%);
   overflow: hidden;
-  padding-block: 9rem;
+  padding-block: 3rem;
   background-color: var(--nbr-card);
   background-image:
     radial-gradient(
@@ -273,25 +276,11 @@ starlight-tabs
     );
 }
 .sl-container .hero {
-  padding-block: 9rem;
-}
-@media (min-width: 50rem) {
-  .hero {
-    grid-template-columns: 100%;
-  }
-  .hero .stack {
-    text-align: center;
-  }
-  .hero .copy {
-    align-items: center;
-  }
-  .hero .actions {
-    justify-content: center;
-  }
+  padding-block: 3rem;
 }
 .hero h1 {
-  font-size: 3rem;
-  line-height: 3.25rem;
+  font-size: 2rem;
+  line-height: 2.375rem;
   font-weight: 700;
   letter-spacing: -0.6px;
   color: var(--nbr-foreground);
@@ -301,13 +290,44 @@ starlight-tabs
   margin-inline: auto;
 }
 .hero .tagline {
-  max-width: 30rem;
+  max-width: none;
   font-size: 1.125rem;
   line-height: 1.875rem;
   color: var(--nbr-muted-foreground-strong);
 }
 .hero .actions {
-  gap: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+@media (min-width: 50rem) {
+  .hero,
+  .sl-container .hero {
+    padding-block: 9rem;
+  }
+  .hero {
+    grid-template-columns: 100%;
+  }
+  .hero .stack {
+    text-align: center;
+  }
+  .hero .copy {
+    align-items: center;
+  }
+  .hero h1 {
+    font-size: 3rem;
+    line-height: 3.25rem;
+  }
+  .hero .tagline {
+    max-width: 37.5rem;
+  }
+  .hero .actions {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
 }
 .sl-link-button {
   border-radius: var(--nbr-radius-md);
@@ -315,6 +335,15 @@ starlight-tabs
   font-size: var(--sl-text-sm);
   line-height: 1.25rem;
   font-weight: 500;
+}
+.hero .actions .sl-link-button {
+  width: 100%;
+  justify-content: center;
+}
+@media (min-width: 50rem) {
+  .hero .actions .sl-link-button {
+    width: auto;
+  }
 }
 .sl-link-button.primary {
   background-color: var(--nbr-primary);
@@ -344,9 +373,17 @@ starlight-tabs
 }
 .content-panel:has(.hero) {
   padding-block-start: 0;
-  padding-inline: clamp(1.5rem, 5vw, 4rem);
+  padding-inline: 1.25rem;
+}
+@media (min-width: 50rem) {
+  .content-panel:has(.hero) {
+    padding-inline: clamp(1.5rem, 5vw, 4rem);
+  }
 }
 
+.nbr-grid-3 .card {
+  border-radius: 12px;
+}
 .nbr-grid-3 .card-grid {
   grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
   gap: 1.25rem;
@@ -386,7 +423,10 @@ starlight-tabs
 .sl-markdown-content .nbr-cols-2 ul li:has(a:hover) {
   background-color: var(--nbr-surface-subtle);
 }
-.card .body > p:last-child a {
+.sl-markdown-content .nbr-cols-2 ul li:has(a:hover) a {
+  text-decoration: underline;
+}
+.nbr-grid-3 .card .body > p:last-child a {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
@@ -396,7 +436,7 @@ starlight-tabs
   color: var(--sl-color-text-accent);
   text-decoration: none;
 }
-.card .body > p:last-child a::after {
+.nbr-grid-3 .card .body > p:last-child a::after {
   content: "→";
 }
 @media not all and (min-width: 50rem) {
@@ -464,6 +504,10 @@ main:has(.nbr-guide-list) .nbr-page-header {
   padding-block-end: 0;
 }
 
+main:has(.nbr-404) > .content-panel,
+main:has(.nbr-404) > .content-panel > .sl-container {
+  flex: 0 0 auto;
+}
 main:has(.nbr-404) {
   display: flex;
   flex-direction: column;
@@ -490,6 +534,14 @@ main:has(.nbr-404) .hero {
   min-height: 0;
   padding-block: 2rem 1rem;
   background: none;
+}
+main:has(.nbr-404) .hero .actions {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+main:has(.nbr-404) .hero .actions .sl-link-button {
+  width: auto;
 }
 main:has(.nbr-404) .nbr-footer {
   display: none;

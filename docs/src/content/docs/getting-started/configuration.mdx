@@ -39,8 +39,10 @@ option table and defaults.
 ### `nav`
 
 Top-level header tabs (Docs / Guides / Reference on this site). When omitted,
-the header is byte-identical to stock Starlight. The active tab is the longest
-href that prefixes the current path:
+the header is byte-identical to stock Starlight. The active tab is the one
+that shares the most leading path segments with the current URL (the root
+tab is a fallback, not a prefix match). A tab can point at a leaf page and
+still light for every page in that section:
 
 ```js
 nebari({

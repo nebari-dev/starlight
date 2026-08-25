@@ -40,6 +40,7 @@ const { title, href, description, category, time } = Astro.props;
     border-color: var(--nbr-border-strong);
   }
   .nbr-guide-card:hover a {
+    color: var(--nbr-foreground);
     text-decoration: underline;
   }
   .nbr-guide-card[hidden] {
@@ -74,7 +75,7 @@ const { title, href, description, category, time } = Astro.props;
   }
   .nbr-guide-card__cat {
     padding: 0.125rem 0.5rem;
-    border-radius: var(--nbr-radius-sm);
+    border-radius: var(--nbr-radius-full);
     background-color: var(--nbr-muted);
     color: var(--nbr-foreground);
   }

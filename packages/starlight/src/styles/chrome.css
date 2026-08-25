@@ -523,6 +523,10 @@ site-search dialog::backdrop {
   background-color: var(--nbr-callout-note);
   border-radius: var(--nbr-radius-md);
 }
+#starlight__search .pagefind-ui__result:focus-within {
+  outline: 2px solid var(--nbr-ring);
+  outline-offset: 2px;
+}
 #starlight__search .pagefind-ui__result:hover::after,
 #starlight__search .pagefind-ui__result:focus-within::after {
   content: "↵";

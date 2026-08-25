@@ -48,22 +48,6 @@ import Default from '@astrojs/starlight/components/MarkdownContent.astro';
     resizeFrame = requestAnimationFrame(wrapTables);
   });
 
-  function bindGuideFilters() {
-    document.querySelectorAll('.nbr-guide-filter').forEach((root) => {
-      if (!(root instanceof HTMLElement) || root.dataset.bound) return;
-      root.dataset.bound = '1';
-      root.addEventListener('change', () => {
-        const value =
-          root.querySelector<HTMLInputElement>('input:checked')?.value ?? '';
-        root.querySelectorAll<HTMLElement>('.nbr-guide-card').forEach((card) => {
-          card.hidden = value !== '' && card.dataset.category !== value;
-        });
-      });
-    });
-  }
-  bindGuideFilters();
-  document.addEventListener('astro:page-load', bindGuideFilters);
-
   let forcingBottom = false;
   let queued = false;
   const linksByHost = new Map<Element, HTMLAnchorElement[]>();
