@@ -48,7 +48,12 @@ const columns = [
   <div class="nbr-footer__top">
     <div class="nbr-footer__brand">
       <img src={markLight} alt="Nebari" class="nbr-footer__mark--light" />
-      <img src={markDark} alt="Nebari" class="nbr-footer__mark--dark" />
+      <img
+        src={markDark}
+        alt=""
+        aria-hidden="true"
+        class="nbr-footer__mark--dark"
+      />
       {config.description && <p>{config.description}</p>}
     </div>
     <div class="nbr-footer__cols">

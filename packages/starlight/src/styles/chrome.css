@@ -43,7 +43,7 @@ div.header .title-wrapper {
   display: inline-flex;
   align-items: center;
   padding-block: 0.375rem;
-  border-block-end: 2px solid transparent;
+  border-block-end: 3px solid transparent;
   color: var(--sl-color-gray-2);
   font-size: var(--sl-text-sm);
   line-height: 1.25rem;
@@ -107,7 +107,7 @@ div.header site-search button[data-open-modal] kbd {
     width: 12.5rem;
     max-width: 100%;
     border-color: var(--nbr-input);
-    background-color: var(--nbr-card);
+    background-color: var(--nbr-background);
     color: var(--sl-color-gray-2);
   }
   div.header site-search button[data-open-modal]:hover {
@@ -124,13 +124,13 @@ div.header site-search button[data-open-modal] kbd {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 1.75rem;
+  height: 1.75rem;
   padding: 0;
   color: var(--sl-color-gray-1);
   background-color: transparent;
   border: none;
-  border-radius: var(--nbr-radius-full);
+  border-radius: var(--nbr-radius-md);
   cursor: pointer;
   transition:
     color var(--nbr-duration-fast) var(--nbr-ease-standard),
@@ -175,6 +175,7 @@ div.header site-search button[data-open-modal] kbd {
 }
 
 .sidebar-content a:not(.nbr-nav-tabs a) {
+  position: relative;
   border-radius: 0;
   padding-block: 0.375rem;
   color: var(--nbr-muted-foreground);
@@ -198,13 +199,11 @@ div.header site-search button[data-open-modal] kbd {
   padding-inline-start: 0;
 }
 .sidebar-content ul ul a:not(.nbr-nav-tabs a) {
-  position: relative;
   padding-inline-start: var(--sl-sidebar-item-padding-inline);
 }
 
-/* Active page — the nested tree line itself carries the accent (the design uses
- * one line that changes colour, not a second bar), plus a subtle fill.
- * Out-specifies Starlight's :where(...)[aria-current=page] rule. */
+/* Active page — left bar + fill. Hover uses a 1px gray bar; current is 2px purple.
+ * Nested items sit the bar on the tree hairline. */
 .sidebar-content a[aria-current="page"]:not(.nbr-nav-tabs a),
 .sidebar-content a[aria-current="page"]:not(.nbr-nav-tabs a):hover,
 .sidebar-content a[aria-current="page"]:not(.nbr-nav-tabs a):focus {
@@ -212,16 +211,20 @@ div.header site-search button[data-open-modal] kbd {
   background-color: var(--nbr-surface-subtle);
   font-weight: 500;
 }
-.sidebar-content ul ul a[aria-current="page"]:not(.nbr-nav-tabs a)::before,
-.sidebar-content ul ul a:not(.nbr-nav-tabs a):hover::before {
+.sidebar-content a[aria-current="page"]:not(.nbr-nav-tabs a)::before,
+.sidebar-content a:not(.nbr-nav-tabs a):hover::before {
   content: "";
   position: absolute;
   inset-block: 0;
-  inset-inline-start: -1px;
+  inset-inline-start: 0;
   width: 1px;
   background-color: var(--nbr-foreground);
 }
-.sidebar-content ul ul a[aria-current="page"]:not(.nbr-nav-tabs a)::before {
+.sidebar-content ul ul a[aria-current="page"]:not(.nbr-nav-tabs a)::before,
+.sidebar-content ul ul a:not(.nbr-nav-tabs a):hover::before {
+  inset-inline-start: -1px;
+}
+.sidebar-content a[aria-current="page"]:not(.nbr-nav-tabs a)::before {
   width: 2px;
   background-color: var(--nbr-primary);
 }

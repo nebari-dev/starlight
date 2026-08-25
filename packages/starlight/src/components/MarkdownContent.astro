@@ -42,7 +42,11 @@ import Default from '@astrojs/starlight/components/MarkdownContent.astro';
 
   wrapTables();
   document.addEventListener('astro:page-load', wrapTables);
-  window.addEventListener('resize', wrapTables);
+  let resizeFrame = 0;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(resizeFrame);
+    resizeFrame = requestAnimationFrame(wrapTables);
+  });
 
   function bindGuideFilters() {
     document.querySelectorAll('.nbr-guide-filter').forEach((root) => {
