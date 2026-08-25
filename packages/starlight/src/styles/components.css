@@ -247,6 +247,12 @@ starlight-tabs
   border-width: 0;
   border-radius: 0;
 }
+starlight-tabs
+  [role="tabpanel"]
+  > .expressive-code:only-child
+  .header {
+  display: none;
+}
 
 :is(starlight-tabs, starlight-tabs + script) + .expressive-code {
   margin-top: -1px;
