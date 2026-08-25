@@ -177,6 +177,7 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
             'nebari.breadcrumbLabel': 'Breadcrumb',
             'nebari.updated': 'Updated',
             'nebari.readTime': '{{minutes}} min read',
+            'nebari.guideTime': '{{minutes}} min',
           },
         });
       },

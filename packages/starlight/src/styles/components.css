@@ -171,6 +171,11 @@
   background-color: var(--nbr-background);
   box-shadow: inset 0 0 0 1px var(--nbr-border);
 }
+/* Upstream draws the guideline on every item; the design stops it between
+   steps, so drop the dangling tail on the last one. */
+.sl-markdown-content .sl-steps > li:last-child::after {
+  display: none;
+}
 
 /* ── Figures ── */
 .sl-markdown-content figure:not(.frame) > :is(img, picture, svg) {
@@ -403,6 +408,7 @@ starlight-tabs [role="tabpanel"] > .expressive-code:only-child .header {
   display: flex;
   align-items: center;
   min-height: 3.5rem;
+  padding: 0.75rem 0.5rem;
   border-block-end: 1px solid var(--sl-color-hairline);
 }
 .sl-markdown-content .nbr-cols-2 ul li::after {
@@ -420,11 +426,17 @@ starlight-tabs [role="tabpanel"] > .expressive-code:only-child .header {
   position: absolute;
   inset: 0;
 }
-.sl-markdown-content .nbr-cols-2 ul li:has(a:hover) {
-  background-color: var(--nbr-surface-subtle);
-}
 .sl-markdown-content .nbr-cols-2 ul li:has(a:hover) a {
   text-decoration: underline;
+}
+/* `a::before` makes the whole row clickable, so ring the row rather than the
+   inline text box the global `:focus-visible` rule would target. */
+.sl-markdown-content .nbr-cols-2 ul li:has(a:focus-visible) {
+  outline: 2px solid var(--nbr-ring);
+  outline-offset: 2px;
+}
+.sl-markdown-content .nbr-cols-2 ul a:focus-visible {
+  outline: none;
 }
 .nbr-grid-3 .card .body > p:last-child a {
   display: inline-flex;
@@ -435,6 +447,9 @@ starlight-tabs [role="tabpanel"] > .expressive-code:only-child .header {
   font-weight: 500;
   color: var(--sl-color-text-accent);
   text-decoration: none;
+}
+.nbr-grid-3 .card .body > p:last-child a:hover {
+  text-decoration: underline;
 }
 .nbr-grid-3 .card .body > p:last-child a::after {
   content: "→";

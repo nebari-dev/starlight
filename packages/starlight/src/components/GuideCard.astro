@@ -1,13 +1,27 @@
 ---
+import { getEntry } from 'astro:content';
+import { readingTimeMinutes } from '../utils/reading-time';
+
 interface Props {
   title: string;
   href: string;
   description: string;
   category: string;
-  time: string;
+  /** Overrides the read time derived from the linked page. */
+  time?: string;
 }
 
 const { title, href, description, category, time } = Astro.props;
+
+// Derive the read time from the page the card links to, so it can't drift from
+// the `N min read` the article itself shows. Root-relative hrefs map onto
+// collection ids; anything else (external links, missing pages) renders no time.
+const entry = time
+  ? undefined
+  : await getEntry('docs', href.replace(/^\/|\/$/g, '')).catch(() => undefined);
+const minutes = entry?.body ? readingTimeMinutes(entry.body) : undefined;
+const readTime =
+  time ?? (minutes ? Astro.locals.t('nebari.guideTime', { minutes }) : undefined);
 ---
 
 <article class="nbr-guide-card" data-category={category}>
@@ -17,7 +31,7 @@ const { title, href, description, category, time } = Astro.props;
   </div>
   <div class="nbr-guide-card__meta">
     <span class="nbr-guide-card__cat">{category}</span>
-    <span>{time}</span>
+    {readTime && <span>{readTime}</span>}
     <span aria-hidden="true">→</span>
   </div>
 </article>
@@ -42,6 +56,15 @@ const { title, href, description, category, time } = Astro.props;
   .nbr-guide-card:hover a {
     color: var(--nbr-foreground);
     text-decoration: underline;
+  }
+  /* `a::before` makes the whole card clickable, so ring the card rather than
+     the inline title the global `:focus-visible` rule would target. */
+  .nbr-guide-card:has(a:focus-visible) {
+    outline: 2px solid var(--nbr-ring);
+    outline-offset: 2px;
+  }
+  a:focus-visible {
+    outline: none;
   }
   .nbr-guide-card[hidden] {
     display: none;
@@ -72,6 +95,10 @@ const { title, href, description, category, time } = Astro.props;
     font-size: 0.75rem;
     line-height: 1rem;
     color: var(--nbr-muted-foreground);
+  }
+  /* Figma has the trailing arrow in the accent in both states. */
+  .nbr-guide-card__meta span[aria-hidden] {
+    color: var(--nbr-primary);
   }
   .nbr-guide-card__cat {
     padding: 0.125rem 0.5rem;

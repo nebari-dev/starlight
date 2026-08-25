@@ -99,12 +99,13 @@ import GuideFilter from '@nebari/starlight/components/GuideFilter.astro';
     href="/getting-started/installation/"
     description="Add the theme to a new or existing Starlight site."
     category="Getting started"
-    time="2 min"
   />
 </GuideFilter>
 ```
 
-`categories` must match each card's `category` prop. See the [guides
+`categories` must match each card's `category` prop. The read time is derived
+from the linked page, so it stays in step with the article's own meta row; pass
+`time` to override it. See the [guides
 landing](/guides/) for a working example, and the [layout
 classes](/reference/configuration/#layout-classes) for the other landing
 contracts (`.nbr-grid-3`, `.nbr-cols-2`, `.nbr-chip`).
