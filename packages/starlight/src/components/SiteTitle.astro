@@ -1,12 +1,15 @@
 ---
-import logoLight from '../assets/nebari-horizontal-light.svg?url';
-import logoDark from '../assets/nebari-horizontal-dark.svg?url';
-import { logoHref } from 'virtual:nebari/config';
+import defaultLight from '../assets/nebari-horizontal-light.svg?url';
+import defaultDark from '../assets/nebari-horizontal-dark.svg?url';
+import { logo, logoHref } from 'virtual:nebari/config';
 const href = logoHref ?? import.meta.env.BASE_URL;
+const light = logo?.light ?? defaultLight;
+const dark = logo?.dark ?? defaultDark;
+const alt = logo?.alt ?? 'Nebari';
 ---
 <a href={href} class="nbr-site-title">
-  <img src={logoLight} alt="Nebari" class="nbr-logo nbr-logo--light" height="32" />
-  <img src={logoDark} alt="Nebari" class="nbr-logo nbr-logo--dark" height="32" />
+  <img src={light} alt={alt} class="nbr-logo nbr-logo--light" height="32" />
+  <img src={dark} alt={alt} class="nbr-logo nbr-logo--dark" height="32" />
 </a>
 <style>
   .nbr-site-title { display: flex; align-items: center; padding-block: 0.25rem; }

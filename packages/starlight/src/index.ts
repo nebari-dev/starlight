@@ -46,10 +46,28 @@ export interface NebariThemeOptions {
    * returns users to `packs.nebari.dev/`.
    */
   logoHref?: string;
+  /**
+   * URL the header GitHub icon links to. Defaults to the Nebari org
+   * (`https://github.com/nebari-dev`). Set it to the pack's own repository.
+   */
+  githubHref?: string;
+  /**
+   * Replace the bundled Nebari mark in the header. Each value is used as the
+   * `<img src>` verbatim — point it at a file in the site's `public/` dir
+   * (root-absolute paths get the site base prefixed at build time) or an
+   * absolute URL. A variant that is omitted falls back to the other one, so a
+   * single-image logo only needs `light`. `alt` defaults to "Nebari".
+   */
+  logo?: { light?: string; dark?: string; alt?: string };
+}
+
+interface ResolvedOptions {
+  logoHref: string | null;
+  logo: { light: string; dark: string; alt: string } | null;
 }
 
 /** Astro integration that exposes the theme config to components via a virtual module. */
-function nebariConfigIntegration(logoHref: string | null): AstroIntegration {
+function nebariConfigIntegration(resolved: ResolvedOptions): AstroIntegration {
   // Captured in config:setup, consumed in build:done to prefix content links.
   let base = '/';
   return {
@@ -69,7 +87,10 @@ function nebariConfigIntegration(logoHref: string | null): AstroIntegration {
                 },
                 load(id: string) {
                   if (id === '\0virtual:nebari/config') {
-                    return `export const logoHref = ${JSON.stringify(logoHref)};`;
+                    return [
+                      `export const logoHref = ${JSON.stringify(resolved.logoHref)};`,
+                      `export const logo = ${JSON.stringify(resolved.logo)};`,
+                    ].join('\n');
                   }
                   return undefined;
                 },
@@ -101,7 +122,20 @@ function nebariConfigIntegration(logoHref: string | null): AstroIntegration {
 }
 
 export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
-  const logoHref = options.logoHref ?? null;
+  const { light, dark, alt } = options.logo ?? {};
+  const resolved: ResolvedOptions = {
+    logoHref: options.logoHref ?? null,
+    // Cross-fall back the variants so a single-image logo only needs one; no
+    // images at all means "use the bundled Nebari mark" (SiteTitle's default).
+    logo:
+      light || dark
+        ? {
+            light: (light ?? dark) as string,
+            dark: (dark ?? light) as string,
+            alt: alt ?? 'Nebari',
+          }
+        : null,
+  };
   return {
     name: '@nebari/starlight',
     hooks: {
@@ -125,12 +159,12 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
             {
               icon: 'github',
               label: 'GitHub',
-              href: 'https://github.com/nebari-dev',
+              href: options.githubHref ?? 'https://github.com/nebari-dev',
             },
             ...(config.social ?? []),
           ],
         });
-        addIntegration(nebariConfigIntegration(logoHref));
+        addIntegration(nebariConfigIntegration(resolved));
       },
     },
   };
