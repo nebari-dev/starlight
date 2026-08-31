@@ -64,6 +64,41 @@ point it at the portal root so it returns users to the pack catalog:
 starlight({ plugins: [nebari({ logoHref: 'https://packs.nebari.dev/' })] })
 ```
 
+### Pointing the GitHub icon at your repo
+
+The header's GitHub icon links to the Nebari org by default. Point it at the
+pack's own repository instead:
+
+```js
+starlight({
+  plugins: [nebari({ githubHref: 'https://github.com/nebari-dev/my-pack' })],
+})
+```
+
+### Using your own logo
+
+The header renders the bundled Nebari mark by default. Pass `logo` to replace
+it — each value is used as the `<img src>` verbatim, so point it at a file in
+your site's `public/` dir (root-absolute paths get the site base prefixed at
+build time) or an absolute URL:
+
+```js
+starlight({
+  plugins: [
+    nebari({
+      logo: {
+        light: '/my-pack-light.svg', // shown in light mode
+        dark: '/my-pack-dark.svg', // shown in dark mode
+        alt: 'My Pack', // defaults to "Nebari"
+      },
+    }),
+  ],
+})
+```
+
+A variant that is omitted falls back to the other one, so a single-image logo
+only needs `light`.
+
 ## What you get
 
 - **Brand colors** - nebari-design's OKLCH tokens mapped onto Starlight's theme
