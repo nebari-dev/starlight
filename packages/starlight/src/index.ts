@@ -1,8 +1,13 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import type {
+  ExpressiveCodeTheme,
+  StarlightExpressiveCodeOptions,
+} from '@astrojs/starlight/expressive-code';
 import type { StarlightPlugin } from '@astrojs/starlight/types';
 import type { AstroIntegration } from 'astro';
+import { customizeTheme } from './code-theme';
 
 /// <reference path="./virtual.d.ts" />
 
@@ -46,6 +51,7 @@ export interface NebariThemeOptions {
    * returns users to `packs.nebari.dev/`.
    */
   logoHref?: string;
+  nav?: Array<{ label: string; href: string }>;
   /**
    * URL the header GitHub icon links to. Defaults to the Nebari org
    * (`https://github.com/nebari-dev`). Set it to the pack's own repository.
@@ -63,6 +69,7 @@ export interface NebariThemeOptions {
 
 interface ResolvedOptions {
   logoHref: string | null;
+  nav: Array<{ label: string; href: string }> | null;
   logo: { light: string; dark: string; alt: string } | null;
 }
 
@@ -87,10 +94,12 @@ function nebariConfigIntegration(resolved: ResolvedOptions): AstroIntegration {
                 },
                 load(id: string) {
                   if (id === '\0virtual:nebari/config') {
-                    return [
-                      `export const logoHref = ${JSON.stringify(resolved.logoHref)};`,
-                      `export const logo = ${JSON.stringify(resolved.logo)};`,
-                    ].join('\n');
+                    return Object.entries(resolved)
+                      .map(
+                        ([key, value]) =>
+                          `export const ${key} = ${JSON.stringify(value)};`,
+                      )
+                      .join('\n');
                   }
                   return undefined;
                 },
@@ -121,10 +130,52 @@ function nebariConfigIntegration(resolved: ResolvedOptions): AstroIntegration {
   };
 }
 
+function nebariExpressiveCode(
+  consumer: StarlightExpressiveCodeOptions,
+): StarlightExpressiveCodeOptions {
+  const { styleOverrides, ...rest } = consumer;
+  const { frames, ...otherStyleOverrides } = styleOverrides ?? {};
+  return {
+    themes: ['github-dark', 'github-light'],
+    ...rest,
+    customizeTheme: (theme: ExpressiveCodeTheme) => {
+      const themed = customizeTheme(theme);
+      return consumer.customizeTheme ? consumer.customizeTheme(themed) : themed;
+    },
+    styleOverrides: {
+      borderRadius: 'var(--nbr-radius-sm)',
+      borderColor: 'var(--nbr-border)',
+      codeLineHeight: '1.375rem',
+      ...otherStyleOverrides,
+      frames: {
+        editorBackground: 'var(--nbr-background)',
+        terminalBackground: 'var(--nbr-background)',
+        editorActiveTabBackground: 'var(--nbr-background)',
+        editorTabBarBackground: 'var(--nbr-muted)',
+        terminalTitlebarBackground: 'var(--nbr-muted)',
+        terminalTitlebarForeground: 'var(--nbr-foreground)',
+        frameBoxShadowCssValue: 'none',
+        editorActiveTabIndicatorTopColor: 'transparent',
+        editorActiveTabIndicatorBottomColor: 'var(--nbr-primary)',
+        editorActiveTabIndicatorHeight: '2px',
+        editorActiveTabBorderColor: 'var(--nbr-border)',
+        editorTabBarBorderColor: 'var(--nbr-border)',
+        editorTabBarBorderBottomColor: 'var(--nbr-border)',
+        terminalTitlebarBorderBottomColor: 'var(--nbr-border)',
+        terminalTitlebarDotsForeground: 'var(--nbr-border)',
+        terminalTitlebarDotsOpacity: '1',
+        inlineButtonForeground: 'var(--nbr-foreground)',
+        ...frames,
+      },
+    },
+  };
+}
+
 export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
   const { light, dark, alt } = options.logo ?? {};
   const resolved: ResolvedOptions = {
     logoHref: options.logoHref ?? null,
+    nav: options.nav ?? null,
     // Cross-fall back the variants so a single-image logo only needs one; no
     // images at all means "use the bundled Nebari mark" (SiteTitle's default).
     logo:
@@ -139,12 +190,24 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
   return {
     name: '@nebari/starlight',
     hooks: {
+      'i18n:setup'({ injectTranslations }) {
+        injectTranslations({
+          en: {
+            'search.label': 'Search docs…',
+            'nebari.navLabel': 'Site',
+            'nebari.breadcrumbLabel': 'Breadcrumb',
+            'nebari.updated': 'Updated',
+            'nebari.readTime': '{{minutes}} min read',
+          },
+        });
+      },
       'config:setup'({ config, updateConfig, addIntegration }) {
         updateConfig({
           customCss: [
             '@nebari/starlight/fonts/font-face.css',
             '@nebari/starlight/styles/nebari-tokens.css',
             '@nebari/starlight/styles/theme.css',
+            '@nebari/starlight/styles/chrome.css',
             '@nebari/starlight/styles/components.css',
             ...(config.customCss ?? []),
           ],
@@ -152,9 +215,15 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
             SiteTitle: '@nebari/starlight/components/SiteTitle.astro',
             Head: '@nebari/starlight/components/Head.astro',
             Footer: '@nebari/starlight/components/Footer.astro',
+            Sidebar: '@nebari/starlight/components/Sidebar.astro',
             ThemeSelect: '@nebari/starlight/components/ThemeSelect.astro',
+            PageTitle: '@nebari/starlight/components/PageTitle.astro',
+            LastUpdated: '@nebari/starlight/components/LastUpdated.astro',
+            MarkdownContent:
+              '@nebari/starlight/components/MarkdownContent.astro',
             ...(config.components ?? {}),
           },
+          lastUpdated: config.lastUpdated ?? true,
           social: [
             {
               icon: 'github',
@@ -163,6 +232,14 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
             },
             ...(config.social ?? []),
           ],
+          expressiveCode:
+            config.expressiveCode === false
+              ? false
+              : nebariExpressiveCode(
+                  config.expressiveCode === true || !config.expressiveCode
+                    ? {}
+                    : config.expressiveCode,
+                ),
         });
         addIntegration(nebariConfigIntegration(resolved));
       },

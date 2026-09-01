@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "build:base": "astro build --base /demo-pack",
+    "theme": "bun run --filter '@nebari/starlight' build",
+    "dev": "bun run theme && astro dev",
+    "build": "bun run theme && astro build",
+    "build:base": "bun run theme && astro build --base /demo-pack",
     "preview": "astro preview",
     "e2e": "playwright test"
   },

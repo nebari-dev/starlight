@@ -1,33 +1,14 @@
 /* packages/starlight/src/styles/components.css
  * Element-styling layer (loaded after theme.css). Where theme.css maps tokens,
- * this file styles concrete surfaces — depth/radius, callouts, cards, hero —
- * in the Darby-inspired direction. Loaded via customCss (unlayered), so these
- * rules win over Starlight's own @layer styles without needing !important.
+ * this file styles concrete surfaces — depth/radius, callouts, cards, hero.
+ * Loaded via customCss (unlayered), so these rules win over Starlight's own
+ * @layer styles without needing !important.
  */
-
-:root {
-  --nbr-radius-lg: calc(var(--nbr-radius) + 0.25rem); /* ~14px cards */
-  --sl-shadow-sm:
-    0 1px 2px rgb(15 23 42 / 0.05), 0 2px 8px rgb(15 23 42 / 0.05);
-  --sl-shadow-md:
-    0 4px 16px rgb(15 23 42 / 0.08), 0 1px 3px rgb(15 23 42 / 0.06);
-}
-:root[data-theme="dark"] {
-  --sl-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35), 0 2px 8px rgb(0 0 0 / 0.35);
-  --sl-shadow-md: 0 6px 24px rgb(0 0 0 / 0.45), 0 1px 3px rgb(0 0 0 / 0.4);
-}
-
-/* ── Code blocks ─────────────────────────────────────────────────────────
- * Give Expressive Code frames a soft, layered lift like Darby's code blocks. */
-.sl-markdown-content .expressive-code .frame {
-  border-radius: var(--nbr-radius);
-  box-shadow: var(--sl-shadow-sm);
-}
 
 /* ── Cards ───────────────────────────────────────────────────────────────
  * Rounder corners, subtle surface fill, soft shadow, and a gentle hover lift. */
 .card {
-  border-radius: var(--nbr-radius-lg);
+  border-radius: var(--nbr-radius-md);
   background-color: var(--nbr-surface-subtle);
   border-color: var(--nbr-border);
   box-shadow: var(--sl-shadow-sm);
@@ -43,240 +24,240 @@
   color: var(--sl-color-accent);
 }
 
-/* ── Callouts / asides ───────────────────────────────────────────────────
- * Darby-style: rounded, tinted fill + a strong left accent bar. Each type maps
- * to a Nebari feedback pair (soft fill + strong foreground for bar/title). The
- * aside body text stays on Starlight's --sl-color-white (theme foreground), so
- * contrast holds against the pale/deep fills in light and dark. */
+/* ── Callouts / asides ── */
 .starlight-aside {
-  border-radius: var(--nbr-radius);
-  border-inline-start-width: 0.25rem;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--nbr-border);
+  border-inline-start-width: 1px;
+  border-radius: var(--nbr-radius-lg);
+  background-color: var(--nbr-card);
+}
+
+.starlight-aside__title {
+  gap: 0.375rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: var(--nbr-aside-fg);
+  background-color: var(--nbr-aside-tint);
+  border-bottom: 1px solid var(--nbr-border);
+}
+
+.starlight-aside__icon {
+  font-size: 1em;
+}
+
+.starlight-aside__content,
+.starlight-aside__title + .starlight-aside__content {
+  margin-top: 0;
+  padding: 0.875rem 1rem;
 }
 
 .starlight-aside--note {
-  --sl-color-asides-border: var(--sl-color-accent);
-  --sl-color-asides-text-accent: var(--sl-color-accent-high);
-  background-color: color-mix(
-    in oklab,
-    var(--nbr-brand),
-    var(--nbr-background) 88%
-  );
+  --nbr-aside-tint: var(--nbr-callout-note);
+  --nbr-aside-fg: var(--sl-color-text-accent);
+  --sl-color-asides-text-accent: var(--sl-color-text-accent);
 }
 .starlight-aside--tip {
-  --sl-color-asides-border: var(--nbr-success-foreground);
+  --nbr-aside-tint: var(--nbr-success);
+  --nbr-aside-fg: var(--nbr-success-foreground);
   --sl-color-asides-text-accent: var(--nbr-success-foreground);
-  background-color: var(--nbr-success);
 }
 .starlight-aside--caution {
-  --sl-color-asides-border: var(--nbr-warning-foreground);
+  --nbr-aside-tint: var(--nbr-warning);
+  --nbr-aside-fg: var(--nbr-warning-foreground);
   --sl-color-asides-text-accent: var(--nbr-warning-foreground);
-  background-color: var(--nbr-warning);
 }
 .starlight-aside--danger {
-  --sl-color-asides-border: var(--nbr-destructive-foreground);
+  --nbr-aside-tint: var(--nbr-destructive);
+  --nbr-aside-fg: var(--nbr-destructive-foreground);
   --sl-color-asides-text-accent: var(--nbr-destructive-foreground);
-  background-color: var(--nbr-destructive);
 }
 
-/* ── Header: right-aligned search + Darby-style theme toggle ─────────────
- * Replace Starlight's header grid with a simple flex row so the search box and
- * controls cluster on the right, like Darby's topbar. Scoped to `div.header`
- * (the inner header row) so we don't disturb the outer `<header class="header">`
- * wrapper, which shares the class name. Unlayered rules win over Starlight's
- * @layer starlight.core without !important. */
-div.header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.75rem;
+/* ── Tables ── */
+.sl-markdown-content table:not(:where(.not-content *)) {
+  display: table;
+  width: 100%;
+  max-width: 100%;
+  min-width: 20rem;
+  table-layout: fixed;
+  border: 1px solid var(--nbr-border);
+  border-radius: var(--nbr-radius-lg);
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
 }
-/* Push the search wrapper (the div immediately after the site title) — and
- * everything after it — to the right edge. */
-div.header > .title-wrapper + div {
-  margin-inline-start: auto;
+.sl-markdown-content table:has(tr > :nth-child(3)):not(:where(.not-content *)) {
+  min-width: 30rem;
 }
-/* Extra breathing room between the search bar and the social/theme controls. */
-div.header .right-group {
-  margin-inline-start: 0.85rem;
+.sl-markdown-content table:has(tr > :nth-child(4)):not(:where(.not-content *)) {
+  min-width: 40rem;
+}
+.nbr-table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+  min-width: 10rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--nbr-border);
+  line-height: 1.375rem;
+  vertical-align: middle;
+}
+.nbr-table-cell-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-wrap: normal;
+  word-break: normal;
+  white-space: normal;
+}
+.nbr-table-cell-content {
+  min-width: 0;
+}
+.sl-markdown-content
+  :is(th:first-child, td:first-child):not(:where(.not-content *)) {
+  padding-inline-start: 1rem;
+}
+.sl-markdown-content
+  :is(th:last-child, td:last-child):not(:where(.not-content *)) {
+  padding-inline-end: 1rem;
+}
+.sl-markdown-content th:not(:where(.not-content *)) {
+  color: var(--nbr-foreground);
+  background-color: var(--nbr-background);
+  line-height: 1.25rem;
+}
+.sl-markdown-content thead th:first-child:not(:where(.not-content *)) {
+  border-start-start-radius: var(--nbr-radius-lg);
+}
+.sl-markdown-content thead th:last-child:not(:where(.not-content *)) {
+  border-start-end-radius: var(--nbr-radius-lg);
+}
+.sl-markdown-content tbody tr:last-child td:not(:where(.not-content *)) {
+  border-bottom: 0;
 }
 
-/* Remove the vertical divider Starlight draws between the social icons and the
- * theme toggle. */
-div.header .social-icons::after {
-  content: none;
+/* ── Badges ── */
+.sl-badge {
+  border-color: transparent;
+  border-radius: var(--nbr-radius-full);
+  font-family: var(--sl-font);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.sl-badge.small {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding: 0.125rem 0.5rem;
 }
 
-/* Header icons (GitHub + theme toggle) read as neutral gray rather than the
- * accent violet, brightening to the high-contrast foreground on hover. */
-div.header .social-icons a {
-  color: var(--sl-color-gray-1);
-  border-radius: 999px;
-  transition:
-    color var(--nbr-duration-fast) var(--nbr-ease-standard),
-    background-color var(--nbr-duration-fast) var(--nbr-ease-standard);
+/* ── Steps ── */
+.sl-markdown-content .sl-steps {
+  --bullet-size: 2rem;
 }
-div.header .social-icons a:hover {
-  color: var(--sl-color-white);
-  background-color: var(--nbr-surface-subtle);
+.sl-markdown-content .sl-steps > li {
+  padding-inline-start: calc(var(--bullet-size) + 0.75rem);
 }
-
-/* Pill-shaped search trigger, echoing Darby's rounded search box. */
-div.header site-search button[data-open-modal] {
-  border-radius: 999px;
-}
-/* Widen the search bar (~3x) on desktop, where the label + shortcut show. Left
- * untouched below the breakpoint so it stays a compact icon button on mobile.
- * The ⌘K shortcut is pushed to the right edge. */
-@media (min-width: 50rem) {
-  div.header site-search button[data-open-modal] {
-    min-width: 24rem;
-  }
-  div.header site-search button[data-open-modal] > kbd {
-    margin-inline-start: auto;
-  }
+.sl-markdown-content .sl-steps > li::before {
+  font-size: 0.875rem;
+  color: var(--nbr-foreground);
+  background-color: var(--nbr-background);
+  box-shadow: inset 0 0 0 1px var(--nbr-border);
 }
 
-/* Rounded icon theme toggle. */
-.nbr-theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+/* ── Figures ── */
+.sl-markdown-content figure:not(.frame) > :is(img, picture, svg) {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--nbr-border);
+  border-radius: var(--nbr-radius-lg);
+  background-color: var(--nbr-muted);
+}
+.sl-markdown-content figure:not(.frame) > figcaption {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  color: var(--nbr-muted-foreground);
+}
+
+.sl-markdown-content a:not(:where(.not-content *)):hover {
+  color: var(--sl-color-text-accent);
+  text-decoration: underline;
+}
+
+.sl-markdown-content :not(pre) > code:not(:where(.not-content *)) {
+  margin-block: 0;
+  padding: 0.0625rem 0.375rem;
+  border-radius: var(--nbr-radius-sm);
+  background-color: var(--nbr-muted);
+  color: var(--nbr-foreground);
+  font-size: 0.9375em;
+  font-weight: 500;
+}
+
+/* ── Tabs ── */
+starlight-tabs .tablist-wrapper {
+  background-color: var(--nbr-muted);
+  border: 1px solid var(--nbr-border);
+  border-radius: var(--nbr-radius-lg) var(--nbr-radius-lg) 0 0;
+}
+starlight-tabs [role="tablist"] {
+  border-bottom: 0;
+}
+starlight-tabs .tab > [role="tab"] {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--nbr-muted-foreground-strong);
+  box-shadow: none;
+}
+starlight-tabs .tab > [role="tab"][aria-selected="true"] {
+  color: var(--nbr-foreground);
+  background-color: var(--nbr-background);
+  box-shadow: inset 0 -2px 0 var(--nbr-primary);
+}
+starlight-tabs .tablist-wrapper ~ [role="tabpanel"] {
+  margin-top: -1px;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--nbr-border);
+  border-radius: 0 0 var(--nbr-radius-lg) var(--nbr-radius-lg);
+}
+
+starlight-tabs
+  .tablist-wrapper
+  ~ [role="tabpanel"]:has(> .expressive-code:only-child) {
   padding: 0;
-  color: var(--sl-color-gray-1);
-  background-color: transparent;
-  border: none;
-  border-radius: 999px;
-  cursor: pointer;
-  transition:
-    color var(--nbr-duration-fast) var(--nbr-ease-standard),
-    background-color var(--nbr-duration-fast) var(--nbr-ease-standard);
+  border-top-width: 0;
+  overflow: hidden;
 }
-.nbr-theme-toggle:hover {
-  color: var(--sl-color-white);
-  background-color: var(--nbr-surface-subtle);
+starlight-tabs
+  [role="tabpanel"]
+  > .expressive-code:only-child
+  :is(.frame, pre) {
+  border-width: 0;
+  border-radius: 0;
 }
-.nbr-theme-toggle .nbr-theme-icon {
-  font-size: 1.15rem;
-}
-/* Show only the icon that represents the current theme. */
-:root[data-theme="light"] .nbr-theme-toggle .nbr-theme-icon--moon,
-:root[data-theme="dark"] .nbr-theme-toggle .nbr-theme-icon--sun {
+starlight-tabs [role="tabpanel"] > .expressive-code:only-child .header {
   display: none;
 }
 
-/* ── Sidebar navigation ──────────────────────────────────────────────────
- * Darby-style docs nav: small uppercase muted group headings, rounded links
- * with a subtle hover fill, and a soft pill on the active page — a pale accent
- * fill with accent-colored text, replacing Starlight's solid-accent bar with
- * inverted text. */
-
-/* Group headings — uppercase, letter-spaced, muted slate. Scoped to the group
- * label so standalone top-level links keep their normal size. */
-.sidebar-content .group-label .large {
-  font-size: var(--sl-text-xs);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--sl-color-gray-3);
-}
-
-/* Rounder pill shape + a faint accent hover fill (the sidebar itself already
- * sits on --nbr-surface-subtle, so hover uses a light accent tint to read). */
-.sidebar-content a {
-  border-radius: 0.5rem;
-}
-.sidebar-content a:hover {
-  background-color: color-mix(
-    in oklab,
-    var(--nbr-brand),
-    var(--nbr-background) 90%
-  );
-}
-
-/* Active page — pale accent pill with accent text (out-specifies Starlight's
- * :where(...)[aria-current=page] solid-accent + inverted-text rule). */
-.sidebar-content a[aria-current="page"],
-.sidebar-content a[aria-current="page"]:hover,
-.sidebar-content a[aria-current="page"]:focus {
-  /* accent-high (brand mixed toward the foreground) rather than the plain brand:
-   * on the pale accent-low fill the plain brand only hits 4.13:1, below WCAG AA
-   * 4.5:1. accent-high darkens in light mode / lightens in dark mode, clearing AA
-   * in both. */
-  color: var(--sl-color-accent-high);
-  background-color: var(--sl-color-accent-low);
-  font-weight: 600;
-}
-
-/* Standard doc pages: let the content fill the full content area rather than
- * Starlight's centered 48rem measure. The splash page keeps its own capped
- * width (see the :has(.hero) rule below), so exclude it here. */
-.content-panel:not(:has(.hero)) .sl-container {
-  max-width: none;
-  /* Zero Starlight's `margin-inline: auto`. The sticky-footer rule below makes
-   * this container a flex column; a flex item with auto cross-axis margins
-   * shrinks to fit its content instead of stretching, which left short pages
-   * (little text) narrow and centered. Zeroing the margin lets it fill the
-   * column. The splash container keeps auto margins (it stays centered). */
-  margin-inline: 0;
-}
-/* With the content full-width, give it a little breathing room on the left and
- * right so it isn't flush against the sidebar border and TOC. */
-.content-panel:not(:has(.hero)) {
-  padding-inline: clamp(1.5rem, 4vw, 3rem);
-}
-
-/* Drop the hairline divider + extra gap Starlight draws between the page-title
- * panel and the content panel, so the h1 sits directly above the body. Starlight
- * gives each panel 1.5rem vertical padding and a border-top on the second one;
- * we remove the line and zero the doubled top padding, leaving the title panel's
- * padding-bottom as the sole (normal) gap. */
-.content-panel + .content-panel {
-  border-top: none;
-  padding-top: 0;
-}
-
-/* Sticky footer: when a page's content is shorter than the viewport, push the
- * pagination links + footer down to the bottom rather than leaving them floating
- * mid-page. The footer + custom footer live inside the last content panel's
- * .sl-container (after .sl-markdown-content), so the flex chain has to reach
- * through main → content-panel → sl-container; the footer then takes the
- * leftover space with an auto top margin. */
-main {
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100vh - var(--sl-nav-height));
-}
-main > .content-panel:last-child,
-main > .content-panel:last-child > .sl-container {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-}
-main > .content-panel:last-child > .sl-container > footer {
-  margin-block-start: auto;
-}
-
-/* Narrow the right-hand "On this page" table of contents. Starlight sizes this
- * column off --sl-sidebar-width (~17rem), which reads too wide for a short TOC;
- * cap it tighter. Only applies at the lg breakpoint where the TOC is shown. */
-@media (min-width: 72rem) {
-  .right-sidebar-container {
-    width: 13rem;
-  }
+:is(starlight-tabs, starlight-tabs + script) + .expressive-code {
+  margin-top: -1px;
 }
 
 /* ── Splash hero ─────────────────────────────────────────────────────────
- * A soft accent wash behind the hero, with the tagline set in Lora to echo the
- * serif page titles. The hero <h1> already inherits Lora from theme.css. */
+ * A soft accent wash behind the hero. */
 .hero {
   background-image: radial-gradient(
     60% 120% at 50% 0%,
     var(--sl-color-accent-low) 0%,
     transparent 70%
   );
-  border-radius: var(--nbr-radius-lg);
+  border-radius: var(--nbr-radius-md);
 }
 /* Trim the hero's default top padding (Starlight's media-query rule ramps it up
  * to 10rem, leaving a big gap under the header). Selector out-specifies that
@@ -288,7 +269,7 @@ main > .content-panel:last-child > .sl-container > footer {
 /* ── Splash landing: full-width content ──────────────────────────────────
  * Let the hero and page content span the full column on the home/splash page.
  * Scoped via :has(.hero) so ONLY splash pages (which render a hero) widen —
- * regular doc pages keep the reverted 48rem centered measure. A capped,
+ * regular doc pages keep their centered measure. A capped,
  * centered measure (~80rem) reads like a landing page — roomy hero, four cards
  * across with room to spare — without sprawling to unreadable line lengths on
  * ultra-wide screens. Drop the panel's top padding so the hero's accent wash
@@ -301,7 +282,17 @@ main > .content-panel:last-child > .sl-container > footer {
   padding-inline: clamp(1.5rem, 5vw, 4rem);
 }
 .hero .tagline {
-  font-family: var(--nbr-font-title);
-  font-style: italic;
   color: var(--sl-color-gray-2);
+}
+.sl-link-button:hover,
+.sl-link-button:focus-visible {
+  text-decoration: underline;
+}
+.sl-link-button.primary:hover {
+  background-color: var(--nbr-primary-hover);
+  border-color: var(--nbr-primary-hover);
+}
+.sl-link-button.secondary:hover {
+  background-color: var(--nbr-accent);
+  border-color: var(--nbr-muted-foreground);
 }

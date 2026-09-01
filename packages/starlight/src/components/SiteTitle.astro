@@ -2,6 +2,7 @@
 import defaultLight from '../assets/nebari-horizontal-light.svg?url';
 import defaultDark from '../assets/nebari-horizontal-dark.svg?url';
 import { logo, logoHref } from 'virtual:nebari/config';
+import NavTabs from './NavTabs.astro';
 const href = logoHref ?? import.meta.env.BASE_URL;
 const light = logo?.light ?? defaultLight;
 const dark = logo?.dark ?? defaultDark;
@@ -11,6 +12,7 @@ const alt = logo?.alt ?? 'Nebari';
   <img src={light} alt={alt} class="nbr-logo nbr-logo--light" height="32" />
   <img src={dark} alt={alt} class="nbr-logo nbr-logo--dark" height="32" />
 </a>
+<NavTabs class="nbr-nav-tabs--header" />
 <style>
   .nbr-site-title { display: flex; align-items: center; padding-block: 0.25rem; }
   .nbr-logo { height: 2rem; width: auto; }

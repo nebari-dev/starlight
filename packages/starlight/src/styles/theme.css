@@ -10,12 +10,7 @@
 :root,
 :root[data-theme="light"],
 :root[data-theme="dark"] {
-  /* ── Brand accent ──────────────────────────────────────────────────────
-   * Nebari magenta nudged toward violet (Darby's deep-violet influence) so
-   * links/accents read as a magenta-violet. Kept derived from --nbr-primary so
-   * the per-theme magenta shade still flows through. Retune the 78% split if a
-   * link/text pair drops below AA. */
-  --nbr-brand: color-mix(in oklch, var(--nbr-primary) 78%, oklch(45% 0.16 292));
+  --nbr-brand: var(--nbr-primary);
 
   --sl-color-accent-low: color-mix(
     in oklab,
@@ -31,53 +26,101 @@
 
   --sl-color-text: var(--nbr-foreground);
   --sl-color-text-accent: var(--nbr-brand);
-  --sl-color-bg: var(--nbr-background);
+  --sl-color-bg: var(--nbr-card);
 
-  /* ── Slate-tinted surfaces + borders (safe subset) ─────────────────────
-   * Nav/sidebar surfaces and hairlines only — never the gray scale that drives
-   * body/muted text. Starlight's contrast-safe grays are left intact (see the
-   * axe note that motivated the original mapping). --nbr-surface-subtle is the
-   * Darby `--bg-subtle` analogue, defined per theme below. */
-  /* Sidebar sits on the page background (white in light mode), separated from
-   * the content only by Starlight's hairline — not a tinted surface fill. */
-  --sl-color-bg-sidebar: var(--nbr-background);
-  /* Header likewise sits on the page background with just a light-gray hairline
-   * beneath it, rather than the tinted surface fill. */
+  --nbr-radius-sm: 0.25rem;
+  --nbr-radius-md: 0.375rem;
+  --nbr-radius-lg: 0.5rem;
+  --nbr-radius-full: 9999px;
+
+  --nbr-callout-note: var(--nbr-primary-magenta-100);
+
+  --sl-badge-default-bg: var(--nbr-muted);
+  --sl-badge-default-border: var(--nbr-border);
+  --sl-badge-default-text: var(--nbr-muted-foreground-strong);
+  --sl-badge-note-bg: var(--nbr-callout-note);
+  --sl-badge-note-border: var(--sl-color-text-accent);
+  --sl-badge-note-text: var(--sl-color-text-accent);
+  --sl-badge-tip-bg: var(--nbr-callout-note);
+  --sl-badge-tip-border: var(--sl-color-text-accent);
+  --sl-badge-tip-text: var(--sl-color-text-accent);
+  --sl-badge-success-bg: var(--nbr-success);
+  --sl-badge-success-border: var(--nbr-success-foreground);
+  --sl-badge-success-text: var(--nbr-success-foreground);
+  --sl-badge-caution-bg: var(--nbr-warning);
+  --sl-badge-caution-border: var(--nbr-warning-foreground);
+  --sl-badge-caution-text: var(--nbr-warning-foreground);
+  --sl-badge-danger-bg: var(--nbr-destructive);
+  --sl-badge-danger-border: var(--nbr-destructive-foreground);
+  --sl-badge-danger-text: var(--nbr-destructive-foreground);
+
+  --sl-shadow-sm:
+    0 1px 2px rgb(15 23 42 / 0.05), 0 2px 8px rgb(15 23 42 / 0.05);
+  --sl-shadow-md:
+    0 4px 16px rgb(15 23 42 / 0.08), 0 1px 3px rgb(15 23 42 / 0.06);
+
+  /* ── Slate-tinted surfaces + borders (safe subset) ───────────────────── */
+  --nbr-surface-subtle: var(--nbr-background);
+  --sl-color-bg-sidebar: var(--nbr-card);
   --sl-color-bg-nav: var(--nbr-background);
   --sl-color-hairline: var(--nbr-border);
   --sl-color-hairline-light: var(--nbr-border);
   --sl-color-hairline-shade: var(--nbr-border);
 
-  /* ── Layout widths (Darby proportions) ─────────────────────────────────── */
-  --sl-content-width: 48rem; /* was 45rem */
-  --sl-sidebar-width: 17rem; /* was 18.75rem */
+  /* ── Layout widths ─────────────────────────────────────────────────────── */
+  --sl-sidebar-width: 18rem;
+  --sl-sidebar-pad-x: 1.5rem;
 
-  /* ── Typography — Darby stack, self-hosted (no CDN) ────────────────────── */
-  --sl-font: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --sl-font-mono: "Fira Code", ui-monospace, monospace;
-  --nbr-font-heading: "Space Grotesk", var(--sl-font);
-  --nbr-font-title: "Lora", Georgia, serif;
+  /* ── Typography — self-hosted (no CDN) ─────────────────────────────────── */
+  --sl-font: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --sl-font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --sl-text-h1: 2.125rem;
+  --sl-text-h2: 1.5rem;
+  --sl-text-h3: 1.25rem;
+  --sl-text-h4: 1.125rem;
+  --sl-text-h5: 1rem;
+  --nbr-text-eyebrow: 0.6875rem;
 }
 
-/* Per-theme subtle surface: sits just off the page background so the sidebar/
- * nav read as a distinct-but-quiet app-shell surface. Primitives resolve the
- * same in both scopes, so we pick the right shade explicitly per theme. */
-:root,
-:root[data-theme="light"] {
-  --nbr-surface-subtle: var(--nbr-neutral-100); /* slate-tinted #eceff1 */
+:root[data-has-sidebar] {
+  --sl-content-width: 51rem;
 }
+
+@media (min-width: 50em) {
+  :root,
+  :root[data-theme="light"],
+  :root[data-theme="dark"] {
+    --sl-nav-height: 3.5rem;
+    --sl-nav-pad-x: 1rem;
+    --sl-text-h1: 2.125rem;
+    --sl-text-h2: 1.5rem;
+    --sl-text-h3: 1.25rem;
+    --sl-text-h4: 1.125rem;
+    --sl-text-h5: 1rem;
+  }
+}
+
 :root[data-theme="dark"] {
-  --nbr-surface-subtle: var(--nbr-zinc-900);
+  --sl-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35), 0 2px 8px rgb(0 0 0 / 0.35);
+  --sl-shadow-md: 0 6px 24px rgb(0 0 0 / 0.45), 0 1px 3px rgb(0 0 0 / 0.4);
+
+  --sl-color-gray-3: var(--nbr-muted-foreground-strong);
+  --sl-color-text-accent: var(--sl-color-accent-high);
+
+  --nbr-callout-note: var(--nbr-primary-magenta-900);
 }
 
-/* All headings (h1–h6) share Space Grotesk. */
-h1,
+.nbr-page-header h1,
+.sl-markdown-content h1 {
+  font-weight: 700;
+  line-height: 2.5rem;
+  letter-spacing: -0.4px;
+}
+
 h2,
-h3,
-h4,
-h5,
-h6,
-.sl-markdown-content :is(h1, h2, h3, h4, h5, h6) {
-  font-family: var(--nbr-font-heading);
+.sl-markdown-content h2 {
   font-weight: 600;
+  line-height: 2rem;
+  letter-spacing: -0.2px;
 }

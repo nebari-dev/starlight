@@ -34,10 +34,9 @@ beforeAll(async () => {
 
 test('compiled CSS maps Starlight accent onto the nebari brand (grays deferred to Starlight)', () => {
   const css = allText('.css');
-  // Accent maps to --nbr-brand, the Nebari magenta nudged toward violet, which
-  // is itself derived from the per-theme --nbr-primary.
+  // Accent maps to --nbr-brand, which is the per-theme Nebari magenta.
   expect(css).toMatch(/--sl-color-accent:\s*var\(--nbr-brand\)/);
-  expect(css).toMatch(/--nbr-brand:\s*color-mix\([^;]*var\(--nbr-primary\)/);
+  expect(css).toMatch(/--nbr-brand:\s*var\(--nbr-primary\)/);
   // Grays are intentionally NOT overridden (Starlight's are WCAG-tuned), so we do
   // not assert a --sl-color-gray-* mapping. The light-mode accent cascade fix is
   // regression-tested in the demo e2e.
@@ -56,10 +55,8 @@ test('both light and dark token blocks are present', () => {
 test('fonts are self-hosted, no external font host', () => {
   const css = allText('.css');
   const html = allText('.html');
-  expect(css).toMatch(/Inter/);
-  expect(css).toMatch(/Space Grotesk/);
-  expect(css).toMatch(/Lora/);
-  expect(css).toMatch(/Fira Code/);
+  expect(css).toMatch(/Geist/);
+  expect(css).toMatch(/IBM Plex Mono/);
   expect(css + html).not.toMatch(
     /fonts\.googleapis\.com|fonts\.gstatic\.com|use\.typekit|cdn\.[a-z0-9-]+\.[a-z]/i,
   );
@@ -80,6 +77,136 @@ test('Nebari logo is rendered in the header', () => {
   expect(html).toMatch(/alt="Nebari"/);
 });
 
+function navTabsMarkup(page: string): string {
+  const html = readFileSync(join(DIST, page), 'utf8');
+  const match = html.match(
+    /<nav class="nbr-nav-tabs[^"]*"[^>]*>[\s\S]*?<\/nav>/,
+  );
+  if (!match) throw new Error(`no nav tabs rendered in ${page}`);
+  return match[0];
+}
+
+test('the nav option renders top-level tabs in the header', () => {
+  const tabs = navTabsMarkup('index.html');
+  expect(tabs).toContain('>Docs<');
+  expect(tabs).toContain('>Guides<');
+  expect(tabs).toContain('>Reference<');
+});
+
+test('exactly one nav tab is marked aria-current per page', () => {
+  for (const page of [
+    'index.html',
+    'reference/configuration/index.html',
+    'guides/deployment/build/index.html',
+  ]) {
+    const current = navTabsMarkup(page).match(/aria-current="page"/g) ?? [];
+    expect(current.length, `${page} lit ${current.length} tabs`).toBe(1);
+  }
+});
+
+test('the active tab is the section the page belongs to', () => {
+  expect(navTabsMarkup('guides/deployment/build/index.html')).toMatch(
+    /href="\/guides\/authoring-content\/"[^>]*aria-current="page"/,
+  );
+  expect(navTabsMarkup('reference/components/index.html')).toMatch(
+    /href="\/reference\/configuration\/"[^>]*aria-current="page"/,
+  );
+  expect(navTabsMarkup('getting-started/installation/index.html')).toMatch(
+    /href="\/"[^>]*aria-current="page"/,
+  );
+});
+
+test('nav tabs render in both the header and the mobile drawer', () => {
+  const html = readFileSync(
+    join(DIST, 'guides/deployment/build/index.html'),
+    'utf8',
+  );
+  expect(html).toContain('nbr-nav-tabs--header');
+  expect(html).toContain('nbr-nav-tabs--drawer');
+});
+
+test('the search label is overridden through injectTranslations', () => {
+  const html = readFileSync(join(DIST, 'index.html'), 'utf8');
+  expect(html).toContain('Search docs');
+  expect(html).toMatch(/aria-label="Search docs[^"]*"/);
+});
+
+test('a nested page renders a breadcrumb trail above the title', () => {
+  const html = readFileSync(
+    join(DIST, 'guides/deployment/build/index.html'),
+    'utf8',
+  );
+  expect(html).toMatch(/<nav class="nbr-breadcrumbs[^"]*" aria-label="[^"]+"/);
+  const crumbs = html.match(/<nav class="nbr-breadcrumbs[\s\S]*?<\/nav>/)?.[0];
+  expect(crumbs).toBeDefined();
+  const trail = (crumbs ?? '').replace(/<[^>]+>/g, ' ');
+  expect(trail).toContain('Guides');
+  expect(trail).toContain('Deployment');
+  expect(html).toMatch(/<li[^>]*aria-current="page"/);
+  // Ancestors are links; the current page is the only segment left as text.
+  expect(crumbs).toMatch(/<li[^>]*><a href="[^"]+"[^>]*>Guides<\/a><\/li>/);
+  expect(crumbs).toMatch(
+    /<li[^>]*aria-current="page"[^>]*>[^<]*Build &amp; Preview/,
+  );
+});
+
+test('the splash home renders no page header, so no breadcrumb', () => {
+  const html = readFileSync(join(DIST, 'index.html'), 'utf8');
+  expect(html).not.toContain('nbr-page-header');
+  expect(html).not.toContain('nbr-breadcrumbs');
+});
+
+test('the page title keeps the id Starlight anchors and the skip link target', () => {
+  const html = readFileSync(
+    join(DIST, 'guides/deployment/build/index.html'),
+    'utf8',
+  );
+  expect(html).toMatch(/<h1 id="_top"/);
+});
+
+test('the meta row shows the updated date and the read time', () => {
+  const html = readFileSync(
+    join(DIST, 'guides/authoring-content/index.html'),
+    'utf8',
+  );
+  expect(html).toMatch(
+    /Updated\s*<time[^>]*datetime="[^"]+"[^>]*>[^<]+<\/time>/,
+  );
+  expect(html).toMatch(/\d+ min read/);
+});
+
+test('read time is derived per page, not a constant', () => {
+  const long = readFileSync(
+    join(DIST, 'guides/authoring-content/index.html'),
+    'utf8',
+  ).match(/(\d+) min read/)?.[1];
+  const short = readFileSync(
+    join(DIST, 'getting-started/installation/index.html'),
+    'utf8',
+  ).match(/(\d+) min read/)?.[1];
+  expect(long).toBeDefined();
+  expect(short).toBeDefined();
+  expect(Number(long)).toBeGreaterThan(Number(short));
+});
+
+test('the last-updated date is not printed a second time in the footer', () => {
+  const html = readFileSync(
+    join(DIST, 'guides/authoring-content/index.html'),
+    'utf8',
+  );
+  expect(html).not.toContain('Last updated:');
+});
+
+test('the footer renders the link columns and bottom bar', () => {
+  const html = readFileSync(join(DIST, 'index.html'), 'utf8');
+  expect(html).toContain('data-nebari-footer');
+  expect(html).toContain('Documentation');
+  expect(html).toContain('Community');
+  expect(html).toContain('Project');
+  expect(html).toContain('Built with Astro Starlight');
+  expect(html).toMatch(/(©|&copy;)\s*\d{4} Nebari/);
+});
+
 test('SiteTitle links the header logo to the site root by default', () => {
   const html = allText('.html');
   // The demo config omits logoHref, so SiteTitle falls back to the site base
@@ -87,4 +214,30 @@ test('SiteTitle links the header logo to the site root by default', () => {
   // class (e.g. "astro-xxxxxxxx") after nbr-site-title, so match the class as a
   // token rather than the full attribute value.
   expect(html).toMatch(/<a[^>]*href="\/"[^>]*class="nbr-site-title\b/);
+});
+
+test('the kitchen sink renders every content surface', () => {
+  const html = readFileSync(
+    join(DIST, 'reference/kitchen-sink/index.html'),
+    'utf8',
+  );
+  // One assertion per surface Phase 4 styles, so a surface that silently stops
+  // rendering fails here rather than only in a visual review.
+  expect(html).toContain('starlight-aside--note');
+  expect(html).toContain('starlight-aside--tip');
+  expect(html).toContain('starlight-aside--caution');
+  expect(html).toContain('starlight-aside--danger');
+  expect(html).toMatch(/class="frame is-terminal/);
+  expect(html).toMatch(/<starlight-tabs[\s>]/);
+  expect(html).toContain('sl-steps');
+  expect(html).toContain('sl-badge');
+  expect(html).toContain('<figcaption>');
+  expect(html).toMatch(/<table[^>]*>[\s\S]*<thead>/);
+});
+
+test('Expressive Code frame chrome uses the muted surface and a bottom tab indicator', () => {
+  const css = allText('.css');
+  expect(css).toMatch(/--ec-frm-edTabBarBg:\s*var\(--nbr-muted\)/);
+  expect(css).toMatch(/--ec-frm-trmTtbBg:\s*var\(--nbr-muted\)/);
+  expect(css).toMatch(/--ec-frm-edActTabIndBtmCol:\s*var\(--nbr-primary\)/);
 });

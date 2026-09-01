@@ -103,8 +103,8 @@ only needs `light`.
 - **Brand colors** - nebari-design's OKLCH tokens mapped onto Starlight's theme
   variables in both light and dark mode. Starlight's WCAG-tuned gray scale is
   kept for accessible body and muted text.
-- **Typography** - Poppins for headings, Atkinson Hyperlegible for body, Fira
-  Code for code, all self-hosted (no external font requests at runtime).
+- **Typography** - Geist for body and headings, IBM Plex Mono for code, both
+  self-hosted (no external font requests at runtime).
 - **Logo, favicon, and footer** - the Nebari mark in the header, an inlined
   symbol favicon, and a branded footer on every page.
 - **Search** - Starlight's built-in Pagefind, ready to merge additional pack
