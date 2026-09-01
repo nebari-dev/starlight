@@ -213,12 +213,12 @@ This package follows [EffVer](https://jacobtomlinson.dev/effver/)
 your build unexpectedly:
 
 ```jsonc
-{ "dependencies": { "@nebari/starlight": "^0.3.0" } }
+{ "dependencies": { "@nebari/starlight": "^1.0.0" } }
 ```
 
-### 0.3.0
+### 1.0.0
 
-EffVer meso. Four behaviours change without an opt-in:
+EffVer macro. Four behaviours change without an opt-in:
 
 1. The footer no longer renders on doc pages — splash pages only.
 2. `lastUpdated` defaults to `true`, so a date appears on pages that had none.
