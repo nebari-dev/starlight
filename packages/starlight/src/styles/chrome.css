@@ -626,3 +626,18 @@ site-search button[data-close-modal] .nbr-search-kbd {
   transform: translateY(-50%);
   color: var(--nbr-muted-foreground);
 }
+/* Row highlighted with ↑↓ from the search input (see components/Search.astro).
+ * Same treatment as hover, scoped to the individual title or nested row. */
+#starlight__search .pagefind-ui__result [data-nbr-active] {
+  position: relative;
+  background-color: var(--nbr-callout-note);
+  border-radius: var(--nbr-radius-md);
+}
+#starlight__search .pagefind-ui__result [data-nbr-active]::after {
+  content: "↵";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: 1rem;
+  transform: translateY(-50%);
+  color: var(--nbr-muted-foreground);
+}
