@@ -1,6 +1,6 @@
 {
   "name": "@nebari/starlight",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "license": "Apache-2.0",
   "description": "Shared Starlight theme plugin for Nebari documentation sites.",
