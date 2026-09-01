@@ -484,22 +484,75 @@ site-search dialog::backdrop {
 #starlight__search .pagefind-ui__form {
   border-block-end: 0;
 }
-#starlight__search .pagefind-ui__form::after {
-  content: "↵ open   esc close";
-  display: block;
-  margin-block-start: 0.75rem;
-  padding-block-start: 0.75rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: var(--nbr-muted-foreground);
+/* Outline magnifier (Lucide "search") to match the header trigger, in the
+ * muted foreground instead of Pagefind's filled icon. */
+#starlight__search .pagefind-ui__form::before {
+  background-color: var(--nbr-muted-foreground);
+  opacity: 1;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
 }
-/* Only draw the divider above the shortcut hints once results are showing;
- * before a search it would double up with the input's own underline. */
-#starlight__search
-  .pagefind-ui__form:has(
-    .pagefind-ui__drawer:not(.pagefind-ui__hidden)
-  )::after {
+
+/* Dialog frame: results scroll in the middle, the keyboard-hint footer
+ * (injected by components/Search.astro) pins to the bottom. */
+site-search .dialog-frame {
+  overflow: hidden;
+  gap: 0;
+  border-radius: inherit;
+}
+site-search .search-container {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+.nbr-search-hints {
+  display: none;
+  flex: none;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.75rem 1.5rem;
   border-block-start: 1px solid var(--sl-color-hairline);
+  background-color: var(--nbr-muted);
+  color: var(--nbr-muted-foreground);
+  font-size: var(--sl-text-sm);
+  line-height: 1.25rem;
+}
+.nbr-search-hints > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+/* Keycap chips, matching the header's ⌘K badge. */
+.nbr-search-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding-inline: 0.375rem;
+  border-radius: var(--nbr-radius-sm);
+  /* Mixed from the surface behind it so the chip reads in both themes (in
+   * dark mode --nbr-muted matches the card and would vanish). */
+  background-color: color-mix(
+    in oklab,
+    var(--nbr-card),
+    var(--nbr-foreground) 8%
+  );
+  color: var(--nbr-muted-foreground);
+  font-family: var(--__sl-font);
+  font-size: var(--sl-text-xs);
+  line-height: 1;
+}
+/* The close button carries both labels; only one shows per breakpoint. */
+site-search button[data-close-modal] .nbr-search-kbd {
+  display: none;
+}
+.nbr-search-hints .nbr-search-kbd {
+  background-color: color-mix(
+    in oklab,
+    var(--nbr-muted),
+    var(--nbr-foreground) 8%
+  );
 }
 @media (min-width: 50rem) {
   site-search .dialog-frame {
@@ -514,9 +567,26 @@ site-search dialog::backdrop {
     top: calc(1.5rem + 23px * var(--pagefind-ui-scale));
     left: calc(1.5rem + 20px * var(--pagefind-ui-scale));
   }
+  .nbr-search-hints {
+    display: flex;
+  }
+  /* Starlight hides its Cancel button on desktop; show it as the `esc` keycap
+   * at the end of the input row (same offsets as the icon above). */
+  site-search button[data-close-modal] {
+    display: flex;
+    top: 1.5rem;
+    inset-inline-end: 1.5rem;
+    padding-inline: 1rem;
+  }
+  site-search button[data-close-modal] .nbr-search-close-label {
+    display: none;
+  }
+  site-search button[data-close-modal] .nbr-search-kbd {
+    display: inline-flex;
+  }
+  /* The esc keycap takes the clear button's spot, per the design. */
   #starlight__search .pagefind-ui__search-clear {
-    top: calc(1.5rem + 3px * var(--pagefind-ui-scale));
-    inset-inline-end: calc(1.5rem + var(--sl-search-cancel-space));
+    display: none;
   }
 }
 #starlight__search

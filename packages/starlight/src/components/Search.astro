@@ -1,0 +1,50 @@
+---
+/*
+ * Wraps Starlight's default Search dialog and adds the design's keyboard hints:
+ * a footer bar pinned to the bottom of the dialog (↑↓ navigate, ↵ open,
+ * esc close) and an `esc` keycap at the end of the input row.
+ *
+ * Starlight renders the dialog markup statically and only mounts Pagefind into
+ * it when opened, so a small script moves the footer from the <template> into
+ * the dialog frame on load and swaps the desktop label of the close button for
+ * the keycap. Layout and colours live in styles/chrome.css.
+ */
+import Default from '@astrojs/starlight/components/Search.astro';
+---
+
+<Default {...Astro.props}><slot /></Default>
+
+<template data-nbr-search-hints>
+  <div class="nbr-search-hints" aria-hidden="true">
+    <span><kbd class="nbr-search-kbd">↑↓</kbd> navigate</span>
+    <span><kbd class="nbr-search-kbd">↵</kbd> open</span>
+    <span><kbd class="nbr-search-kbd">esc</kbd> close</span>
+  </div>
+</template>
+
+<script>
+  const template = document.querySelector<HTMLTemplateElement>(
+    'template[data-nbr-search-hints]',
+  );
+  const search = document.querySelector('site-search');
+  const frame = search?.querySelector('.dialog-frame');
+  if (template && frame) frame.append(template.content.cloneNode(true));
+
+  // Keep "Cancel" as the accessible name and the mobile label; chrome.css swaps
+  // it for the `esc` keycap on desktop, where the button sits in the input row.
+  const closeBtn = search?.querySelector<HTMLButtonElement>(
+    'button[data-close-modal]',
+  );
+  if (closeBtn) {
+    const label = closeBtn.textContent?.trim() ?? '';
+    if (label) closeBtn.setAttribute('aria-label', label);
+    const text = document.createElement('span');
+    text.className = 'nbr-search-close-label';
+    text.textContent = label;
+    const kbd = document.createElement('kbd');
+    kbd.className = 'nbr-search-kbd';
+    kbd.setAttribute('aria-hidden', 'true');
+    kbd.textContent = 'esc';
+    closeBtn.replaceChildren(text, kbd);
+  }
+</script>
