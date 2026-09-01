@@ -121,7 +121,10 @@ div.header site-search button[data-open-modal] > kbd {
 
 /* Rounded icon theme toggle. */
 .nbr-theme-toggle {
-  display: inline-flex;
+  /* Block-level so the <starlight-theme-select> wrapper collapses to the
+   * button's height; inline-flex left baseline descender space below it and
+   * pushed the toggle above the header's centerline. */
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 1.75rem;
