@@ -125,6 +125,9 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+# Editor/AI assistant local config
+.cursor/
+
 # pnpm
 .pnpm-store
 
