@@ -14,14 +14,20 @@ sets on your behalf. For task-oriented guidance, see
 
 Options passed to `nebari(options)`:
 
-| Option      | Type               | Default                    | Description                                                                 |
-| ----------- | ------------------ | -------------------------- | --------------------------------------------------------------------------- |
-| `logoHref`  | `string`           | site base (`BASE_URL`)     | URL the header logo links to. Set to a portal root for multi-pack domains.  |
+| Option     | Type                                     | Default                | Description                                                                 |
+| ---------- | ---------------------------------------- | ---------------------- | --------------------------------------------------------------------------- |
+| `logoHref` | `string`                                 | site base (`BASE_URL`) | URL the header logo links to. Set to a portal root for multi-pack domains.  |
+| `nav`      | `{ label: string; href: string }[]`      | unset                  | Top-level header tabs. Absent, the header is byte-identical to Starlight.   |
 
 ```ts
 interface NebariThemeOptions {
   /** URL the header logo links to. Defaults to the site's own base. */
   logoHref?: string;
+  /**
+   * Top-level header tabs. When omitted, the header is byte-identical to
+   * stock Starlight.
+   */
+  nav?: Array<{ label: string; href: string }>;
 }
 ```
 
@@ -30,26 +36,47 @@ interface NebariThemeOptions {
 When you register `nebari()`, it updates your Starlight config as follows. All of
 these are merged **before** your own config, so your values take precedence.
 
-| Setting     | What the theme adds                                                                                     | Overridable |
-| ----------- | ------------------------------------------------------------------------------------------------------- | ----------- |
-| `customCss` | Font faces, Nebari tokens, theme mapping, and component styles — prepended before your own `customCss`. | Yes         |
-| `components` | Overrides `SiteTitle`, `Head`, `Footer`, and `ThemeSelect`.                                            | Yes         |
-| `social`    | Prepends a GitHub link to `github.com/nebari-dev`.                                                       | Yes         |
+| Setting      | What the theme adds                                                                                     | Overridable |
+| ------------ | ------------------------------------------------------------------------------------------------------- | ----------- |
+| `customCss`  | Font faces, Nebari tokens, theme mapping, and component styles — prepended before your own `customCss`. | Yes         |
+| `components` | Overrides the eight components listed below.                                                            | Yes         |
+| `social`     | Prepends a GitHub link to `github.com/nebari-dev`.                                                      | Yes         |
+| `lastUpdated`| Defaults to `true`, so a date appears on pages that had none.                                           | Yes         |
 
 ### Overridden components
 
-| Component     | Status                            | Why the theme overrides it                          |
-| ------------- | --------------------------------- | --------------------------------------------------- |
-| `SiteTitle`   | <Badge text="Overridden" variant="note" />   | Renders the Nebari logo in the header.   |
-| `Head`        | <Badge text="Overridden" variant="note" />   | Injects self-hosted font preloads.       |
-| `Footer`      | <Badge text="Overridden" variant="note" />   | Adds the branded Nebari footer.          |
-| `ThemeSelect` | <Badge text="Overridden" variant="note" />   | Swaps the `<select>` for the icon toggle. |
+| Component        | Status                                     | Why the theme overrides it                                      |
+| ---------------- | ------------------------------------------ | --------------------------------------------------------------- |
+| `SiteTitle`      | <Badge text="Overridden" variant="note" /> | Renders the Nebari logo in the header.                          |
+| `Head`           | <Badge text="Overridden" variant="note" /> | Injects self-hosted font preloads.                              |
+| `Footer`         | <Badge text="Overridden" variant="note" /> | Adds the branded Nebari footer on splash pages.                 |
+| `Sidebar`        | <Badge text="Overridden" variant="note" /> | Injects the `nav` tabs into the mobile drawer.                  |
+| `ThemeSelect`    | <Badge text="Overridden" variant="note" /> | Swaps the `<select>` for the icon toggle.                       |
+| `PageTitle`      | <Badge text="Overridden" variant="note" /> | Renders breadcrumbs and the updated / read-time meta row.       |
+| `LastUpdated`    | <Badge text="Overridden" variant="note" /> | Suppresses the duplicate date Starlight prints in the footer.   |
+| `MarkdownContent`| <Badge text="Overridden" variant="note" /> | Wraps tables so wide grids and long cells scroll instead of wrap, and tracks the last TOC heading at the bottom of the page. |
 
 :::caution
-Setting any of the four components above in your own `components` map replaces the
-theme's version and drops the corresponding branding. See
+Setting any of the eight components above in your own `components` map replaces
+the theme's version and drops the corresponding feature. See
 [Customizing the Theme](/guides/customizing/).
 :::
+
+## Layout classes
+
+These class names are a documented CSS contract. Use them in Markdown so a pack
+gets the landing and guides layouts without a versioned component API.
+
+| Class            | Where                                         | What it does                                                                 |
+| ---------------- | --------------------------------------------- | ---------------------------------------------------------------------------- |
+| `.nbr-grid-3`    | wrapping a `<CardGrid>`                       | Three-up cards that ladder to two, then one.                                 |
+| `.nbr-cols-2`    | wrapping a Markdown list                      | Two-column popular-pages list, column-major, with trailing arrows.           |
+| `.nbr-chip`      | a `<label>` next to a radio                    | Filter chip. The checked radio paints the filled accent pill.                |
+| `.nbr-guide-list`| wrapping `<GuideCard>`s                       | Stacked guide cards; also hides breadcrumbs, meta, and the title hairline.   |
+| `.nbr-404`       | wrapping the 404 footnote                      | Splash 404 layout: centres the page, hides the footer, paints the wash.      |
+| `.nbr-table-scroll` | injected around tables                     | Horizontal scroll for a table that does not fit the column.                  |
+
+Import `GuideCard` from `@nebari/starlight/components/GuideCard.astro`.
 
 ## Design tokens
 

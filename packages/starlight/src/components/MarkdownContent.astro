@@ -47,4 +47,127 @@ import Default from '@astrojs/starlight/components/MarkdownContent.astro';
     cancelAnimationFrame(resizeFrame);
     resizeFrame = requestAnimationFrame(wrapTables);
   });
+
+  let forcingBottom = false;
+  let queued = false;
+  const linksByHost = new Map<Element, HTMLAnchorElement[]>();
+  const observers: MutationObserver[] = [];
+
+  function atBottom(): boolean {
+    const scroller = document.scrollingElement ?? document.documentElement;
+    if (scroller.scrollHeight <= scroller.clientHeight + 2) return false;
+    return (
+      scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2
+    );
+  }
+
+  function linkAboveScanLine(links: HTMLAnchorElement[]): HTMLAnchorElement {
+    const nav =
+      document.querySelector('header')?.getBoundingClientRect().height ?? 0;
+    const top = nav + 32;
+    let current = links[0];
+    for (const link of links) {
+      const id = decodeURIComponent(link.hash.replace(/^#/, ''));
+      const heading = id ? document.getElementById(id) : null;
+      if (heading && heading.getBoundingClientRect().top <= top) current = link;
+    }
+    return current;
+  }
+
+  function setCurrent(
+    host: Element,
+    target: HTMLAnchorElement,
+    links: HTMLAnchorElement[],
+  ) {
+    const unique =
+      target.getAttribute('aria-current') === 'true' &&
+      links.every(
+        (link) => link === target || !link.hasAttribute('aria-current'),
+      );
+    if (!unique) {
+      for (const link of links) {
+        if (link === target) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      }
+    }
+    const label = host.querySelector('.display-current');
+    if (label) label.textContent = target.textContent;
+  }
+
+  function syncToc() {
+    const bottom = atBottom();
+    if (bottom) forcingBottom = true;
+    else if (!forcingBottom) return;
+    else forcingBottom = false;
+    for (const [host, links] of linksByHost) {
+      if (!links.length) continue;
+      setCurrent(
+        host,
+        bottom ? links[links.length - 1] : linkAboveScanLine(links),
+        links,
+      );
+    }
+  }
+
+  function onMutate(host: Element, records: MutationRecord[]) {
+    const links = linksByHost.get(host) ?? [];
+    let incoming: HTMLAnchorElement | undefined;
+    for (let i = records.length - 1; i >= 0; i--) {
+      const target = records[i].target;
+      if (
+        target instanceof HTMLAnchorElement &&
+        target.getAttribute('aria-current') === 'true'
+      ) {
+        incoming = target;
+        break;
+      }
+    }
+    if (incoming && !atBottom()) {
+      forcingBottom = false;
+      setCurrent(host, incoming, links);
+      return;
+    }
+    syncToc();
+  }
+
+  function observeToc() {
+    forcingBottom = false;
+    for (const observer of observers) observer.disconnect();
+    observers.length = 0;
+    linksByHost.clear();
+    for (const host of document.querySelectorAll(
+      'starlight-toc, mobile-starlight-toc',
+    )) {
+      linksByHost.set(host, [
+        ...host.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'),
+      ]);
+      const observer = new MutationObserver((records) =>
+        onMutate(host, records),
+      );
+      observer.observe(host, {
+        attributes: true,
+        subtree: true,
+        attributeFilter: ['aria-current'],
+      });
+      observers.push(observer);
+    }
+    syncToc();
+  }
+
+  function onScrollOrResize() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      queued = false;
+      syncToc();
+    });
+  }
+
+  observeToc();
+  document.addEventListener('astro:page-load', observeToc);
+  document.addEventListener('scroll', onScrollOrResize, {
+    passive: true,
+    capture: true,
+  });
+  window.addEventListener('resize', onScrollOrResize);
 </script>

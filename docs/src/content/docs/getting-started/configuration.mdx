@@ -36,6 +36,24 @@ nebari({ logoHref: 'https://packs.nebari.dev/' });
 See the [Configuration Options reference](/reference/configuration/) for the full
 option table and defaults.
 
+### `nav`
+
+Top-level header tabs (Docs / Guides / Reference on this site). When omitted,
+the header is byte-identical to stock Starlight. The active tab is the one
+that shares the most leading path segments with the current URL (the root
+tab is a fallback, not a prefix match). A tab can point at a leaf page and
+still light for every page in that section:
+
+```js
+nebari({
+  nav: [
+    { label: 'Docs', href: '/' },
+    { label: 'Guides', href: '/guides/' },
+    { label: 'Reference', href: '/reference/configuration/' },
+  ],
+});
+```
+
 ## Starlight options worth setting
 
 The theme leaves these to you — they're per-pack decisions.

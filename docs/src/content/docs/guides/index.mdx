@@ -1,0 +1,50 @@
+---
+title: Guides
+description: Task-oriented walkthroughs for installing, authoring, customizing, and deploying a Nebari docs pack.
+tableOfContents: false
+---
+
+import GuideCard from '@nebari/starlight/components/GuideCard.astro';
+import GuideFilter from '@nebari/starlight/components/GuideFilter.astro';
+
+How to get a pack's docs on-brand and shipped. Start with install, then pick the
+task that matches what you're doing.
+
+<GuideFilter categories={['Getting started', 'Authoring', 'Customizing', 'Deployment']}>
+  <GuideCard
+    title="Installation"
+    href="/getting-started/installation/"
+    description="Add the theme to a new or existing Starlight site."
+    category="Getting started"
+  />
+  <GuideCard
+    title="Quickstart"
+    href="/getting-started/quickstart/"
+    description="Scaffold a docs pack and see the theme running in five minutes."
+    category="Getting started"
+  />
+  <GuideCard
+    title="Authoring content"
+    href="/guides/authoring-content/"
+    description="Learn the components and Markdown conventions this theme adds."
+    category="Authoring"
+  />
+  <GuideCard
+    title="Customizing the theme"
+    href="/guides/customizing/"
+    description="Adjust colors, the logo, and other presentation without forking."
+    category="Customizing"
+  />
+  <GuideCard
+    title="Build & preview"
+    href="/guides/deployment/build/"
+    description="Produce a production build and preview it locally."
+    category="Deployment"
+  />
+  <GuideCard
+    title="Deploy to production"
+    href="/guides/deployment/deploy/"
+    description="Ship the built site to GitHub Pages or another static host."
+    category="Deployment"
+  />
+</GuideFilter>

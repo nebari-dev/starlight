@@ -51,6 +51,10 @@ export interface NebariThemeOptions {
    * returns users to `packs.nebari.dev/`.
    */
   logoHref?: string;
+  /**
+   * Top-level header tabs. When omitted, the header is byte-identical to
+   * stock Starlight.
+   */
   nav?: Array<{ label: string; href: string }>;
   /**
    * URL the header GitHub icon links to. Defaults to the Nebari org
@@ -198,6 +202,7 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
             'nebari.breadcrumbLabel': 'Breadcrumb',
             'nebari.updated': 'Updated',
             'nebari.readTime': '{{minutes}} min read',
+            'nebari.guideTime': '{{minutes}} min',
           },
         });
       },

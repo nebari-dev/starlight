@@ -7,72 +7,70 @@ hero:
   actions:
     - text: Get started
       link: /getting-started/installation/
-      icon: right-arrow
       variant: primary
     - text: Read the guides
-      link: /guides/authoring-content/
-      icon: open-book
-      variant: minimal
-    - text: View on GitHub
-      link: https://github.com/nebari-dev/starlight
-      icon: external
-      variant: minimal
+      link: /guides/
+      variant: secondary
 ---
 
-import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Card, CardGrid } from '@astrojs/starlight/components';
 
-Every Nebari pack ships documentation, and every set of docs should look like it
-belongs to the same platform. `@nebari/starlight` is the shared theme that makes
-that automatic: add the plugin, write your content, and get a polished,
-accessible, on-brand site out of the box. New here? Jump to the
-[installation guide](/getting-started/installation/).
+## Explore the documentation
 
-## Why teams use it
+Everything the theme styles, from a one-line install through to the kitchen sink.
 
-<CardGrid stagger>
-  <Card title="One-line install" icon="rocket">
-    Register the `nebari()` plugin in `astro.config.mjs` and the entire theme —
-    colors, fonts, logo, footer, and social links — is wired up for you.
-  </Card>
-  <Card title="On-brand by default" icon="approve-check">
-    OKLCH design tokens from nebari-design map onto Starlight's variables: a
-    magenta accent with slate-tinted surfaces, tuned for light and dark.
-  </Card>
-  <Card title="Typography that ships with it" icon="seti:font">
-    Geist for body and headings, IBM Plex Mono for code — all self-hosted, no
-    CDN calls, no layout shift.
-  </Card>
-  <Card title="Search included" icon="magnifier">
-    Starlight's built-in Pagefind search is enabled and styled to match, ready
-    for multisite merging across packs.
-  </Card>
-</CardGrid>
+<div class="nbr-grid-3">
+  <CardGrid>
+    <Card title="One-line install">
+      Register the `nebari()` plugin in `astro.config.mjs` and the entire theme —
+      colors, fonts, logo, footer, and social links — is wired up for you.
 
-## Start here
+      [Install the theme](/getting-started/installation/)
+    </Card>
+    <Card title="On-brand by default">
+      OKLCH design tokens from nebari-design map onto Starlight's variables: a
+      magenta accent with slate-tinted surfaces, tuned for light and dark.
 
-<CardGrid>
-  <LinkCard
-    title="Installation"
-    href="/getting-started/installation/"
-    description="Add the theme to a new or existing Starlight site."
-  />
-  <LinkCard
-    title="Quickstart"
-    href="/getting-started/quickstart/"
-    description="Scaffold a docs pack and see the theme running in five minutes."
-  />
-  <LinkCard
-    title="Authoring content"
-    href="/guides/authoring-content/"
-    description="Learn the components and Markdown conventions this theme adds."
-  />
-  <LinkCard
-    title="Configuration reference"
-    href="/reference/configuration/"
-    description="Every plugin option, with defaults and examples."
-  />
-</CardGrid>
+      [Customize tokens](/guides/customizing/)
+    </Card>
+    <Card title="Typography that ships">
+      Geist for body and headings, IBM Plex Mono for code — all self-hosted, no
+      CDN calls, no layout shift.
 
-This site is also a working template. It runs on `@nebari/starlight` itself, so
-everything you see — the hero above, the cards, the callouts, the sidebar
-groups — is the theme in action. Fork it as the starting point for your own pack.
+      [See it in content](/guides/authoring-content/)
+    </Card>
+    <Card title="Search included">
+      Starlight's built-in Pagefind search is enabled and styled to match, ready
+      for multisite merging across packs.
+
+      [Open the components](/reference/components/)
+    </Card>
+    <Card title="Configuration">
+      Plugin options, the Starlight settings the theme manages, and what a pack
+      still owns.
+
+      [Read the reference](/reference/configuration/)
+    </Card>
+    <Card title="Kitchen sink">
+      Every content surface on one page — callouts, tabs, tables, steps, figures
+      — so you can check the theme against the design.
+
+      [Browse the sink](/reference/kitchen-sink/)
+    </Card>
+  </CardGrid>
+</div>
+
+## Popular pages
+
+<div class="nbr-cols-2">
+
+- [Installation](/getting-started/installation/)
+- [Quickstart](/getting-started/quickstart/)
+- [Authoring content](/guides/authoring-content/)
+- [Customizing the theme](/guides/customizing/)
+- [Configuration](/reference/configuration/)
+- [Kitchen sink](/reference/kitchen-sink/)
+- [GitHub](https://github.com/nebari-dev)
+- [nebari.dev](https://nebari.dev)
+
+</div>

@@ -1,0 +1,109 @@
+---
+import { getEntry } from 'astro:content';
+import { readingTimeMinutes } from '../utils/reading-time';
+
+interface Props {
+  title: string;
+  href: string;
+  description: string;
+  category: string;
+  /** Overrides the read time derived from the linked page. */
+  time?: string;
+}
+
+const { title, href, description, category, time } = Astro.props;
+
+// Derive the read time from the page the card links to, so it can't drift from
+// the `N min read` the article itself shows. Root-relative hrefs map onto
+// collection ids; anything else (external links, missing pages) renders no time.
+const entry = time
+  ? undefined
+  : await getEntry('docs', href.replace(/^\/|\/$/g, '')).catch(() => undefined);
+const minutes = entry?.body ? readingTimeMinutes(entry.body) : undefined;
+const readTime =
+  time ?? (minutes ? Astro.locals.t('nebari.guideTime', { minutes }) : undefined);
+---
+
+<article class="nbr-guide-card" data-category={category}>
+  <div class="nbr-guide-card__copy">
+    <a href={href}>{title}</a>
+    <p>{description}</p>
+  </div>
+  <div class="nbr-guide-card__meta">
+    <span class="nbr-guide-card__cat">{category}</span>
+    {readTime && <span>{readTime}</span>}
+    <span aria-hidden="true">→</span>
+  </div>
+</article>
+
+<style>
+  .nbr-guide-card {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.25rem;
+    min-height: 5.5rem;
+    padding: 1.125rem 1.25rem;
+    border: 1px solid var(--nbr-border);
+    border-radius: var(--nbr-radius-lg);
+    background-color: var(--nbr-card);
+  }
+  .nbr-guide-card:hover {
+    border-color: var(--nbr-border-strong);
+  }
+  .nbr-guide-card:hover a {
+    color: var(--nbr-foreground);
+    text-decoration: underline;
+  }
+  /* `a::before` makes the whole card clickable, so ring the card rather than
+     the inline title the global `:focus-visible` rule would target. */
+  .nbr-guide-card:has(a:focus-visible) {
+    outline: 2px solid var(--nbr-ring);
+    outline-offset: 2px;
+  }
+  a:focus-visible {
+    outline: none;
+  }
+  .nbr-guide-card[hidden] {
+    display: none;
+  }
+  a {
+    color: var(--nbr-foreground);
+    font-size: 1rem;
+    line-height: 1.75rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  a::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--nbr-muted-foreground);
+  }
+  .nbr-guide-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: var(--nbr-muted-foreground);
+  }
+  /* Figma has the trailing arrow in the accent in both states. */
+  .nbr-guide-card__meta span[aria-hidden] {
+    color: var(--nbr-primary);
+  }
+  .nbr-guide-card__cat {
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--nbr-radius-full);
+    background-color: var(--nbr-muted);
+    color: var(--nbr-foreground);
+  }
+</style>

@@ -106,7 +106,7 @@ test('exactly one nav tab is marked aria-current per page', () => {
 
 test('the active tab is the section the page belongs to', () => {
   expect(navTabsMarkup('guides/deployment/build/index.html')).toMatch(
-    /href="\/guides\/authoring-content\/"[^>]*aria-current="page"/,
+    /href="\/guides\/"[^>]*aria-current="page"/,
   );
   expect(navTabsMarkup('reference/components/index.html')).toMatch(
     /href="\/reference\/configuration\/"[^>]*aria-current="page"/,
@@ -240,4 +240,24 @@ test('Expressive Code frame chrome uses the muted surface and a bottom tab indic
   expect(css).toMatch(/--ec-frm-edTabBarBg:\s*var\(--nbr-muted\)/);
   expect(css).toMatch(/--ec-frm-trmTtbBg:\s*var\(--nbr-muted\)/);
   expect(css).toMatch(/--ec-frm-edActTabIndBtmCol:\s*var\(--nbr-primary\)/);
+});
+
+test('the landing, guides index and 404 emit their layout markers', () => {
+  const home = readFileSync(join(DIST, 'index.html'), 'utf8');
+  expect(home).toContain('nbr-grid-3');
+  expect(home).toContain('nbr-cols-2');
+  const guides = readFileSync(join(DIST, 'guides/index.html'), 'utf8');
+  expect(guides).toContain('nbr-guide-list');
+  expect(guides).toContain('nbr-chip');
+  const notFound = readFileSync(join(DIST, '404.html'), 'utf8');
+  expect(notFound).toContain('hero');
+  expect(notFound).toContain('nbr-404');
+});
+
+test('guide filter CSS hides cards that do not match the checked category', () => {
+  const css =
+    allText('.css') + readFileSync(join(DIST, 'guides/index.html'), 'utf8');
+  expect(css).toContain(
+    '.nbr-guide-filter:has(#gf-getting-started:checked) .nbr-guide-card:not([data-category="Getting started"])',
+  );
 });

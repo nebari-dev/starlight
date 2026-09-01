@@ -5,9 +5,9 @@ description: The Starlight components available in Nebari docs packs, with impor
 
 import { Badge, Card, CardGrid } from '@astrojs/starlight/components';
 
-Nebari Starlight styles the standard Starlight component set — it doesn't add new
-components or dependencies. Everything below is imported from
-`@astrojs/starlight/components` and works in any `.mdx` page.
+Nebari Starlight styles the standard Starlight component set and adds one
+layout helper, `GuideCard`, for the guides landing page. Everything else is
+imported from `@astrojs/starlight/components` and works in any `.mdx` page.
 
 ```js
 import { Card, CardGrid, Tabs, TabItem, Steps, FileTree, Badge, Aside }
@@ -27,6 +27,8 @@ import { Card, CardGrid, Tabs, TabItem, Steps, FileTree, Badge, Aside }
 | `Aside`              | Callouts (also via `:::note` syntax)            | <Badge text="Stable" variant="success" />     |
 | `LinkButton`         | Prominent call-to-action link                   | <Badge text="Stable" variant="success" />     |
 | `Icon`               | Built-in icon set                               | <Badge text="Stable" variant="success" />     |
+| `GuideCard`          | Guides-landing row (badge, read time, arrow)    | <Badge text="Stable" variant="success" />     |
+| `GuideFilter`        | Category chips that filter a stack of cards     | <Badge text="Stable" variant="success" />     |
 
 ## Badge variants
 
@@ -77,3 +79,33 @@ ships search enabled.
 For prop-level detail on any component, see the upstream
 [Starlight component reference](https://starlight.astro.build/components/using-components/).
 This theme changes their appearance, not their API.
+
+## Guide cards
+
+`GuideCard` is the one extra component. Import it from the theme, not from
+Starlight. Wrap a stack in `GuideFilter` to get the category chips; it also
+supplies `.nbr-guide-list`, so the page drops breadcrumbs, the meta row, and
+the title hairline.
+
+```js
+import GuideCard from '@nebari/starlight/components/GuideCard.astro';
+import GuideFilter from '@nebari/starlight/components/GuideFilter.astro';
+```
+
+```mdx
+<GuideFilter categories={['Getting started', 'Authoring']}>
+  <GuideCard
+    title="Installation"
+    href="/getting-started/installation/"
+    description="Add the theme to a new or existing Starlight site."
+    category="Getting started"
+  />
+</GuideFilter>
+```
+
+`categories` must match each card's `category` prop. The read time is derived
+from the linked page, so it stays in step with the article's own meta row; pass
+`time` to override it. See the [guides
+landing](/guides/) for a working example, and the [layout
+classes](/reference/configuration/#layout-classes) for the other landing
+contracts (`.nbr-grid-3`, `.nbr-cols-2`, `.nbr-chip`).
