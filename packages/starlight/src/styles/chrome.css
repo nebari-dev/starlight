@@ -489,10 +489,17 @@ site-search dialog::backdrop {
   display: block;
   margin-block-start: 0.75rem;
   padding-block-start: 0.75rem;
-  border-block-start: 1px solid var(--sl-color-hairline);
   font-size: 0.75rem;
   line-height: 1rem;
   color: var(--nbr-muted-foreground);
+}
+/* Only draw the divider above the shortcut hints once results are showing;
+ * before a search it would double up with the input's own underline. */
+#starlight__search
+  .pagefind-ui__form:has(
+    .pagefind-ui__drawer:not(.pagefind-ui__hidden)
+  )::after {
+  border-block-start: 1px solid var(--sl-color-hairline);
 }
 @media (min-width: 50rem) {
   site-search .dialog-frame {
@@ -500,6 +507,16 @@ site-search dialog::backdrop {
   }
   #starlight__search .pagefind-ui__form {
     padding: 1.5rem;
+  }
+  /* Pagefind positions the magnifier icon absolutely from the form's corner,
+   * so offset it by the form padding added above to keep it inside the input. */
+  #starlight__search .pagefind-ui__form::before {
+    top: calc(1.5rem + 23px * var(--pagefind-ui-scale));
+    left: calc(1.5rem + 20px * var(--pagefind-ui-scale));
+  }
+  #starlight__search .pagefind-ui__search-clear {
+    top: calc(1.5rem + 3px * var(--pagefind-ui-scale));
+    inset-inline-end: calc(1.5rem + var(--sl-search-cancel-space));
   }
 }
 #starlight__search
