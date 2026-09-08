@@ -493,17 +493,31 @@ site-search dialog::backdrop {
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
 }
 
-/* Dialog frame: results scroll in the middle, the keyboard-hint footer
- * (injected by components/Search.astro) pins to the bottom. */
+/* Dialog frame: the input stays put at the top, only the results drawer
+ * scrolls, and the keyboard-hint footer (injected by components/Search.astro)
+ * pins to the bottom. Pagefind nests the drawer inside its form, so every
+ * wrapper down to it becomes a shrinkable flex column. */
 site-search .dialog-frame {
   overflow: hidden;
   gap: 0;
   border-radius: inherit;
 }
-site-search .search-container {
+site-search .search-container,
+#starlight__search,
+#starlight__search .pagefind-ui,
+#starlight__search .pagefind-ui__form {
+  display: flex;
+  flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
-  overflow: auto;
+}
+#starlight__search .pagefind-ui__search-input {
+  flex: none;
+}
+#starlight__search .pagefind-ui__drawer {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
 .nbr-search-hints {
   display: none;
@@ -559,7 +573,18 @@ site-search button[data-close-modal] .nbr-search-kbd {
     padding: 0;
   }
   #starlight__search .pagefind-ui__form {
-    padding: 1.5rem;
+    padding: 1.5rem 1.5rem 0;
+  }
+  /* The drawer scrolls flush with the dialog edge and down to the footer,
+   * while the input keeps the form's inset. */
+  #starlight__search .pagefind-ui__drawer {
+    margin-inline: -1.5rem;
+    padding: 0 1.5rem 1.5rem;
+  }
+  /* Room for the esc keycap so a long query never runs underneath it. */
+  #starlight__search .pagefind-ui__search-input {
+    /* biome-ignore lint/complexity/noImportantStyles: Pagefind sets padding-right inline from the width of its clear button, which is hidden below and so measures 0. */
+    padding-inline-end: 4rem !important;
   }
   /* Pagefind positions the magnifier icon absolutely from the form's corner,
    * so offset it by the form padding added above to keep it inside the input. */
@@ -589,10 +614,15 @@ site-search button[data-close-modal] .nbr-search-kbd {
     display: none;
   }
 }
+/* Each title and nested row is its own link, so the highlight is per row.
+ * Starlight's hover/focus outlines go; components/Search.astro moves a single
+ * data-nbr-active highlight with ↑↓, the pointer, or Tab, so hover and
+ * keyboard never paint two different regions. */
 #starlight__search
   .pagefind-ui__result-title:not(:where(.pagefind-ui__result-nested *)),
 #starlight__search .pagefind-ui__result-nested {
   background-color: transparent;
+  border-radius: var(--nbr-radius-md);
 }
 #starlight__search
   .pagefind-ui__result-title:not(:where(.pagefind-ui__result-nested *)):hover,
@@ -605,33 +635,16 @@ site-search button[data-close-modal] .nbr-search-kbd {
   outline: none;
   background-color: transparent;
 }
-#starlight__search .pagefind-ui__result {
-  position: relative;
-}
-#starlight__search .pagefind-ui__result:hover,
-#starlight__search .pagefind-ui__result:focus-within {
-  background-color: var(--nbr-callout-note);
-  border-radius: var(--nbr-radius-md);
-}
-#starlight__search .pagefind-ui__result:focus-within {
+#starlight__search
+  .pagefind-ui__result-title:not(
+    :where(.pagefind-ui__result-nested *)
+  ):focus-within,
+#starlight__search .pagefind-ui__result-nested:focus-within {
   outline: 2px solid var(--nbr-ring);
-  outline-offset: 2px;
+  outline-offset: -2px;
 }
-#starlight__search .pagefind-ui__result:hover::after,
-#starlight__search .pagefind-ui__result:focus-within::after {
-  content: "↵";
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-end: 1rem;
-  transform: translateY(-50%);
-  color: var(--nbr-muted-foreground);
-}
-/* Row highlighted with ↑↓ from the search input (see components/Search.astro).
- * Same treatment as hover, scoped to the individual title or nested row. */
 #starlight__search .pagefind-ui__result [data-nbr-active] {
-  position: relative;
   background-color: var(--nbr-callout-note);
-  border-radius: var(--nbr-radius-md);
 }
 #starlight__search .pagefind-ui__result [data-nbr-active]::after {
   content: "↵";
