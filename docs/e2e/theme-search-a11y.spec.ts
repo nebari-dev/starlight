@@ -473,6 +473,11 @@ test('search results share one highlight across ↑↓, hover, and the screen re
     el.scrollTop = el.scrollHeight;
   });
   expect((await input.boundingBox())?.y).toBe(before?.y);
+  // Scrolled rows stop short of the input instead of running into its edge.
+  const drawerBox = await drawer.boundingBox();
+  expect(drawerBox?.y ?? 0).toBeGreaterThanOrEqual(
+    (before?.y ?? 0) + (before?.height ?? 0) + 12,
+  );
 
   // A long query stops short of the visible esc keycap instead of running
   // under it (the button around it is only a larger hit area).

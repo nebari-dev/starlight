@@ -518,6 +518,13 @@ site-search .search-container,
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
+  /* Breathing room below the input that survives scrolling: Pagefind's own
+   * top margin sits on the results area inside the scroller, so scrolled rows
+   * would otherwise run straight into the input's bottom edge. */
+  margin-block-start: 1rem;
+}
+#starlight__search .pagefind-ui__results-area {
+  margin-top: 0;
 }
 .nbr-search-hints {
   display: none;
