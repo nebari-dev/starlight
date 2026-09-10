@@ -1,0 +1,153 @@
+---
+/*
+ * Wraps Starlight's default Search dialog and adds the design's keyboard hints:
+ * a footer bar pinned to the bottom of the dialog (↑↓ navigate, ↵ open,
+ * esc close) and an `esc` keycap at the end of the input row.
+ *
+ * Starlight renders the dialog markup statically and only mounts Pagefind into
+ * it when opened, so a small script moves the footer from the <template> into
+ * the dialog frame on load and swaps the desktop label of the close button for
+ * the keycap. It also adds the ↑↓/↵ keyboard navigation the hints promise,
+ * which neither Pagefind's UI nor Starlight provide. Layout and colours live
+ * in styles/chrome.css.
+ */
+import Default from '@astrojs/starlight/components/Search.astro';
+---
+
+<Default {...Astro.props}><slot /></Default>
+
+<template data-nbr-search-hints>
+  {/* The visual chips are decorative; screen readers get the sentence below,
+      wired to the input with aria-describedby. */}
+  <div class="nbr-search-hints" aria-hidden="true">
+    <span><kbd class="nbr-search-kbd">↑↓</kbd> navigate</span>
+    <span><kbd class="nbr-search-kbd">↵</kbd> open</span>
+    <span><kbd class="nbr-search-kbd">esc</kbd> close</span>
+  </div>
+  <p class="sr-only" id="nbr-search-keys" data-nbr-search-description>
+    Use the up and down arrow keys to move through results, Enter to open the
+    highlighted result, and Escape to close search.
+  </p>
+</template>
+
+<script>
+  const template = document.querySelector<HTMLTemplateElement>(
+    'template[data-nbr-search-hints]',
+  );
+  const search = document.querySelector('site-search');
+  const frame = search?.querySelector('.dialog-frame');
+  if (template && frame) frame.append(template.content.cloneNode(true));
+  const descriptionId = frame?.querySelector<HTMLElement>(
+    '[data-nbr-search-description]',
+  )?.id;
+
+  // The button shows "Cancel" on mobile and the `esc` keycap on desktop
+  // (chrome.css swaps them), so the accessible name carries both: voice
+  // control users can say either visible label (WCAG 2.5.3 label-in-name).
+  const closeBtn = search?.querySelector<HTMLButtonElement>(
+    'button[data-close-modal]',
+  );
+  if (closeBtn) {
+    const label = closeBtn.textContent?.trim() ?? '';
+    closeBtn.setAttribute('aria-label', label ? `${label} (esc)` : 'esc');
+    const text = document.createElement('span');
+    text.className = 'nbr-search-close-label';
+    text.textContent = label;
+    const kbd = document.createElement('kbd');
+    kbd.className = 'nbr-search-kbd';
+    kbd.setAttribute('aria-hidden', 'true');
+    kbd.textContent = 'esc';
+    closeBtn.replaceChildren(text, kbd);
+  }
+
+  // One highlight, moved by ↑↓, the pointer, or Tab focus, so the keyboard and
+  // the mouse never disagree about which row ↵ will open. Focus stays in the
+  // input so typing keeps refining the query. The highlight lives in the DOM as
+  // a data attribute rather than in JS state, so Pagefind re-rendering the list
+  // can never leave a stale index behind; the input mirrors it through
+  // aria-activedescendant for screen readers.
+  const dialog = search?.querySelector('dialog');
+  const results = search?.querySelector('#starlight__search');
+  if (dialog && results) {
+    const ACTIVE = 'data-nbr-active';
+    const LINK = '.pagefind-ui__result-link';
+    const ROW = '.pagefind-ui__result-nested, .pagefind-ui__result-title';
+    let ids = 0;
+    const input = () => results.querySelector<HTMLInputElement>('input');
+    const links = () =>
+      Array.from(results.querySelectorAll<HTMLAnchorElement>(LINK));
+    const rowOf = (link: Element) =>
+      link.closest('.pagefind-ui__result-nested') ??
+      link.closest('.pagefind-ui__result-title') ??
+      link;
+    const clear = () => {
+      for (const el of results.querySelectorAll(`[${ACTIVE}]`)) {
+        el.removeAttribute(ACTIVE);
+      }
+      input()?.removeAttribute('aria-activedescendant');
+    };
+    const activate = (link: HTMLAnchorElement, scroll = false) => {
+      clear();
+      const row = rowOf(link);
+      row.setAttribute(ACTIVE, '');
+      // Pagefind owns the result markup, so ids are assigned lazily; the
+      // counter keeps them unique across Svelte reusing rows between queries.
+      if (!link.id) link.id = `nbr-search-result-${++ids}`;
+      input()?.setAttribute('aria-activedescendant', link.id);
+      if (scroll) row.scrollIntoView({ block: 'nearest' });
+    };
+
+    dialog.addEventListener('keydown', (event) => {
+      if (!(event.target instanceof HTMLInputElement)) return;
+      const all = links();
+      if (!all.length) return;
+      const current = all.findIndex((a) => rowOf(a).hasAttribute(ACTIVE));
+      const last = all.length - 1;
+
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        // With nothing highlighted (current = -1), ↓ starts at the first row
+        // and ↑ at the last; from either end the highlight wraps around.
+        const next =
+          event.key === 'ArrowDown'
+            ? current === last
+              ? 0
+              : current + 1
+            : current <= 0
+              ? last
+              : current - 1;
+        activate(all[next], true);
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        (all[current] ?? all[0]).click();
+      }
+    });
+
+    // Hover moves the highlight instead of painting a second one. mousemove
+    // rather than mouseover, and only on real pointer travel, so a row scrolled
+    // under a resting cursor by ↑↓ does not steal the highlight back.
+    let pointer = { x: NaN, y: NaN };
+    results.addEventListener('mousemove', (event) => {
+      if (event.clientX === pointer.x && event.clientY === pointer.y) return;
+      pointer = { x: event.clientX, y: event.clientY };
+      if (!(event.target instanceof Element)) return;
+      const link = event.target
+        .closest(ROW)
+        ?.querySelector<HTMLAnchorElement>(LINK);
+      if (link && !rowOf(link).hasAttribute(ACTIVE)) activate(link);
+    });
+    // Tabbing onto a link highlights it too, so ↵ and the focus ring agree.
+    results.addEventListener('focusin', (event) => {
+      const target = event.target;
+      if (target instanceof HTMLInputElement && descriptionId) {
+        target.setAttribute('aria-describedby', descriptionId);
+      } else if (target instanceof HTMLAnchorElement && target.matches(LINK)) {
+        activate(target);
+      }
+    });
+    // A new query re-renders the list; drop the highlight rather than let it
+    // land on whichever row Svelte happened to reuse.
+    dialog.addEventListener('input', clear);
+    dialog.addEventListener('close', clear);
+  }
+</script>

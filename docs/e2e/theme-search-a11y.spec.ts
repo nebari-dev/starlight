@@ -421,3 +421,74 @@ test('guide chips filter the list in place', async ({ page }) => {
   await expect(visible).toHaveCount(6);
   expect(page.url()).toBe(url);
 });
+
+test('search results share one highlight across ↑↓, hover, and the screen reader', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  await page.locator('button[data-open-modal]').first().click();
+
+  const input = page.locator('#starlight__search input').first();
+  await input.waitFor({ state: 'visible', timeout: 10_000 });
+  await input.focus();
+  // The button reads "Cancel" on mobile and "esc" on desktop; both visible
+  // labels must appear in the accessible name (WCAG 2.5.3).
+  await expect(
+    page.locator('site-search button[data-close-modal]'),
+  ).toHaveAttribute('aria-label', /Cancel.*esc/);
+  await expect(input).toHaveAttribute('aria-describedby', 'nbr-search-keys');
+
+  await input.fill('nebari');
+  const links = page.locator('#starlight__search .pagefind-ui__result-link');
+  await expect(links.first()).toBeVisible({ timeout: 15_000 });
+  const count = await links.count();
+  expect(count).toBeGreaterThan(1);
+  const highlighted = (i: number) =>
+    links.nth(i).evaluate((a) => a.closest('[data-nbr-active]') !== null);
+
+  // From a fresh list ↑ lands on the last row, not the second to last.
+  await input.press('ArrowUp');
+  expect(await highlighted(count - 1)).toBe(true);
+  await expect(page.locator('[data-nbr-active]')).toHaveCount(1);
+  await expect(input).toHaveAttribute(
+    'aria-activedescendant',
+    (await links.nth(count - 1).getAttribute('id')) ?? '',
+  );
+  await input.press('ArrowDown');
+  expect(await highlighted(0)).toBe(true);
+
+  // Hover moves the same highlight rather than painting a second region.
+  await links.nth(1).hover();
+  expect(await highlighted(1)).toBe(true);
+  await expect(page.locator('[data-nbr-active]')).toHaveCount(1);
+
+  // The input stays put while the results drawer scrolls beneath it.
+  const drawer = page.locator('#starlight__search .pagefind-ui__drawer');
+  expect(await drawer.evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(
+    true,
+  );
+  const before = await input.boundingBox();
+  await drawer.evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+  expect((await input.boundingBox())?.y).toBe(before?.y);
+  // Scrolled rows stop short of the input instead of running into its edge.
+  const drawerBox = await drawer.boundingBox();
+  expect(drawerBox?.y ?? 0).toBeGreaterThanOrEqual(
+    (before?.y ?? 0) + (before?.height ?? 0) + 12,
+  );
+
+  // A long query stops short of the visible esc keycap instead of running
+  // under it (the button around it is only a larger hit area).
+  const keycap = await page
+    .locator('site-search button[data-close-modal] kbd')
+    .boundingBox();
+  const box = await input.boundingBox();
+  const paddingEnd = await input.evaluate((el) =>
+    parseFloat(getComputedStyle(el).paddingRight),
+  );
+  expect((box?.x ?? 0) + (box?.width ?? 0) - paddingEnd).toBeLessThanOrEqual(
+    keycap?.x ?? 0,
+  );
+});

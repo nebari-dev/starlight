@@ -218,6 +218,7 @@ export function nebari(options: NebariThemeOptions = {}): StarlightPlugin {
           ],
           components: {
             SiteTitle: '@nebari/starlight/components/SiteTitle.astro',
+            Search: '@nebari/starlight/components/Search.astro',
             Head: '@nebari/starlight/components/Head.astro',
             Footer: '@nebari/starlight/components/Footer.astro',
             Sidebar: '@nebari/starlight/components/Sidebar.astro',
