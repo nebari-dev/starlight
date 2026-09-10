@@ -216,17 +216,6 @@ your build unexpectedly:
 { "dependencies": { "@nebari/starlight": "^1.0.0" } }
 ```
 
-### 1.0.0
-
-EffVer macro. Four behaviours change without an opt-in:
-
-1. The footer no longer renders on doc pages — splash pages only.
-2. `lastUpdated` defaults to `true`, so a date appears on pages that had none.
-3. Nav tabs appear only if `nav` is set; absent, the header is byte-identical.
-4. Tables scroll rather than wrap. Long values scroll inside the cell or the
-   table instead of breaking across lines. With JavaScript disabled, a wide
-   table can overflow the page.
-
 ## Releasing
 
 Releases are published to npm automatically from GitHub Releases via
