@@ -54,6 +54,24 @@ nebari({
 });
 ```
 
+Root-absolute hrefs get the site `base` prefixed, so they keep working when a
+pack is served from a sub-path. An entry can also point at another site —
+absolute (`https://…`, `mailto:…`) and protocol-relative (`//host/path`) hrefs
+are rendered verbatim and open in a new tab, and they never take the active-tab
+state, since no page of this site can match them:
+
+```js
+nebari({
+  nav: [
+    { label: 'Docs', href: '/' },
+    { label: 'Software Packs', href: 'https://packs.nebari.dev' },
+  ],
+});
+```
+
+The tabs render in the header, the mobile drawer, and the footer's
+Documentation column.
+
 ## Starlight options worth setting
 
 The theme leaves these to you — they're per-pack decisions.

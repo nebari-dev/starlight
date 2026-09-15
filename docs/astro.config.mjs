@@ -13,6 +13,7 @@ export default defineConfig({
             { label: 'Docs', href: '/' },
             { label: 'Guides', href: '/guides/' },
             { label: 'Reference', href: '/reference/configuration/' },
+            { label: 'Nebari', href: 'https://nebari.dev' },
           ],
         }),
       ],

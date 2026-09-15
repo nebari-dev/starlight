@@ -2,18 +2,16 @@
 import Default from '@astrojs/starlight/components/Footer.astro';
 import config from 'virtual:starlight/user-config';
 import { nav } from 'virtual:nebari/config';
+import { isExternalNavHref, navHref } from '../utils/nav';
 import markLight from '../assets/nebari-horizontal-light.svg?url';
 import markDark from '../assets/nebari-horizontal-dark.svg?url';
 
 const { hasSidebar } = Astro.locals.starlightRoute;
 
 const year = new Date().getFullYear();
-const prefix = import.meta.env.BASE_URL.replace(/\/+$/, '');
-const hrefFor = (href: string) => `${prefix}/${href.replace(/^\/+/, '')}`;
-
 const docsLinks = (nav ?? []).map((item) => ({
   label: item.label,
-  href: hrefFor(item.href),
+  href: navHref(item.href, import.meta.env.BASE_URL),
 }));
 
 const columns = [
@@ -59,7 +57,14 @@ const columns = [
             <ul>
               {column.links.map((link) => (
                 <li>
-                  <a href={link.href}>{link.label}</a>
+                  <a
+                    href={link.href}
+                    {...(isExternalNavHref(link.href)
+                      ? { target: '_blank', rel: 'noopener noreferrer' }
+                      : {})}
+                  >
+                    {link.label}
+                  </a>
                 </li>
               ))}
             </ul>

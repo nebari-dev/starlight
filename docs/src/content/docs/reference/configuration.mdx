@@ -17,7 +17,7 @@ Options passed to `nebari(options)`:
 | Option     | Type                                     | Default                | Description                                                                 |
 | ---------- | ---------------------------------------- | ---------------------- | --------------------------------------------------------------------------- |
 | `logoHref` | `string`                                 | site base (`BASE_URL`) | URL the header logo links to. Set to a portal root for multi-pack domains.  |
-| `nav`      | `{ label: string; href: string }[]`      | unset                  | Top-level header tabs. Absent, the header is byte-identical to Starlight.   |
+| `nav`      | `{ label: string; href: string }[]`      | unset                  | Top-level header tabs. Absent, the header is byte-identical to Starlight. Absolute hrefs link off-site and open in a new tab. |
 
 ```ts
 interface NebariThemeOptions {
@@ -25,7 +25,9 @@ interface NebariThemeOptions {
   logoHref?: string;
   /**
    * Top-level header tabs. When omitted, the header is byte-identical to
-   * stock Starlight.
+   * stock Starlight. Root-absolute hrefs get the site base prefixed;
+   * absolute and protocol-relative ones are rendered verbatim and open in a
+   * new tab.
    */
   nav?: Array<{ label: string; href: string }>;
 }

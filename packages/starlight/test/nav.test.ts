@@ -1,7 +1,12 @@
 // packages/starlight/test/nav.test.ts
 import { expect, test } from 'bun:test';
 import { nebari } from '../src/index.ts';
-import { activeNavHref, type NavItem } from '../src/utils/nav.ts';
+import {
+  activeNavHref,
+  isExternalNavHref,
+  type NavItem,
+  navHref,
+} from '../src/utils/nav.ts';
 
 const NAV: NavItem[] = [
   { label: 'Docs', href: '/' },
@@ -73,6 +78,41 @@ test('an empty nav never matches', () => {
 test('a partial segment is not treated as a prefix match', () => {
   const tabs: NavItem[] = [{ label: 'Guides', href: '/guide/' }];
   expect(activeNavHref('/guides/authoring/', tabs)).toBeNull();
+});
+
+test('external hrefs are recognized, internal ones are not', () => {
+  expect(isExternalNavHref('https://packs.nebari.dev')).toBe(true);
+  expect(isExternalNavHref('http://localhost:4321/')).toBe(true);
+  expect(isExternalNavHref('mailto:hi@nebari.dev')).toBe(true);
+  expect(isExternalNavHref('//cdn.example.com/docs/')).toBe(true);
+  expect(isExternalNavHref('/guides/')).toBe(false);
+  expect(isExternalNavHref('guides')).toBe(false);
+});
+
+test('an internal href is resolved against the site base', () => {
+  expect(navHref('/guides/', '/starlight/')).toBe('/starlight/guides/');
+  expect(navHref('guides', '/starlight')).toBe('/starlight/guides');
+  expect(navHref('/guides/')).toBe('/guides/');
+});
+
+test('an external href is rendered verbatim, base or no base', () => {
+  expect(navHref('https://packs.nebari.dev', '/starlight/')).toBe(
+    'https://packs.nebari.dev',
+  );
+  expect(navHref('//cdn.example.com/docs/', '/starlight/')).toBe(
+    '//cdn.example.com/docs/',
+  );
+});
+
+test('an external tab never lights up, and never shadows the fallback', () => {
+  const withExternal: NavItem[] = [
+    { label: 'Docs', href: '/' },
+    { label: 'Packs', href: 'https://packs.nebari.dev' },
+  ];
+  expect(activeNavHref('/getting-started/', withExternal)).toBe('/');
+  expect(
+    activeNavHref('/', [{ label: 'Packs', href: 'https://packs.nebari.dev' }]),
+  ).toBeNull();
 });
 
 function loadVirtualConfig(options?: Parameters<typeof nebari>[0]): string {

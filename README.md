@@ -110,7 +110,8 @@ only needs `light`.
   symbol favicon, and a branded multi-column footer on splash pages (home, 404).
   Doc pages with a sidebar end at their content.
 - **Nav tabs** - optional `nav` items render as header tabs and in the mobile
-  drawer. Omit the option and the header stays stock Starlight.
+  drawer. Entries can point at another site (`https://packs.nebari.dev`), which
+  open in a new tab. Omit the option and the header stays stock Starlight.
 - **Search** - Starlight's built-in Pagefind, styled to the Docs theme, ready to
   merge additional pack indexes for portal-wide multisite search.
 

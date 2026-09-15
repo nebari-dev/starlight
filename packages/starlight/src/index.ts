@@ -53,7 +53,9 @@ export interface NebariThemeOptions {
   logoHref?: string;
   /**
    * Top-level header tabs. When omitted, the header is byte-identical to
-   * stock Starlight.
+   * stock Starlight. Root-absolute hrefs (`/guides/`) get the site base
+   * prefixed; absolute and protocol-relative ones (`https://packs.nebari.dev`)
+   * are rendered verbatim and open in a new tab.
    */
   nav?: Array<{ label: string; href: string }>;
   /**

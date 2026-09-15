@@ -1,6 +1,6 @@
 ---
 import { nav } from 'virtual:nebari/config';
-import { activeNavHref } from '../utils/nav';
+import { activeNavHref, isExternalNavHref, navHref } from '../utils/nav';
 
 interface Props {
   class?: string;
@@ -9,8 +9,7 @@ interface Props {
 const items = nav ?? [];
 const base = import.meta.env.BASE_URL;
 const active = activeNavHref(Astro.url.pathname, items, base);
-const prefix = base.replace(/\/+$/, '');
-const hrefFor = (href: string) => `${prefix}/${href.replace(/^\/+/, '')}`;
+const hrefFor = (href: string) => navHref(href, base);
 ---
 
 {
@@ -25,6 +24,9 @@ const hrefFor = (href: string) => `${prefix}/${href.replace(/^\/+/, '')}`;
             <a
               href={hrefFor(item.href)}
               aria-current={item.href === active ? 'page' : undefined}
+              {...(isExternalNavHref(item.href)
+                ? { target: '_blank', rel: 'noopener noreferrer' }
+                : {})}
             >
               {item.label}
             </a>

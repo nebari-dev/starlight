@@ -93,6 +93,18 @@ test('the nav option renders top-level tabs in the header', () => {
   expect(tabs).toContain('>Reference<');
 });
 
+test('an external nav entry keeps its URL and opens in a new tab', () => {
+  const tabs = navTabsMarkup('index.html');
+  expect(tabs).toMatch(
+    /<a href="https:\/\/nebari\.dev"[^>]*target="_blank"[^>]*>Nebari</,
+  );
+  expect(tabs).toContain('rel="noopener noreferrer"');
+  // The footer's Documentation column renders the same nav list.
+  expect(readFileSync(join(DIST, 'index.html'), 'utf8')).not.toContain(
+    'href="/https://nebari.dev"',
+  );
+});
+
 test('exactly one nav tab is marked aria-current per page', () => {
   for (const page of [
     'index.html',
