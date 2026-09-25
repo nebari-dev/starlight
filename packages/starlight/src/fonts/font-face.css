@@ -5,6 +5,9 @@
  *
  * Geist         — body text and headings (--sl-font), variable 100–900
  * IBM Plex Mono — code (--sl-font-mono)
+ * Shantell Sans — hand drawn diagram labels (--doodle-font), variable 300–800.
+ *                 Only fetched on pages that actually draw a diagram, since a
+ *                 face is not requested until something uses the family.
  */
 @font-face {
   font-family: "Geist";
@@ -19,4 +22,11 @@
   font-weight: 400;
   font-display: swap;
   src: url("./ibm-plex-mono-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Shantell Sans";
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url("./shantell-sans-latin-wght-normal.woff2") format("woff2");
 }

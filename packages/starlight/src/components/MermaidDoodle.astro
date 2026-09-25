@@ -1,0 +1,20 @@
+---
+/**
+ * Mounts mermaid-doodle on every page. The renderer looks for a diagram
+ * before it does anything else, so pages with no mermaid fence never pay
+ * for resolving mermaid.
+ *
+ * Expressive Code renders the fence as a <pre data-language="mermaid">, which
+ * mermaid-doodle picks up on its own. Colours come from the --doodle-*
+ * properties in theme.css, so nothing is configured here.
+ */
+---
+
+<script>
+  import { createRenderer } from 'mermaid-doodle';
+  import 'mermaid-doodle/styles.css';
+
+  const renderer = createRenderer();
+  renderer.mount();
+  document.addEventListener('astro:page-load', () => renderer.render());
+</script>

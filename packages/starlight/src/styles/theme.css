@@ -84,6 +84,24 @@
   --sl-text-h4: 1.125rem;
   --sl-text-h5: 1rem;
   --nbr-text-eyebrow: 0.6875rem;
+
+  /* ── Mermaid diagrams (mermaid-doodle) ──────────────────────────────────── */
+  /* Fills are tinted from the magenta ramp rather than the neutral surface
+     tokens. --nbr-muted and --nbr-background are near zero chroma, so using
+     them left every shape grey inside a vivid magenta outline, which reads as
+     washed out next to the hand drawn stroke. Light values below; the dark
+     block further down overrides the ones that need it. */
+  --doodle-accent: var(--nbr-primary);
+  --doodle-font: "Shantell Sans", var(--sl-font);
+  --doodle-node-bg: var(--nbr-primary-magenta-100);
+  --doodle-node-text: var(--nbr-foreground);
+  --doodle-alt-bg: var(--nbr-primary-magenta-50);
+  --doodle-alt-border: var(--nbr-primary-magenta-300);
+  --doodle-cluster-bg: var(--nbr-primary-magenta-50);
+  --doodle-cluster-border: var(--nbr-primary-magenta-200);
+  --doodle-note-bg: var(--nbr-primary-magenta-100);
+  --doodle-text: var(--nbr-foreground);
+  --doodle-edge-label-bg: var(--nbr-background);
 }
 
 :root[data-has-sidebar] {
@@ -115,6 +133,19 @@
   --nbr-wash-1: var(--nbr-primary-magenta-900);
   --nbr-wash-2: var(--nbr-accent-teal-900);
   --nbr-wash-3: var(--nbr-highlight-yellow-900);
+
+  /* Diagram fills for dark. The subgraph sits behind the nodes it contains, so
+     it is mixed back towards the page so nodes stay the brighter shape. */
+  --doodle-node-bg: var(--nbr-primary-magenta-950);
+  --doodle-alt-bg: var(--nbr-primary-magenta-900);
+  --doodle-alt-border: var(--nbr-primary-magenta-700);
+  --doodle-cluster-bg: color-mix(
+    in oklch,
+    var(--nbr-primary-magenta-950) 50%,
+    var(--nbr-background)
+  );
+  --doodle-cluster-border: var(--nbr-primary-magenta-800);
+  --doodle-note-bg: var(--nbr-primary-magenta-900);
 }
 
 .nbr-page-header h1,
