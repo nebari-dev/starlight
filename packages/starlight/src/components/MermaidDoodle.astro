@@ -6,7 +6,10 @@
  *
  * Expressive Code renders the fence as a <pre data-language="mermaid">, which
  * mermaid-doodle picks up on its own. Colours come from the --doodle-*
- * properties in theme.css, so nothing is configured here.
+ * properties in theme.css. The one setting passed through is the layout:
+ * mermaid 12 made ELK the default, which lays flowcharts out as a single wide
+ * row that shrinks to illegible text in the content column, so dagre (the
+ * mermaid 11 default) is pinned.
  */
 ---
 
@@ -14,7 +17,7 @@
   import { createRenderer } from 'mermaid-doodle';
   import 'mermaid-doodle/styles.css';
 
-  const renderer = createRenderer();
+  const renderer = createRenderer({ mermaidConfig: { layout: 'dagre' } });
   renderer.mount();
   document.addEventListener('astro:page-load', () => renderer.render());
 </script>
