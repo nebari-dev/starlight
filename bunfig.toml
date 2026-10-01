@@ -1,2 +1,5 @@
 [test]
 root = "packages/starlight/test"
+
+[install]
+linker = "hoisted"

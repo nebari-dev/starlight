@@ -88,10 +88,11 @@ test('the mobile drawer exposes nav tabs and keeps accessible names', async ({
   await page.goto('/guides/deployment/build/');
 
   await expect(page.locator('.nbr-nav-tabs--header')).toBeHidden();
-  const menu = page.locator('starlight-menu-button');
+  // Starlight 0.42 opens the drawer with the popover API: the toggle is a
+  // native <button popovertarget>, and the open state lives on the pane.
   await expect(page.locator('.nbr-nav-tabs--drawer')).toBeHidden();
-  await menu.locator('button').click();
-  await expect(menu).toHaveAttribute('aria-expanded', 'true');
+  await page.locator('.sl-menu-button').click();
+  await expect(page.locator('#starlight__sidebar:popover-open')).toHaveCount(1);
 
   const drawerTabs = page.locator('.nbr-nav-tabs--drawer');
   await expect(drawerTabs).toBeVisible();
@@ -317,6 +318,9 @@ test('exactly one "Site" nav landmark is exposed at each width', async ({
   ]) {
     await page.setViewportSize({ width, height });
     await page.goto('/guides/authoring-content/');
+    // Below 50rem the only Site nav is the drawer's, inside a popover that is
+    // display: none until opened, so open it before counting.
+    if (width < 800) await page.locator('.sl-menu-button').click();
     const exposed = await page.evaluate(
       () =>
         [...document.querySelectorAll('nav[aria-label="Site"]')].filter(
