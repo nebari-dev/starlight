@@ -369,6 +369,9 @@ main > .content-panel:last-child > .sl-container > footer {
     );
     padding-inline-end: var(--sl-nav-pad-x);
   }
+  /* Starlight 0.42+ renders a native <button popovertarget>; older releases
+     (still allowed by our peer range) wrap the button in <starlight-menu-button>. */
+  .sl-menu-button,
   starlight-menu-button button {
     inset-inline-start: var(--sl-nav-pad-x);
     inset-inline-end: auto;
@@ -377,6 +380,7 @@ main > .content-panel:last-child > .sl-container > footer {
     color: var(--sl-color-gray-1);
     box-shadow: none;
   }
+  .sl-menu-button:has(~ :popover-open),
   starlight-menu-button[aria-expanded="true"] button {
     background-color: var(--nbr-surface-subtle);
   }
